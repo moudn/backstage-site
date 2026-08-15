@@ -13,7 +13,6 @@
  * section the reader advances through.
  */
 
-import { ContactForm } from "./ContactForm";
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
 import { StepSequence } from "./StepSequence";
@@ -128,24 +127,23 @@ export function PageBody() {
             <StepSequence />
           </section>
 
-          <section id="contact" className="panel panel--tall contact">
-            <div>
-              <ScrollReveal mode="scrub" as="h2" className="contact__title" baseRotation={2}>
-                Tell us what's eating your week.
-              </ScrollReveal>
-              <ScrollReveal mode="scrub" className="contact__lede">
-                One process, in your own words. We'll come back to you and say whether it's
-                something we can take off your hands.
-              </ScrollReveal>
-              <Reveal delay={100}>
-                <a className="contact__email" href={`mailto:${CONTACT_EMAIL}`}>
-                  {CONTACT_EMAIL}
-                </a>
-              </Reveal>
-            </div>
-            <Reveal delay={140}>
-              <ContactForm />
+          {/* One address, set large, and nothing to fill in. A form asks
+              somebody to compose their problem in a textarea on a stranger's
+              website; an address lets them write it where they already write
+              everything else, from an account we can actually reply from. */}
+          <section id="contact" className="panel contact">
+            <ScrollReveal mode="scrub" as="h2" className="contact__title" baseRotation={2}>
+              Tell us what's eating your week.
+            </ScrollReveal>
+            <Reveal delay={80}>
+              <a className="contact__email" href={`mailto:${CONTACT_EMAIL}`}>
+                {CONTACT_EMAIL}
+              </a>
             </Reveal>
+            <ScrollReveal mode="scrub" className="contact__lede">
+              One process, in your own words. We'll come back to you and say whether it's
+              something we can take off your hands.
+            </ScrollReveal>
           </section>
         </main>
 

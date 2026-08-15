@@ -33,11 +33,13 @@ type Props = {
   SHADING?: boolean;
 };
 
-/* Picked to sit in the palette: the violet accent on a dark page, and a
- * deeper violet-pink on a light one, where a pale trail would be invisible. */
+/* Dark takes the violet accent. Light takes a blue drawn from the light
+ * theme's own glow (--glow-1 is oklch(0.62 0.07 215), a soft sea blue): the
+ * violet read as a stray brand colour on a page that has none of it, and a
+ * paler blue would vanish against near-white. */
 const THEME_COLOR: Record<Theme, string> = {
   dark: "#A558FB",
-  light: "#7C3FD8",
+  light: "#3E9CC4",
 };
 
 export function SplashCursor({

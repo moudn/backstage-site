@@ -109,6 +109,16 @@
   color-scheme: light;
 }
 
+/* The display stack: heavy grotesques, in the order each platform actually
+   has them. All system fonts — no webfont request, nothing to block the first
+   paint, and no third-party host in the critical path. Inter and Helvetica
+   Now are picked up automatically by anyone who has them installed. */
+:root{
+  --font-display:"Inter Display","Inter","Helvetica Now Display",
+    "Helvetica Neue",Helvetica,"Segoe UI Variable Display","Segoe UI",
+    Roboto,system-ui,Arial,sans-serif;
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{

@@ -130,10 +130,13 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
         style={{
           position: "absolute",
           left: "50%",
-          top: "43%",
+          top: "42%",
           transform: "translate(-50%, -50%)",
-          width: "min(74vh, 92vw)",
-          height: "94svh",
+          width: "min(72vh, 90vw)",
+          // Was 94svh centred at 43%, which put the canvas bottom at 90% of
+          // the section and clipped the ends of the tentacles. 82svh at 42%
+          // finishes at 83%, clear of both the section edge and the slogan.
+          height: "82svh",
           zIndex: 2,
           pointerEvents: "none",
         }}
@@ -173,7 +176,6 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
         <h2 className="jf-slogan__line">
           We work backstage, so you can take centre stage.
         </h2>
-        <p className="jf-slogan__meta">An AI consultancy · UK</p>
       </div>
 
     </section>
@@ -219,25 +221,20 @@ const RING_CSS = `
   bottom:clamp(20px,4.5vh,54px);
   transform:translateX(-50%);
   z-index:3;
-  width:min(760px, 88vw);
+  width:min(480px, 84vw);
   text-align:center;
-  padding:clamp(14px,2vh,22px) clamp(16px,3vw,28px) clamp(10px,1.4vh,16px);
+  padding:clamp(10px,1.4vh,16px) clamp(14px,2.4vw,24px);
   background:radial-gradient(120% 140% at 50% 60%, var(--bg) 38%, transparent 78%);
   pointer-events:none;
 }
+/* Deliberately small. BACKSTAGE is the title on this screen; at anything
+   near its size the slogan competes with it and the screen has two titles. */
 .jf-slogan__line{
-  margin:0 0 clamp(8px,1.2vh,14px);
-  font:400 clamp(21px,3.1vw,38px)/1.22 Georgia,'Times New Roman',serif;
-  letter-spacing:-0.012em;
-  color:var(--text);
-  text-wrap:balance;
-}
-.jf-slogan__meta{
   margin:0;
-  font:400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
-  letter-spacing:0.22em;
-  text-transform:uppercase;
-  color:var(--text-3);
+  font:400 clamp(14px,1.35vw,19px)/1.45 Helvetica Neue,Helvetica,Arial,sans-serif;
+  letter-spacing:0.005em;
+  color:var(--text-2);
+  text-wrap:balance;
 }
 
 .jf-bubble{

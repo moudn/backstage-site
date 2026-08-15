@@ -24,7 +24,6 @@ No server needed.
 | `src/components/Jellyfish3D.tsx` | The creature itself: shaded bell + shader-driven tentacles. |
 | `src/components/SiteNav.tsx` | Fixed nav, revealed once the visitor passes ~72% of the first screen. |
 | `src/components/PageBody.tsx` | Everything below the two full-screen sections. |
-| `src/components/ContactForm.tsx` | The contact form. Needs a relay key — see below. |
 | `src/data/content.ts` | All page copy, plus the rules that govern editing it. |
 | `src/styles/page.css` | Section styles, carried over from the design's inline values. |
 | `src/styles/panels.css` | The one-section-per-screen layout. |
@@ -111,7 +110,7 @@ Two reveal systems, used for different things:
   to scroll position, with blur and a slight container rotation. Used on the
   section headings and lead paragraphs, where it reads as deliberate.
 - **`Reveal`** — a plain fade-up on an IntersectionObserver, fired once. Used
-  for the structured blocks: Julian's rows, the four steps, buttons, the form.
+  for the structured blocks: Julian's rows, buttons, the address.
   Word-splitting a reference table makes it harder to read, not more
   impressive, and constant motion across a page of detail is tiring.
 
@@ -147,35 +146,22 @@ Initial load is ~63KB gzipped; the jellyfish chunk is ~237KB gzipped.
 
 ## The contact form
 
-A static site cannot send email by itself: there is no server to send it from
-and no browser will hand out SMTP credentials. Delivery goes through a form
-relay, configured with two build-time variables — see `.env.example`:
+There isn't one. The contact section is the address, set large, and nothing
+to fill in — the pattern the Noomo site uses. A form asks somebody to compose
+their problem in a textarea on a stranger's website and trust that it
+arrived; an address lets them write it where they already write everything
+else, from an account we can reply to.
 
-```
-VITE_FORM_ENDPOINT=https://api.web3forms.com/submit
-VITE_FORM_KEY=<your key>
-```
-
-**Until `VITE_FORM_KEY` is set, nothing is emailed.** The form falls back to
-opening the visitor's own mail client with the message pre-filled, which
-works but loses anyone without one configured. Set it before launch.
-
-Web3Forms needs no account — give it the address, it emails a key. Formspree
-and Formspark take the same JSON POST. The key is baked into the built
-JavaScript and is public; that is fine for a form key, whose only power is to
-send you an email. For the live site the values go in the repository's
-**Settings → Secrets and variables → Actions → Variables**, where the Pages
-workflow reads them at build time.
-
-There is also a honeypot field: hidden from people and from screen readers,
-filled in by bots, and dropped server-side.
+It also removes the only part of the site that needed a server. A static
+build cannot send email, so a form here meant a third-party relay, a key in
+the bundle, and a silent-failure mode where an enquiry vanishes. None of that
+exists now.
 
 ## Still open
 
 1. Should Julian's link be live at launch, or hidden until his site ships?
    Right now it links out with a "Going live shortly." note beneath it.
-2. `VITE_FORM_KEY` is not set, so the contact form still falls back to the
-   visitor's mail client. See above.
+2. Is there a phone number to add alongside the address?
 3. Do they want Julian's pricing tiers on the page later? The page currently
    acknowledges pricing exists without printing numbers, which was deliberate.
 4. Is there a phone number to add alongside the email?

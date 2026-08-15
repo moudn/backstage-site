@@ -46,8 +46,8 @@ export const STEPS: { n: string; title: string; body: string }[] = [
 ];
 
 export const NAV_LINKS: { href: string; label: string; strong?: boolean }[] = [
-  { href: "#problem", label: "The problem" },
-  { href: "#julian", label: "Julian" },
+  { href: "#problem", label: "What we do" },
+  { href: "#julian", label: "Our products" },
   { href: "#how", label: "How we work" },
   { href: "#contact", label: "Get in touch", strong: true },
 ];

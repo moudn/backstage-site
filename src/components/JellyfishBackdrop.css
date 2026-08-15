@@ -3,38 +3,47 @@
   inset:0;
   z-index:0;
   pointer-events:none;
-  /* Behind the page's own background, which is why .page must not paint an
-     opaque colour over the top — see the note in page.css. */
+  /* Behind the page's own content, which is why .page must not paint an
+     opaque background over the top — see the note in page.css. */
   display:grid;
   place-items:center;
+  overflow:hidden;
 }
 
 .jf-backdrop__inner{
-  width:min(96vh, 120vw);
-  height:104svh;
-  /* --jf-hue and --jf-drift are written by the component on scroll. The
-     fallbacks matter: if the script never runs, this still renders as a
-     static creature rather than collapsing to no transform at all. */
-  transform:translate3d(var(--jf-drift, 0px), 0, 0);
-  filter:hue-rotate(var(--jf-hue, 0deg)) blur(1.5px);
-  opacity:0.16;
-  transition:opacity 700ms ease;
+  /* Deliberately larger than the viewport. The reference sites put a creature
+     big enough to run off both edges behind the words; something that fits
+     neatly on screen reads as an illustration rather than as a world the page
+     is moving through. */
+  width:min(150vh, 165vw);
+  height:145svh;
+  /* --jf-* are written by the component on scroll. The fallbacks matter: with
+     no script this still renders as a static creature rather than collapsing
+     to no transform at all. */
+  transform:
+    translate3d(var(--jf-x, 0px), var(--jf-y, 0px), 0)
+    rotate(var(--jf-rot, 0deg));
+  filter:hue-rotate(var(--jf-hue, 0deg));
   will-change:transform, filter;
-  animation:jf-backdrop-drift 46s ease-in-out infinite;
+  animation:jf-backdrop-drift 42s ease-in-out infinite;
 }
 
-/* Light mode's page is near-white and its jellyfish is pale, so the same
-   opacity that reads as a presence on a dark page reads as a smudge here. */
-:root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.1 }
+/* Opacity is the whole balance of this thing: high enough to be a presence
+   behind the type, low enough that the type stays comfortably readable. Light
+   and dark need different numbers because the creature is pale on a near-white
+   page and saturated on a near-black one. */
+:root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.3 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.16 }
+  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.42 }
 }
-:root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.16 }
+:root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.42 }
 
+/* A slow independent drift on top of the scroll-driven movement, so the
+   creature is alive even when the page is still. */
 @keyframes jf-backdrop-drift{
-  0%{ transform:translate3d(var(--jf-drift, 0px), 0, 0) scale(1) }
-  50%{ transform:translate3d(calc(var(--jf-drift, 0px) + 26px), -3%, 0) scale(1.06) }
-  100%{ transform:translate3d(var(--jf-drift, 0px), 0, 0) scale(1) }
+  0%{ scale:1 }
+  50%{ scale:1.07 }
+  100%{ scale:1 }
 }
 
 @media (prefers-reduced-motion: reduce){

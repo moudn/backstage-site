@@ -147,13 +147,10 @@
   font-variant-numeric:tabular-nums;
 }
 
-/* Georgia, matching .step__title in page.css — the serif is the design's own
-   voice for step headings, and the sequence should not sound like a different
-   site to the one above it. */
 .steps-seq__step-title{
   margin:0 0 clamp(10px,1.6vh,18px);
-  font:400 clamp(24px,3.4vw,44px)/1.2 Georgia,'Times New Roman',serif;
-  letter-spacing:-0.01em;
+  font:700 clamp(24px,3.3vw,44px)/1.08 var(--font-display);
+  letter-spacing:-0.03em;
   color:var(--text);
   text-wrap:balance;
 }

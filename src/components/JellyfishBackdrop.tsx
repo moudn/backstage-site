@@ -25,10 +25,20 @@ const Jellyfish3D = lazy(() =>
   import("./Jellyfish3D").then((m) => ({ default: m.Jellyfish3D }))
 );
 
-/* Hue rotation, in degrees, across the whole scrollable body. A full circle
- * would take it through greens and yellows that have nothing to do with this
- * palette; a narrow sweep keeps it inside violet → pink → indigo. */
-const HUE_SWEEP = 120;
+/* How far the creature travels across the whole scrollable body. These are
+ * what make it read as something the page moves past rather than a fixed
+ * image: it drifts sideways, rises, and turns slowly as you go.
+ *
+ * The hue range is the fiddly one. The creature is violet (~285deg), so
+ * rotating *forward* by any real amount lands in yellow-green — at +150 the
+ * contact screen came out olive and gold, colours that appear nowhere else on
+ * the site. Sweeping backwards instead runs violet -> blue, and starting a
+ * little forward opens on pink: the whole journey stays inside the palette. */
+const HUE_START = 22;   // deg, at the top of the page — violet toward pink
+const HUE_END = -68;    // deg, at the bottom — violet toward blue
+const DRIFT_X = 420;   // px travelled left-to-right, centred on 0
+const DRIFT_Y = 260;   // px risen over the page
+const ROTATE = 14;     // degrees of slow turn
 
 export function JellyfishBackdrop({ theme }: { theme: Theme }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -67,8 +77,11 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
       frame = 0;
       const total = document.documentElement.scrollHeight - window.innerHeight;
       const progress = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
-      el!.style.setProperty("--jf-hue", `${(progress * HUE_SWEEP).toFixed(1)}deg`);
-      el!.style.setProperty("--jf-drift", `${(progress * 90 - 45).toFixed(1)}px`);
+      const hue = HUE_START + progress * (HUE_END - HUE_START);
+      el!.style.setProperty("--jf-hue", `${hue.toFixed(1)}deg`);
+      el!.style.setProperty("--jf-x", `${(progress * DRIFT_X - DRIFT_X / 2).toFixed(1)}px`);
+      el!.style.setProperty("--jf-y", `${(DRIFT_Y / 2 - progress * DRIFT_Y).toFixed(1)}px`);
+      el!.style.setProperty("--jf-rot", `${(progress * ROTATE - ROTATE / 2).toFixed(2)}deg`);
     }
     function onScroll() {
       if (!frame) frame = requestAnimationFrame(apply);
