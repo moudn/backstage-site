@@ -1,4 +1,4 @@
-/* Lenis smooth scrolling — the engine behind cinematic mode.
+/* Lenis smooth scrolling — the page's scrolling.
  *
  * Lenis stops the browser scrolling natively and moves the page itself,
  * easing towards the target position each frame. That inertia is the whole
@@ -22,11 +22,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function useLenis(enabled: boolean) {
+export function useLenis() {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
     // Taking over the scroll is precisely what a reduced-motion visitor is
     // asking not to happen. Leave the browser's scrolling alone for them.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -68,7 +67,7 @@ export function useLenis(enabled: boolean) {
       // offset the last frame happened to land on.
       ScrollTrigger.refresh();
     };
-  }, [enabled]);
+  }, []);
 
   return lenisRef;
 }

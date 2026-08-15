@@ -1,15 +1,10 @@
-/* Full-viewport panels the scroll lands on one at a time.
+/* Full-viewport panels.
  *
- * This is CSS scroll-snap, not JS wheel-hijacking. The browser does the
- * assisting, so the keyboard still works, Page Down still works, find-in-page
- * still works, anchor links still jump straight to a section, and if the CSS
- * never loads the page is simply a normal scrolling document. A hijacked
- * wheel handler gives a slightly firmer feel and breaks all of that.
- *
- * The failure mode of mandatory snapping is content you cannot reach: if a
- * panel is taller than the viewport, the browser can pull you to the next
- * snap point before you have read the bottom of the current one. Everything
- * below exists to prevent that.
+ * There is no scroll-snapping any more: Lenis paces the page, and a snap
+ * container fighting it produces a scroll that stalls at the first snap point
+ * and refuses to move. What survives from that work is the layout — each
+ * section still gets a screen to itself, which is what makes the sections read
+ * as separate moments rather than as a continuous wall of text.
  */
 
 .panel{
@@ -17,50 +12,16 @@
   display:grid;
   align-content:center;
   padding-block:clamp(72px,11vh,132px);
-  scroll-margin-top:0;
 }
 
 /* Panels whose content genuinely can exceed the viewport — the contact form,
-   the four-step grid once it stacks. They still start a snap, but they never
-   force a stop, so a reader can scroll through them freely. */
+   the Julian table once it stacks. Aligned to the top so nothing they contain
+   ends up below the fold. */
 .panel--tall{ align-content:start }
 
-/* Snapping belongs to one of the two scroll modes. In cinematic mode Lenis
-   drives the scroll position itself, and a snap container fighting it produces
-   exactly the stall this whole file exists to avoid — so the mode gates every
-   rule below. See src/lib/scrollMode.ts. */
-@media (min-height:720px) and (min-width:600px) and (prefers-reduced-motion:no-preference){
-  :root[data-scroll-mode="snap"]{
-    scroll-snap-type:y mandatory;
-  }
-  [data-scroll-mode="snap"] .glow-horizon,
-  [data-scroll-mode="snap"] .jelly-panel,
-  [data-scroll-mode="snap"] .panel{
-    scroll-snap-align:start;
-  }
-
-  /* Deliberately NOT scroll-snap-stop:always.
-     `always` forces the container to stop at every panel — and it applies to
-     programmatic scrolling too, so a nav link cannot jump past the panels in
-     between. Skipping straight to a section from the nav is the whole point,
-     so the default `normal` stays: a wheel gesture still lands on a section,
-     but a jump is allowed through. */
-
-  /* Mandatory snapping only ever rests at a snap point, so without one of its
-     own the footer can never be shown — the scroll springs back to the last
-     panel. `end` aligns its bottom to the bottom of the screen, which puts the
-     tail of the contact panel and the footer on the final screen together. */
-  [data-scroll-mode="snap"] .footer{ scroll-snap-align:end }
-
-  /* The step sequence is a tall sticky region the reader scrolls *through*,
-     so it must not carry a snap point of its own — a mandatory container
-     would haul them back out of the middle of it. Its own waypoints provide
-     the snap targets instead; see StepSequence.css. */
-  [data-scroll-mode="snap"] .steps-seq{ scroll-snap-align:none }
+/* On a short window a centred full-height panel wastes most of the screen on
+   padding, and on a phone one section per screen just means more scrolling for
+   the same words. */
+@media (max-height:719px), (max-width:599px){
+  .panel{ min-height:0; padding-block:clamp(56px,8vh,84px) }
 }
-
-/* Below that — short windows, narrow phones, reduced motion — snapping is
-   switched off entirely and the page is an ordinary document. On a 600px-tall
-   laptop or a phone in landscape there is not enough room for a panel to hold
-   its content, and forcing one screen per section would hide half of it. */
-

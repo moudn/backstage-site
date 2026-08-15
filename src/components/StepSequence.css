@@ -6,18 +6,6 @@
   height:calc(var(--steps) * 100svh);
 }
 
-/* Snap waypoints. Absolutely positioned: they are snap targets without being
-   layout. Height is one screen each, so a mandatory snap container comes to
-   rest exactly on a step. */
-.steps-seq__wp{
-  position:absolute;
-  left:0;
-  right:0;
-  height:100svh;
-  pointer-events:none;
-}
-[data-scroll-mode="snap"] .steps-seq__wp{ scroll-snap-align:start }
-
 .steps-seq__stage{
   position:sticky;
   top:0;
@@ -200,7 +188,6 @@
    inline styles that drive the animation are never written. */
 @media (prefers-reduced-motion: reduce){
   .steps-seq{ height:auto }
-  .steps-seq__wp{ display:none }
   .steps-seq__stage{
     position:static;
     height:auto;

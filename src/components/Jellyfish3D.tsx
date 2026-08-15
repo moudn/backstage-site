@@ -5,9 +5,7 @@
  * Adapted from the supplied component in two ways that mattered:
  *
  *  1. Every colour is a uniform now rather than a constant baked into the
- *     GLSL, so the creature can be recoloured for light and dark. The
- *     original was fixed magenta/pink, which is off-palette for Backstage
- *     and disappears entirely against a near-white background.
+ *     GLSL, so the creature can be recoloured for light and dark.
  *  2. Light mode carries a translucency boost. The same alpha that reads as
  *     a delicate creature on near-black is close to invisible on near-white,
  *     so the palette swap alone isn't enough.
@@ -18,10 +16,7 @@ import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { Theme } from "../lib/useTheme";
 
-/* ── Palettes ──────────────────────────────────────────────────────────────
-   Indigo/violet to sit with Backstage's accent, rather than the original's
-   magenta. Light mode runs deeper and more saturated because it has to hold
-   against a near-white ground. */
+/* ── Palettes ────────────────────────────────────────────────────────────── */
 type Palette = {
   bellApex: string;
   bellMid: string;
@@ -37,41 +32,72 @@ type Palette = {
   opacity: number;
 };
 
+/* The original component's palette, for reference, because it is the thing
+ * light mode is meant to look like:
+ *
+ *   ground  #1a1a22   bell  #f1f1f7 → #e7e6f0 → #ddd9ea → #d2cde2
+ *   core    #ff6fbf   tentacles #e9b6e6 / #f3d9f0   arms #f7d6ef / #e79fd8
+ *
+ * Note the ground. That pearl bell was drawn against near-black, where a pale
+ * translucent dome glows. Dropped unchanged onto this page's near-white it
+ * disappears — same colours, no contrast. So light mode keeps the original's
+ * character (pearl dome, hot-pink core, pale pink trailing parts) and darkens
+ * only the dome enough to hold an edge against #fafaff. Everything that made
+ * the original read as a jellyfish rather than a purple blob is unchanged.
+ */
 const PALETTES: Record<Theme, Palette> = {
+  /* Dark: the original's pink pulled through the site's violet, so the
+     creature belongs to this page rather than looking borrowed. */
   dark: {
-    bellApex: "#4922E5",
-    bellMid: "#8B5CF6",
-    bellEdge: "#C4B5FD",
+    bellApex: "#5B2CC9",
+    bellMid: "#9B5CF0",
+    bellEdge: "#E4B5F0",
     bellSpeck: "#2A1065",
-    rimTint: "#A558FB",
-    core: "#8B5CF6",
-    tentacleTop: "#C4B5FD",
-    tentacleTip: "#E9E2FF",
-    armTop: "#DDD3FF",
-    armTip: "#A78BFA",
-    opacity: 1,
+    rimTint: "#FF8FD0",
+    core: "#FF6FBF",
+    tentacleTop: "#E9B6E6",
+    tentacleTip: "#F7D6EF",
+    armTop: "#F3D9F0",
+    armTip: "#D98FD8",
+    // Under 1 the bell stays translucent enough for BACKSTAGE to read through
+    // it as it passes behind. At 1 the word disappears into the dome, and the
+    // creature cropping the word is the point of the composition.
+    opacity: 0.82,
   },
+  /* Light: the original, with the dome weighted to survive a white page. */
   light: {
-    bellApex: "#3A1D9E",
-    bellMid: "#5B3FD0",
-    bellEdge: "#8F79DC",
-    bellSpeck: "#241063",
-    rimTint: "#6D4FD8",
-    core: "#7C5CE6",
-    tentacleTop: "#7B63CF",
-    tentacleTip: "#B4A4E8",
-    armTop: "#8A72D8",
-    armTip: "#6247BE",
-    // On a near-white ground the creature needs more presence or it washes
-    // out — but push too far and the bell stops reading as translucent and
-    // starts looking like solid plastic, losing the ribs and the word behind.
-    opacity: 1.3,
+    bellApex: "#B9B4CE",
+    bellMid: "#C8C2D8",
+    bellEdge: "#A79FC4",
+    bellSpeck: "#1A1A22",
+    rimTint: "#BDB3E6",
+    core: "#FF6FBF",
+    tentacleTop: "#E79FD8",
+    tentacleTip: "#F3D9F0",
+    armTop: "#F7D6EF",
+    armTip: "#DE8FC8",
+    opacity: 1.15,
   },
 };
 
+/* The creature's undulation, and the clock every shader reads from.
+ *
+ * Under prefers-reduced-motion the clock is frozen rather than the component
+ * removed: a still jellyfish is the right thing to show, and the rest of this
+ * section already stops its orbit and its bubbles for the same visitors. The
+ * frozen value is deliberately not 0 — at t=0 the tentacles are perfectly
+ * straight and it reads as a diagram rather than a creature. */
+const STILL_POSE = 4.2;
+
 function useTime() {
-  const t = useRef({ value: 0 });
-  useFrame((s) => (t.current.value = s.clock.elapsedTime));
+  const still = useRef(
+    typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+  const t = useRef({ value: still.current ? STILL_POSE : 0 });
+  useFrame((s) => {
+    if (!still.current) t.current.value = s.clock.elapsedTime;
+  });
   return t.current;
 }
 

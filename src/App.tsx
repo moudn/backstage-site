@@ -1,26 +1,28 @@
 import { GlowHorizon } from "./components/GlowHorizon";
 import { JellyfishSection } from "./components/JellyfishSection";
+import { JellyfishBackdrop } from "./components/JellyfishBackdrop";
 import { PageBody } from "./components/PageBody";
-import { ScrollModeSwitcher } from "./components/ScrollModeSwitcher";
 import { SiteNav } from "./components/SiteNav";
+import { SplashCursor } from "./components/SplashCursor";
 import { useAnchorScroll } from "./lib/useAnchorScroll";
 import { useLenis } from "./lib/useLenis";
-import { useScrollMode } from "./lib/scrollMode";
 import { useTheme } from "./lib/useTheme";
 
 export default function App() {
   const { theme, toggle } = useTheme();
-  const { mode, choose } = useScrollMode();
 
-  const lenisRef = useLenis(mode === "cinematic");
-  useAnchorScroll(mode, lenisRef);
+  /* Lenis drives the scroll for the whole page. Everything below the title
+   * card is paced against scroll position rather than snapped to it. */
+  const lenisRef = useLenis();
+  useAnchorScroll(lenisRef);
 
   return (
     <>
+      <SplashCursor theme={theme} />
       <SiteNav theme={theme} onToggleTheme={toggle} />
 
       <GlowHorizon
-        eyebrow="Backstage · AI consultancy · Gloucester, UK"
+        eyebrow="Backstage · AI consultancy · UK"
         lines={["Welcome to your new", "AI-powered world"]}
         scrollTo="#title"
       />
@@ -29,10 +31,9 @@ export default function App() {
         <JellyfishSection theme={theme} />
       </div>
 
-      <PageBody mode={mode} />
-
-      {/* Review scaffolding — goes when a mode is chosen. */}
-      <ScrollModeSwitcher mode={mode} onChange={choose} />
+      {/* Drifts behind everything after the title card. */}
+      <JellyfishBackdrop theme={theme} />
+      <PageBody />
     </>
   );
 }

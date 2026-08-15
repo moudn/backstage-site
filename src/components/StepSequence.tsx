@@ -4,11 +4,9 @@
  * Built on `position: sticky` rather than GSAP's ScrollTrigger pin. Pinning
  * works by switching the element to `position: fixed` and inserting a spacer
  * to replace its height, which rewrites the document's scroll height as
- * triggers refresh. Under CSS scroll-snap that is a direct fight — the snap
- * container's targets move while the visitor is scrolling through them.
- * Sticky changes no layout and adds no spacer, so the same component works
- * unmodified under both scroll modes. It is also three lines of CSS and
- * survives the JS failing, which the pin does not.
+ * triggers refresh. That fights Lenis, which is reading and writing the same
+ * scroll position. Sticky is three lines of CSS, changes no layout, and still
+ * shows the content if the JS never runs — none of which a pin manages.
  *
  * The animation is written to the DOM directly, not through React state. This
  * runs on every scroll frame; a re-render per frame would be pointless work
@@ -101,18 +99,6 @@ export function StepSequence() {
       className="steps-seq"
       style={{ "--steps": STEPS.length } as React.CSSProperties}
     >
-      {/* Snap targets, one per step, laid out down the length of the section.
-          They are absolutely positioned so they take part in snapping without
-          taking part in layout. In cinematic mode they simply do nothing. */}
-      {STEPS.map((step, i) => (
-        <div
-          key={`wp-${step.n}`}
-          className="steps-seq__wp"
-          style={{ top: `calc(${i} * 100svh)` }}
-          aria-hidden="true"
-        />
-      ))}
-
       <div className="steps-seq__stage">
         <div className="steps-seq__head">
           <h2 className="h2 steps-seq__title">How we work</h2>

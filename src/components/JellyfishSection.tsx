@@ -27,7 +27,7 @@ const WORD = "BACKSTAGE";
 const RING_N = 5;                       // seats on the ring
 const RING_STEP = 360 / RING_N;
 const LOOP = 20;                        // seconds for one full orbit
-const RING_R = 660;                     // px from hub to each word
+const RING_R = 760;                     // px from hub to each word
 const PERSP = 2200;                     // px camera distance
 
 export function JellyfishSection({ theme }: { theme: Theme }) {
@@ -99,7 +99,7 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
                 inset: 0,
                 display: "grid",
                 placeItems: "center",
-                font: "900 clamp(56px, 15vh, 176px)/1 Helvetica Neue,Helvetica,Arial Black,sans-serif",
+                font: "900 clamp(64px, 17.5vh, 210px)/1 Helvetica Neue,Helvetica,Arial Black,sans-serif",
                 letterSpacing: "-0.05em",
                 whiteSpace: "nowrap",
                 color: "var(--text)",
@@ -130,10 +130,10 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
         style={{
           position: "absolute",
           left: "50%",
-          top: "46%",
+          top: "43%",
           transform: "translate(-50%, -50%)",
-          width: "min(58vh, 76vw)",
-          height: "78svh",
+          width: "min(74vh, 92vw)",
+          height: "94svh",
           zIndex: 2,
           pointerEvents: "none",
         }}
@@ -166,23 +166,16 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
         />
       ))}
 
-      <p
-        style={{
-          position: "absolute",
-          bottom: "clamp(24px,5vh,52px)",
-          left: "50%",
-          transform: "translateX(-50%)",
-          margin: 0,
-          zIndex: 3,
-          font: "400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace",
-          letterSpacing: "0.22em",
-          textTransform: "uppercase",
-          color: "var(--text-3)",
-          textAlign: "center",
-        }}
-      >
-        An AI consultancy · Gloucester, UK
-      </p>
+      {/* h2, not h1: GlowHorizon's headline is the page's h1 and comes first.
+          Two h1s on one page is a broken outline, and this reads as the
+          company's statement rather than the page's title. */}
+      <div className="jf-slogan">
+        <h2 className="jf-slogan__line">
+          We work backstage, so you can take centre stage.
+        </h2>
+        <p className="jf-slogan__meta">An AI consultancy · UK</p>
+      </div>
+
     </section>
   );
 }
@@ -215,6 +208,36 @@ const RING_CSS = `
   78%{transform:translateY(28vh);animation-timing-function:ease-out}
   87%{transform:translateY(0)}
   100%{transform:translateY(0)}
+}
+
+/* The slogan sits over the foot of the creature, so it needs its own footing:
+   a soft wash of the page colour behind it keeps the type legible without
+   drawing a visible box across the artwork. */
+.jf-slogan{
+  position:absolute;
+  left:50%;
+  bottom:clamp(20px,4.5vh,54px);
+  transform:translateX(-50%);
+  z-index:3;
+  width:min(760px, 88vw);
+  text-align:center;
+  padding:clamp(14px,2vh,22px) clamp(16px,3vw,28px) clamp(10px,1.4vh,16px);
+  background:radial-gradient(120% 140% at 50% 60%, var(--bg) 38%, transparent 78%);
+  pointer-events:none;
+}
+.jf-slogan__line{
+  margin:0 0 clamp(8px,1.2vh,14px);
+  font:400 clamp(21px,3.1vw,38px)/1.22 Georgia,'Times New Roman',serif;
+  letter-spacing:-0.012em;
+  color:var(--text);
+  text-wrap:balance;
+}
+.jf-slogan__meta{
+  margin:0;
+  font:400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--text-3);
 }
 
 .jf-bubble{

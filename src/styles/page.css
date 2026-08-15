@@ -3,11 +3,16 @@
    classes so the markup stays readable. */
 
 /* overflow-x:clip, NOT overflow:hidden. `hidden` makes this element a scroll
-   container, which captures the scroll-snap targets inside it away from <html>
-   — the page then can't snap, the footer becomes unreachable and anchor jumps
-   land in the wrong place. `clip` clips the aurora's horizontal bleed without
-   creating a scroll container. */
-.page{ position:relative; background:var(--bg); overflow-x:clip }
+   container, which breaks position:sticky for everything inside it — the held
+   step sequence would stop holding. `clip` clips the aurora's horizontal
+   bleed without creating a scroll container. */
+/* Deliberately no background. JellyfishBackdrop is fixed behind the page at
+   z-index 0, and .page paints after it in DOM order — an opaque colour here
+   covers the backdrop completely and it looks like the component is broken.
+   The page colour comes from <body> instead (tokens.css), which paints below
+   both. Anything that genuinely needs an opaque ground to stay readable sets
+   its own (.julian__row, .steps-seq__stage). */
+.page{ position:relative; overflow-x:clip }
 .shell{ position:relative; max-width:1180px; margin:0 auto; padding:0 clamp(20px,5vw,64px); z-index:1 }
 
 /* Ambient aurora behind the body copy, and the veil that settles it down. */
@@ -24,6 +29,13 @@
 .aurora-veil{
   position:absolute; top:0; left:0; right:0; height:120vh;
   pointer-events:none; background:var(--veil); z-index:0;
+  /* The veil's gradient ends on an opaque page colour and then simply stops.
+     While .page painted its own background that edge was invisible; with the
+     jellyfish backdrop showing through it became a hard horizontal line
+     across the page at exactly 120vh. Fading the element's own bottom out
+     costs nothing and fixes it wherever the veil happens to end. */
+  -webkit-mask-image:linear-gradient(180deg, #000 78%, transparent 100%);
+  mask-image:linear-gradient(180deg, #000 78%, transparent 100%);
 }
 
 /* ── nav (revealed on scroll) ─────────────────────────────────────────── */
@@ -96,6 +108,16 @@
   font:400 clamp(38px,7.2vw,68px)/1.08 Georgia,'Times New Roman',serif;
   letter-spacing:-0.015em; color:var(--text); text-wrap:pretty;
 }
+/* The intro's opening statement. Set between a headline and body copy: the
+   page's h1 is now the slogan under the jellyfish, so this paragraph leads
+   without competing with it. At .intro__title's 68px a three-sentence
+   paragraph fills the screen and stops being readable. */
+.intro__opening{
+  margin:0 0 clamp(24px,3.5vw,36px); max-width:760px;
+  font:400 clamp(21px,2.9vw,31px)/1.4 Georgia,'Times New Roman',serif;
+  letter-spacing:-0.01em; color:var(--text); text-wrap:pretty;
+}
+
 .intro__lede{
   margin:0 0 clamp(28px,4vw,42px); max-width:620px;
   font:400 clamp(17px,2.2vw,19px)/1.62 Helvetica Neue,Helvetica,Arial,sans-serif;
@@ -147,7 +169,7 @@
 /* "How we work" is the held sequence now — see StepSequence.css. It keeps the
    rule that separates it from the section above, but none of .section's
    vertical padding: the sticky stage has to sit flush with the top of the
-   scroll region or it falls out of register with its own snap waypoints. */
+   scroll region or its progress runs out before the last step. */
 .how{ border-top:1px solid var(--line-soft); scroll-margin-top:0 }
 
 /* ── offer ────────────────────────────────────────────────────────────── */
@@ -209,6 +231,7 @@
    ScrollReveal wrapper now owns. */
 .body-copy--spaced{ margin-top:18px }
 .intro__title.scroll-reveal{ margin:0 0 clamp(20px,3vw,28px) }
+.intro__opening.scroll-reveal{ margin:0 0 clamp(24px,3.5vw,36px) }
 .intro__lede.scroll-reveal{ margin:0 0 clamp(28px,4vw,42px) }
 .h2.scroll-reveal{ margin:0 0 18px }
 .h2.how__title.scroll-reveal{ margin:0 0 clamp(30px,5vw,52px) }

@@ -37,6 +37,12 @@ jobs:
       - run: npm ci
 
       - run: npm run build
+        env:
+          # Set these in Settings -> Secrets and variables -> Actions ->
+          # Variables. Unset, the contact form falls back to opening the
+          # visitor's mail client. See .env.example.
+          VITE_FORM_ENDPOINT: ${{ vars.VITE_FORM_ENDPOINT }}
+          VITE_FORM_KEY: ${{ vars.VITE_FORM_KEY }}
 
       # `enablement: true` turns Pages on via the API if it isn't already,
       # rather than failing with "Get Pages site failed" and waiting for

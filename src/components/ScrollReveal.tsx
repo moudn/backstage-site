@@ -40,10 +40,9 @@ export type ScrollRevealProps = {
    *  "scrub" ties progress to scroll position — the original behaviour, right
    *  for a long freely-scrolling page.
    *
-   *  "enter" plays once when the element arrives. This is what snap panels
-   *  need: once a section occupies the viewport there is no gradual scroll
-   *  through it left to scrub against, so a scrubbed reveal either finishes
-   *  instantly or races through during the snap. */
+   *  "enter" plays once when the element arrives, for a section that lands
+   *  all at once: with no gradual scroll through it left to scrub against, a
+   *  scrubbed reveal either finishes instantly or never starts. */
   mode?: "scrub" | "enter";
   enableBlur?: boolean;
   baseOpacity?: number;
@@ -96,8 +95,8 @@ export function ScrollReveal({
       const wordEls = el.querySelectorAll(".sr-word");
 
       if (mode === "enter") {
-        // Plays once when the panel arrives. `once` matters with snapping:
-        // without it, snapping back to a section would replay the reveal
+        // Plays once when the section arrives. `once` matters: without it,
+        // scrolling back up to a section would replay the reveal
         // every time and the page would never settle.
         const tl = gsap.timeline({
           scrollTrigger: { trigger: el, start: "top 85%", once: true },
