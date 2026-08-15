@@ -1,0 +1,61 @@
+.mode-switch{
+  position:fixed;
+  left:20px;
+  bottom:20px;
+  z-index:80;
+  display:grid;
+  gap:6px;
+  padding:10px 12px 9px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:color-mix(in oklab, var(--bg) 82%, transparent);
+  backdrop-filter:blur(14px) saturate(1.1);
+  box-shadow:0 8px 30px oklch(0 0 0 / 0.10);
+}
+
+.mode-switch__label{
+  margin:0;
+  font:400 10px/1 ui-monospace,Menlo,monospace;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--text-3);
+}
+
+.mode-switch__group{
+  display:flex;
+  gap:2px;
+  padding:2px;
+  border-radius:8px;
+  background:var(--bg-2);
+}
+
+.mode-switch__btn{
+  appearance:none;
+  border:0;
+  border-radius:6px;
+  padding:6px 11px;
+  background:transparent;
+  color:var(--text-2);
+  font:400 12px/1 Helvetica Neue,Helvetica,Arial,sans-serif;
+  cursor:pointer;
+  transition:background 160ms ease, color 160ms ease;
+}
+.mode-switch__btn:hover{ color:var(--text) }
+.mode-switch__btn[aria-checked="true"]{
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+}
+
+.mode-switch__hint{
+  margin:0;
+  max-width:15ch;
+  font:400 11px/1.35 Helvetica Neue,Helvetica,Arial,sans-serif;
+  color:var(--text-3);
+}
+
+/* On a phone the switcher would sit on top of the content it is meant to let
+   you judge. It is a review tool, not part of the site — the query string
+   (?scroll=cinematic) still works there. */
+@media (max-width:600px){
+  .mode-switch{ display:none }
+}

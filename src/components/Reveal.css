@@ -1,0 +1,18 @@
+/* Scoped to no-preference deliberately. If the hidden state applied
+   unconditionally, the site's global reduced-motion rule
+   (*{animation:none;transition:none}) would freeze these elements at
+   opacity:0 and the content would never appear for those visitors. Written
+   this way there is nothing to override — reduced motion simply never gets a
+   hidden state. */
+
+@media (prefers-reduced-motion: no-preference){
+  .reveal[data-shown="false"]{
+    opacity:0;
+    transform:translateY(16px);
+  }
+  .reveal{
+    transition:
+      opacity 700ms cubic-bezier(0.16,1,0.3,1) var(--reveal-delay, 0ms),
+      transform 700ms cubic-bezier(0.16,1,0.3,1) var(--reveal-delay, 0ms);
+  }
+}

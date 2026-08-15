@@ -1,0 +1,142 @@
+/* Backstage design tokens — carried over verbatim from Backstage.dc.html.
+   Dark mode is served two ways and both must stay: the media query for the
+   system preference, and [data-theme] for the manual toggle, with an explicit
+   light choice beating a dark OS. */
+
+:root{
+  --bg:oklch(0.985 0.005 250);
+  --bg-2:oklch(0.965 0.007 250);
+  --text:oklch(0.28 0.02 260);
+  --text-2:oklch(0.44 0.02 260);
+  --text-3:oklch(0.55 0.05 288);
+  --line:oklch(0.905 0.01 250);
+  --line-soft:oklch(0.94 0.008 250);
+  --accent:oklch(0.50 0.13 288);
+  --btn-bg:oklch(0.28 0.02 260);
+  --btn-fg:oklch(0.985 0.005 250);
+  --field:oklch(1 0 0 / 0.7);
+  --focus:oklch(0.58 0.13 250);
+  --aur-1:oklch(0.90 0.085 165 / 0.85);
+  --aur-2:oklch(0.88 0.085 275 / 0.80);
+  --aur-3:oklch(0.91 0.07 340 / 0.70);
+  --aur-4:oklch(0.93 0.07 95 / 0.65);
+  --aur-op:0.72;
+  --veil:linear-gradient(180deg, transparent 55%, oklch(0.985 0.005 250 / 0.9) 100%);
+  --glow-rim:oklch(0.78 0.05 215);
+  --glow-rim-shadow:0px -4px 18px 0px oklch(0.60 0.06 285 / 0.45);
+  --glow-1:oklch(0.62 0.07 215);
+  --glow-2:oklch(0.60 0.07 285);
+  --glow-op:0.30;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:oklch(0.135 0.012 285);
+    --bg-2:oklch(0.175 0.018 285);
+    --text:oklch(0.97 0.006 285);
+    --text-2:oklch(0.79 0.012 285);
+    --text-3:oklch(0.68 0.09 295);
+    --line:oklch(0.30 0.025 285);
+    --line-soft:oklch(0.235 0.022 285);
+    --accent:oklch(0.70 0.17 295);
+    --btn-bg:oklch(0.96 0.008 285);
+    --btn-fg:oklch(0.145 0.015 285);
+    --field:oklch(1 0 0 / 0.05);
+    --focus:oklch(0.72 0.16 295);
+    --aur-1:oklch(0.50 0.20 285 / 0.85);
+    --aur-2:oklch(0.42 0.18 275 / 0.85);
+    --aur-3:oklch(0.55 0.18 300 / 0.70);
+    --aur-4:oklch(0.40 0.14 265 / 0.60);
+    --aur-op:0.22;
+    --veil:linear-gradient(180deg, transparent 40%, oklch(0.135 0.012 285 / 0.92) 100%);
+    --glow-rim:#FFFFFF;
+    --glow-rim-shadow:0px -4px 23px 0px #ffffffb5;
+    --glow-1:#4922E5;
+    --glow-2:#A558FB;
+    --glow-op:1;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"]{
+  --bg:oklch(0.135 0.012 285);
+  --bg-2:oklch(0.175 0.018 285);
+  --text:oklch(0.97 0.006 285);
+  --text-2:oklch(0.79 0.012 285);
+  --text-3:oklch(0.68 0.09 295);
+  --line:oklch(0.30 0.025 285);
+  --line-soft:oklch(0.235 0.022 285);
+  --accent:oklch(0.70 0.17 295);
+  --btn-bg:oklch(0.96 0.008 285);
+  --btn-fg:oklch(0.145 0.015 285);
+  --field:oklch(1 0 0 / 0.05);
+  --focus:oklch(0.72 0.16 295);
+  --aur-1:oklch(0.50 0.20 285 / 0.85);
+  --aur-2:oklch(0.42 0.18 275 / 0.85);
+  --aur-3:oklch(0.55 0.18 300 / 0.70);
+  --aur-4:oklch(0.40 0.14 265 / 0.60);
+  --aur-op:0.22;
+  --veil:linear-gradient(180deg, transparent 40%, oklch(0.135 0.012 285 / 0.92) 100%);
+  --glow-rim:#FFFFFF;
+  --glow-rim-shadow:0px -4px 23px 0px #ffffffb5;
+  --glow-1:#4922E5;
+  --glow-2:#A558FB;
+  --glow-op:1;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"]{
+  --bg:oklch(0.985 0.005 250);
+  --bg-2:oklch(0.965 0.007 250);
+  --text:oklch(0.28 0.02 260);
+  --text-2:oklch(0.44 0.02 260);
+  --text-3:oklch(0.55 0.05 288);
+  --line:oklch(0.905 0.01 250);
+  --line-soft:oklch(0.94 0.008 250);
+  --accent:oklch(0.50 0.13 288);
+  --btn-bg:oklch(0.28 0.02 260);
+  --btn-fg:oklch(0.985 0.005 250);
+  --field:oklch(1 0 0 / 0.7);
+  --focus:oklch(0.58 0.13 250);
+  --aur-op:0.72;
+  --veil:linear-gradient(180deg, transparent 55%, oklch(0.985 0.005 250 / 0.9) 100%);
+  --glow-rim:oklch(0.78 0.05 215);
+  --glow-rim-shadow:0px -4px 18px 0px oklch(0.60 0.06 285 / 0.45);
+  --glow-1:oklch(0.62 0.07 215);
+  --glow-2:oklch(0.60 0.07 285);
+  --glow-op:0.30;
+  color-scheme: light;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font:400 16px/1.6 Helvetica Neue,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px}
+
+@keyframes riseIn{
+  from{opacity:0;transform:translateY(18px);filter:blur(6px)}
+  to{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+
+
+@keyframes drift1{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(-4%,3%,0) scale(1.12)}
+  100%{transform:translate3d(0,0,0) scale(1)}
+}
+@keyframes drift2{
+  0%{transform:translate3d(0,0,0) scale(1.06)}
+  50%{transform:translate3d(5%,-4%,0) scale(1)}
+  100%{transform:translate3d(0,0,0) scale(1.06)}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+}

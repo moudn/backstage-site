@@ -1,0 +1,23 @@
+/* The original shipped its own type scale (clamp(1.6rem, 4vw, 3rem), weight
+   600), which would override whatever it wrapped. Here the component stays
+   typographically neutral and inherits from the class it's given, so a
+   heading still looks like a heading and body copy still looks like body
+   copy. */
+
+.scroll-reveal{ margin:0 }
+
+.scroll-reveal-text{
+  display:inline;
+  font:inherit;
+  color:inherit;
+}
+
+.sr-word{
+  display:inline-block;
+  /* Keeps the blur from being clipped by the inline box as it animates. */
+  will-change:opacity, filter;
+}
+
+/* Rotating the container needs room, or the corner clips against a neighbour
+   during the scrub. */
+.scroll-reveal{ transform-origin:0% 50% }

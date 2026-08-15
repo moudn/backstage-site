@@ -1,0 +1,124 @@
+.glow-horizon{
+  /* The one number the arc and the headline share. Everything derives from
+     it, which is what keeps the text inside the bowl at any window size. */
+  --arc-h: 78%;
+  --arc-bleed: 10%;
+  --rim-clear: clamp(20px, 6svh, 64px);
+  --enter: cubic-bezier(0.16,1,0.3,1);
+  position:relative;
+  height:100svh;
+  min-height:560px;
+  overflow:hidden;
+  isolation:isolate;
+}
+
+.glow-horizon__arc{
+  position:absolute;
+  top:0;
+  left:calc(var(--arc-bleed) * -1);
+  right:calc(var(--arc-bleed) * -1);
+  height:var(--arc-h);
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+}
+
+.glow-horizon__stack{
+  position:absolute;
+  inset:0;
+  opacity:var(--glow-op);
+  /* Pulling up by half leaves the bottom half of the ellipse on screen —
+     the horizon — and puts the bowl's floor at exactly --arc-h / 2. */
+  transform:translateY(-50%) scaleY(1);
+  animation:glowEnter 2000ms var(--enter) both;
+}
+
+.glow-horizon__layer{
+  position:absolute;
+  inset:0;
+  border-radius:100%;
+  transform:scale(var(--s));
+}
+.glow-horizon__layer--rim { --s:1.32; background:var(--glow-rim); box-shadow:var(--glow-rim-shadow) }
+.glow-horizon__layer--mid { --s:1.20; background:var(--glow-2); filter:blur(31px);
+  animation:arcSlide 2000ms var(--enter) 600ms both }
+.glow-horizon__layer--deep{ --s:1.24; background:var(--glow-1); filter:blur(21px);
+  animation:arcSlide 2000ms var(--enter) both }
+.glow-horizon__layer--base{ --s:1.20; background:var(--bg); filter:blur(51px);
+  animation:arcSlide 2000ms var(--enter) both }
+
+@keyframes glowEnter{
+  from{ transform:translateY(-100%) scaleY(1.5); opacity:0; filter:blur(15px) }
+  to  { transform:translateY(-50%)  scaleY(1);   opacity:var(--glow-op); filter:blur(0) }
+}
+@keyframes arcSlide{
+  from{ transform:translateY(-40%) scale(var(--s)) }
+  to  { transform:translateY(0)    scale(var(--s)) }
+}
+
+/* The bowl's interior — the arc box, halved. Anything in here is inside the
+   glow by construction. */
+.glow-horizon__content{
+  position:absolute;
+  top:0; left:0; right:0;
+  height:calc(var(--arc-h) / 2);
+  padding:clamp(56px,9svh,112px) clamp(20px,5vw,64px) var(--rim-clear);
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:clamp(16px,2.6vw,24px);
+  text-align:center;
+  z-index:3;
+}
+
+.glow-horizon__eyebrow{
+  margin:0;
+  font:400 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:0.22em; text-transform:uppercase; color:var(--text-3);
+  animation:riseIn 900ms var(--enter) 900ms both;
+}
+
+.glow-horizon__title{
+  margin:0;
+  /* Height-aware as well as width-aware. The bowl's depth is a fraction of
+     the viewport HEIGHT, so type sized purely in vw outgrows it on a wide but
+     short window — min() keeps whichever axis is tighter in charge. */
+  font:600 clamp(28px, min(6.4vw, 7.6svh), 68px)/1.1 Helvetica Neue,Helvetica,Arial,sans-serif;
+  letter-spacing:-0.02em; color:var(--text); text-wrap:balance;
+  max-width:16ch;
+}
+.glow-horizon__title span{ display:block }
+.glow-horizon__title span:nth-child(1){ animation:riseIn 1100ms var(--enter) 1200ms both }
+.glow-horizon__title span:nth-child(2){ color:var(--accent); animation:riseIn 1100ms var(--enter) 1500ms both }
+
+.glow-horizon__scroll{
+  position:absolute; bottom:clamp(24px,4vh,44px); left:50%; transform:translateX(-50%);
+  z-index:4;
+  font:400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:0.18em; text-transform:uppercase; color:var(--text-3); text-decoration:none;
+  animation:riseIn 900ms var(--enter) 2300ms both;
+}
+
+/* Short viewports — short laptops as well as landscape phones. Below this a
+   two-line headline can't sit in the bowl at any sensible size, so deepen the
+   arc rather than let the text break the rim. */
+@media (max-height: 780px){
+  .glow-horizon{ --arc-h: 90%; --rim-clear: clamp(12px, 4svh, 32px) }
+  .glow-horizon__content{ padding-top:clamp(24px,5svh,56px) }
+}
+@media (max-height: 560px){
+  .glow-horizon{ --arc-h: 96% }
+  .glow-horizon__title{ font-size:clamp(24px,4.6vw,34px) }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .glow-horizon *{animation:none !important;transition:none !important}
+  /* Killing the animation drops each layer to scale(var(--s)), already its
+     rest state. Only the wrapper needs restating — without the -50% the bowl
+     sits in the wrong place entirely. */
+  .glow-horizon__stack{transform:translateY(-50%) scaleY(1);opacity:var(--glow-op);filter:none}
+  .glow-horizon__eyebrow,
+  .glow-horizon__title span,
+  .glow-horizon__scroll{opacity:1;filter:none;transform:none}
+  .glow-horizon__scroll{transform:translateX(-50%)}
+}
