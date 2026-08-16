@@ -109,14 +109,19 @@
   color-scheme: light;
 }
 
-/* The display stack: heavy grotesques, in the order each platform actually
-   has them. All system fonts — no webfont request, nothing to block the first
-   paint, and no third-party host in the critical path. Inter and Helvetica
-   Now are picked up automatically by anyone who has them installed. */
+/* Sora for display, Inter for text — both self-hosted variable fonts, loaded
+   in main.tsx.
+   Sora is geometric and even, and holds together at the 130px section titles
+   where a text face would look stretched. Inter runs underneath it because a
+   geometric face is tiring over a paragraph: the display font is for titles,
+   not for reading.
+   System fallbacks stay in both stacks so the page is still set correctly in
+   the moment before the woff2 lands, and if it never lands. */
 :root{
-  --font-display:"Inter Display","Inter","Helvetica Now Display",
-    "Helvetica Neue",Helvetica,"Segoe UI Variable Display","Segoe UI",
-    Roboto,system-ui,Arial,sans-serif;
+  --font-display:"Sora Variable",Sora,"Helvetica Neue",Helvetica,
+    system-ui,Arial,sans-serif;
+  --font-text:"Inter Variable",Inter,"Helvetica Neue",Helvetica,
+    system-ui,Arial,sans-serif;
 }
 
 *{box-sizing:border-box}
@@ -125,7 +130,7 @@ body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font:400 16px/1.6 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 16px/1.6 var(--font-text);
   -webkit-font-smoothing:antialiased;
 }
 :focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px}

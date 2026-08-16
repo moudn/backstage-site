@@ -83,7 +83,7 @@
   /* Height-aware as well as width-aware. The bowl's depth is a fraction of
      the viewport HEIGHT, so type sized purely in vw outgrows it on a wide but
      short window — min() keeps whichever axis is tighter in charge. */
-  font:600 clamp(28px, min(6.4vw, 7.6svh), 68px)/1.1 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:600 clamp(28px, min(6.4vw, 7.6svh), 68px)/1.1 var(--font-text);
   letter-spacing:-0.02em; color:var(--text); text-wrap:balance;
   max-width:16ch;
 }

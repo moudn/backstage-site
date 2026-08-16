@@ -55,12 +55,12 @@
 .nav__brand{ display:flex; align-items:baseline; gap:10px; text-decoration:none }
 .nav__dot{ display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--accent) }
 .nav__word{
-  font:500 15px/1 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:500 15px/1 var(--font-text);
   letter-spacing:0.16em; text-transform:uppercase; color:var(--text);
 }
 .nav__links{
   display:flex; align-items:center; gap:clamp(14px,2.2vw,28px);
-  font:400 13.5px/1 Helvetica Neue,Helvetica,Arial,sans-serif; flex-wrap:wrap;
+  font:400 13.5px/1 var(--font-text); flex-wrap:wrap;
 }
 .nav__links a{ text-decoration:none; color:var(--text-2) }
 .nav__links a[data-strong="true"]{ color:var(--text) }
@@ -89,7 +89,7 @@
 }
 .body-copy{
   margin:0;
-  font:400 clamp(16.5px,2vw,18px)/1.66 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 clamp(16.5px,2vw,18px)/1.66 var(--font-text);
   color:var(--text-2); text-wrap:pretty;
 }
 /* Both of these were referenced in PageBody with no rule behind them, so the
@@ -103,10 +103,10 @@
 .btn-pill{
   display:inline-block; padding:15px 30px; border:0; border-radius:999px;
   background:var(--btn-bg); color:var(--btn-fg); text-decoration:none; cursor:pointer;
-  font:500 15px/1 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:500 15px/1 var(--font-text);
 }
 .link-rule{
-  font:400 15px/1 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 15px/1 var(--font-text);
   color:var(--text-2); text-decoration:none;
   border-bottom:1px solid var(--line); padding-bottom:4px;
 }
@@ -152,7 +152,7 @@
 
 .intro__lede{
   margin:0 0 clamp(28px,4vw,42px); max-width:620px;
-  font:400 clamp(17px,2.2vw,19px)/1.62 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 clamp(17px,2.2vw,19px)/1.62 var(--font-text);
   color:var(--text-2); text-wrap:pretty;
 }
 .intro__actions{ display:flex; align-items:center; gap:clamp(16px,3vw,26px); flex-wrap:wrap }
@@ -177,12 +177,12 @@
 /* ── julian ───────────────────────────────────────────────────────────── */
 .julian__lede{
   margin:0 0 26px; max-width:520px;
-  font:400 clamp(16.5px,2vw,18px)/1.66 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 clamp(16.5px,2vw,18px)/1.66 var(--font-text);
   color:var(--text-2); text-wrap:pretty;
 }
 .julian__link{
   display:inline-flex; align-items:baseline; gap:9px;
-  font:400 15px/1 Helvetica Neue,Helvetica,Arial,sans-serif; color:var(--text);
+  font:400 15px/1 var(--font-text); color:var(--text);
   text-decoration:none; border-bottom:1px solid var(--line); padding-bottom:4px;
 }
 .julian__note{ margin:12px 0 0; font:400 12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--text-3) }
@@ -195,7 +195,7 @@
   margin:0; font:400 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
   letter-spacing:0.16em; text-transform:uppercase; color:var(--accent);
 }
-.julian__val{ margin:0; font:400 16px/1.55 Helvetica Neue,Helvetica,Arial,sans-serif; color:var(--text-2); text-wrap:pretty }
+.julian__val{ margin:0; font:400 16px/1.55 var(--font-text); color:var(--text-2); text-wrap:pretty }
 
 /* ── how we work ──────────────────────────────────────────────────────── */
 /* "How we work" is the held sequence now — see StepSequence.css. It keeps the
@@ -252,7 +252,7 @@
    not comfortably readable. */
 .contact__lede{
   margin:0; max-width:46ch;
-  font:400 clamp(15.5px,1.8vw,17.5px)/1.62 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 clamp(15.5px,1.8vw,17.5px)/1.62 var(--font-text);
   color:var(--text-2); text-wrap:pretty;
 }
 

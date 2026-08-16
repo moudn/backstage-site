@@ -99,7 +99,9 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
                 inset: 0,
                 display: "grid",
                 placeItems: "center",
-                font: "900 clamp(64px, 17.5vh, 210px)/1 Helvetica Neue,Helvetica,Arial Black,sans-serif",
+                // The company name, so it is set in the company's face.
+                // Sora tops out at 800, not 900.
+                font: "800 clamp(64px, 17.5vh, 210px)/1 var(--font-display)",
                 letterSpacing: "-0.05em",
                 whiteSpace: "nowrap",
                 color: "var(--text)",
@@ -232,7 +234,7 @@ const RING_CSS = `
    near its size the slogan competes with it and the screen has two titles. */
 .jf-slogan__line{
   margin:0;
-  font:400 clamp(12px,0.95vw,14px)/1.5 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 clamp(12px,0.95vw,14px)/1.5 var(--font-text);
   letter-spacing:0.04em;
   color:var(--text-2);
   text-wrap:balance;

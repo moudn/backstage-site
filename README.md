@@ -135,6 +135,26 @@ The same reduced-motion trap applies to `Reveal`: its hidden state sits inside
 `@media (prefers-reduced-motion: no-preference)` rather than being switched off
 later, so there is no way for those visitors to end up with invisible content.
 
+## Type
+
+Two self-hosted variable fonts, installed from npm and imported in
+`main.tsx` — no Google Fonts request, nothing third-party in the critical
+path, and the files are fingerprinted and cached like any other asset.
+
+- **Sora** (`--font-display`) — section titles, headings, the BACKSTAGE ring.
+  Geometric and even, and it holds together at the 130px section titles where
+  a text face looks stretched.
+- **Inter** (`--font-text`) — everything you actually read. A geometric face
+  is tiring over a paragraph; the display font is for titles, not for prose.
+
+Both are variable, so one file each covers every weight and asking for 700
+costs nothing over 400. System fallbacks stay in both stacks, so the page is
+still set correctly in the moment before the woff2 lands, and if it never
+lands.
+
+To swap the display face, change `--font-display` in `tokens.css` and the
+import in `main.tsx` — nothing else references a family name directly.
+
 ## Performance
 
 three.js is code-split, so the hero paints without it and the download only

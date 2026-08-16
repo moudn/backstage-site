@@ -129,7 +129,7 @@
   font-variant-numeric:tabular-nums;
 }
 .steps-seq__idx-t{
-  font:400 13.5px/1.45 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 13.5px/1.45 var(--font-text);
   text-wrap:pretty;
 }
 
@@ -165,7 +165,7 @@
 
 .steps-seq__step-body{
   margin:0;
-  font:400 clamp(15px,1.5vw,19px)/1.62 Helvetica Neue,Helvetica,Arial,sans-serif;
+  font:400 clamp(15px,1.5vw,19px)/1.62 var(--font-text);
   color:var(--text-2);
   max-width:54ch;
 }
