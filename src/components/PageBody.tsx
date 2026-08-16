@@ -15,6 +15,8 @@
 
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
+import { SectionTitle } from "./SectionTitle";
+import { Logo } from "./Logo";
 import { StepSequence } from "./StepSequence";
 import { CONTACT_EMAIL, JULIAN_ROWS, JULIAN_URL } from "../data/content";
 import "../styles/page.css";
@@ -49,9 +51,7 @@ export function PageBody() {
           </section>
 
           <section id="problem" className="panel section">
-            <Reveal>
-              <p className="sec-title">What we do</p>
-            </Reveal>
+            <SectionTitle>What we do</SectionTitle>
             <div className="split">
               <ScrollReveal mode="scrub" as="h2" className="h2" baseRotation={2}>
                 Being handed a tool is being handed more work.
@@ -83,9 +83,7 @@ export function PageBody() {
           </section>
 
           <section id="julian" className="panel panel--tall section">
-            <Reveal>
-              <p className="sec-title">Our products</p>
-            </Reveal>
+            <SectionTitle>Our products</SectionTitle>
             <div className="split">
               <div>
                 <Reveal>
@@ -140,12 +138,13 @@ export function PageBody() {
               website; an address lets them write it where they already write
               everything else, from an account we can actually reply from. */}
           <section id="contact" className="panel contact">
-            <Reveal>
-              <p className="sec-title">Get in touch</p>
-            </Reveal>
+            <SectionTitle>Get in touch</SectionTitle>
             <ScrollReveal mode="scrub" as="h2" className="contact__title" baseRotation={2}>
               Tell us what's eating your week.
             </ScrollReveal>
+            {/* The address is the call to action, so it is the largest and
+                heaviest thing on the screen — the arrangement the reference
+                uses, where the address *is* the contact page. */}
             <Reveal delay={80}>
               <a className="contact__email" href={`mailto:${CONTACT_EMAIL}`}>
                 {CONTACT_EMAIL}
@@ -159,8 +158,14 @@ export function PageBody() {
         </main>
 
         <footer className="footer">
-          <span>Backstage — UK</span>
-          <span>© {new Date().getFullYear()} Backstage Consultancy</span>
+          <a className="footer__brand" href="#top" aria-label="Backstage, back to top">
+            <Logo />
+          </a>
+          <span className="footer__meta">
+            <span>AI consultancy · UK</span>
+            <span>Est. 2026</span>
+            <span>© {new Date().getFullYear()} Backstage Consultancy</span>
+          </span>
         </footer>
       </div>
     </div>

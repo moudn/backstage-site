@@ -1,0 +1,44 @@
+.sec-title{
+  margin:0 0 clamp(28px,6vh,72px);
+  text-align:center;
+  font:700 clamp(38px,9vw,132px)/0.95 var(--font-display);
+  letter-spacing:-0.045em;
+  color:var(--text);
+  text-transform:uppercase;
+  /* The scroll-linked drift. Both variables are written by the component; the
+     fallbacks mean the title sits exactly where it belongs with no script. */
+  transform:translate3d(0, var(--t-shift, 0px), 0) scale(var(--t-scale, 1));
+  will-change:transform;
+}
+
+/* Words stay whole so a title wraps between them, never mid-word. */
+.sec-title__word{
+  display:inline-block;
+  white-space:nowrap;
+}
+.sec-title__word:not(:last-child)::after{
+  content:" ";
+  display:inline-block;
+  width:0.26em;
+}
+
+.sec-title__ch{
+  display:inline-block;
+  /* Starting state. Only inside the no-preference query: if it lived outside,
+     a reduced-motion visitor whose JS failed would be left looking at a title
+     that never becomes visible. */
+  will-change:transform, opacity;
+}
+
+@media (prefers-reduced-motion: no-preference){
+  .sec-title__ch{
+    opacity:0;
+    transform:translateY(0.42em);
+    transition:opacity 620ms cubic-bezier(0.16,1,0.3,1),
+               transform 780ms cubic-bezier(0.16,1,0.3,1);
+  }
+  .sec-title[data-shown="true"] .sec-title__ch{
+    opacity:1;
+    transform:translateY(0);
+  }
+}

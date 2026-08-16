@@ -1,0 +1,25 @@
+.logo{
+  display:inline-flex;
+  align-items:center;
+  gap:0.62em;
+  color:var(--accent);
+  line-height:1;
+}
+
+.logo__mark{
+  width:1.72em;
+  height:1.72em;
+  display:block;
+  flex:none;
+  overflow:visible;
+}
+
+/* Behind the letterform, not beside it. At full strength the star reads as a
+   second mark and the B stops being the thing you see first. */
+.logo__star{ opacity:0.16 }
+
+.logo__word{
+  font:700 1em/1 var(--font-display);
+  letter-spacing:-0.022em;
+  color:var(--text);
+}

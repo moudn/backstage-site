@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NAV_LINKS } from "../data/content";
 import type { Theme } from "../lib/useTheme";
+import { Logo } from "./Logo";
 
 /** Fixed nav that stays out of the way until the visitor has passed the hero.
  *  It is kept in the DOM the whole time (hidden with opacity/transform rather
@@ -19,8 +20,7 @@ export function SiteNav({ theme, onToggleTheme }: { theme: Theme; onToggleTheme:
     <header className="nav" data-visible={visible} inert={!visible || undefined}>
       <div className="nav__inner">
         <a className="nav__brand" href="#top">
-          <span className="nav__dot" aria-hidden="true" />
-          <span className="nav__word">Backstage</span>
+          <Logo />
         </a>
         <nav className="nav__links">
           {NAV_LINKS.map((l) => (

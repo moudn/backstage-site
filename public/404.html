@@ -1,0 +1,142 @@
+<!doctype html>
+<!--
+  GitHub Pages serves this file for any path it doesn't recognise.
+
+  Deliberately standalone: no bundle, no fonts to fetch, no framework. A 404
+  is the one page that must render when something has already gone wrong, and
+  a broken 404 is a blank screen. Everything below is inline and it is about
+  4KB, so it paints immediately.
+
+  The creature is drawn in CSS rather than reusing the WebGL jellyfish — same
+  idea, none of the weight, and it works with scripting off.
+-->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lost · Backstage</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="./favicon.svg">
+<style>
+  :root{
+    --bg:#fafaff; --text:#2b2b3a; --text-2:#5a5a70; --text-3:#8a86a8;
+    --accent:#5b3fd0; --line:#e2e0ee;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#111018; --text:#f2f1f7; --text-2:#b9b6cc; --text-3:#8b86a8;
+      --accent:#a558fb; --line:#2c2a3c;
+      color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100svh; background:var(--bg); color:var(--text);
+    font:400 16px/1.6 "Sora","Helvetica Neue",Helvetica,system-ui,Arial,sans-serif;
+    display:grid; place-items:center; padding:clamp(24px,6vw,64px);
+    overflow:hidden; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ position:relative; text-align:center; max-width:640px; z-index:1 }
+
+  .code{
+    margin:0; font-weight:700; letter-spacing:-0.05em;
+    font-size:clamp(96px,26vw,260px); line-height:0.86; color:var(--text);
+  }
+  h1{
+    margin:clamp(14px,3vh,26px) 0 0;
+    font-size:clamp(19px,2.6vw,26px); font-weight:700; letter-spacing:-0.02em;
+  }
+  p{ margin:14px auto 0; max-width:44ch; color:var(--text-2); font-size:15.5px }
+  .home{
+    display:inline-block; margin-top:clamp(22px,4vh,34px);
+    padding:14px 28px; border-radius:999px; text-decoration:none;
+    background:var(--text); color:var(--bg); font-weight:600; font-size:15px;
+    transition:transform 260ms cubic-bezier(0.16,1,0.3,1);
+  }
+  .home:hover{ transform:translateY(-2px) }
+  .mail{ display:block; margin-top:18px; color:var(--text-3); font-size:13px }
+  .mail a{ color:var(--text-2) }
+
+  /* The creature. Follows the pointer, slowly, at a fraction of the distance —
+     enough to feel alive without turning the page into a toy. */
+  /* Sits high and behind: at 46% the tentacles hung straight through the
+     paragraph, which reads as a rendering fault rather than atmosphere. */
+  .jelly{
+    position:fixed; left:50%; top:20%; width:min(40vh,52vw); aspect-ratio:1;
+    transform:translate3d(calc(-50% + var(--x,0px)), calc(-50% + var(--y,0px)), 0);
+    transition:transform 900ms cubic-bezier(0.16,1,0.3,1);
+    pointer-events:none; z-index:0; opacity:0.26;
+  }
+  .bell{
+    position:absolute; inset:0 0 42% 0; border-radius:50% 50% 46% 46%/58% 58% 42% 42%;
+    background:radial-gradient(120% 110% at 50% 26%, var(--accent), transparent 72%);
+    filter:blur(2px); animation:pulse 6.5s ease-in-out infinite;
+  }
+  .tent{
+    position:absolute; top:56%; left:50%; width:2px; height:32%;
+    background:linear-gradient(180deg, var(--accent), transparent);
+    border-radius:2px; transform-origin:top center;
+    animation:sway 5.5s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(0.92)} }
+  @keyframes sway{
+    0%,100%{ transform:translateX(-50%) rotate(var(--r,0deg)) }
+    50%{ transform:translateX(-50%) rotate(calc(var(--r,0deg) * -1)) }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .jelly{ transition:none }
+    .bell,.tent{ animation:none }
+  }
+</style>
+</head>
+<body>
+  <div class="jelly" id="jelly" aria-hidden="true">
+    <div class="bell"></div>
+  </div>
+
+  <main class="wrap">
+    <p class="code">404</p>
+    <h1>You've drifted off the map.</h1>
+    <p>
+      There's nothing at this address. Whatever you were after has either moved
+      or never existed — either way, it isn't your fault.
+    </p>
+    <a class="home" href="./">Back to the surface</a>
+    <span class="mail">
+      Or just tell us what you were looking for —
+      <a href="mailto:hello@backstageconsultancy.co.uk">hello@backstageconsultancy.co.uk</a>
+    </span>
+  </main>
+
+<script>
+  // Tentacles, built here rather than written out eleven times in the markup.
+  var jelly = document.getElementById('jelly');
+  for (var i = 0; i < 11; i++) {
+    var t = document.createElement('div');
+    t.className = 'tent';
+    t.style.setProperty('--r', (i - 5) * 2.6 + 'deg');
+    t.style.marginLeft = (i - 5) * 2.4 + '%';
+    t.style.height = (16 + (i % 3) * 4) + '%';
+    t.style.animationDelay = (i * 0.16) + 's';
+    t.style.animationDuration = (5 + (i % 4) * 0.7) + 's';
+    jelly.appendChild(t);
+  }
+
+  // Drift toward the pointer at a fraction of the distance. Skipped entirely
+  // for anyone who has asked for less motion, and for touch, where there is
+  // no pointer to follow.
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!still && fine) {
+    addEventListener('pointermove', function (e) {
+      var dx = (e.clientX - innerWidth / 2) / innerWidth;
+      var dy = (e.clientY - innerHeight / 2) / innerHeight;
+      jelly.style.setProperty('--x', (dx * 90).toFixed(1) + 'px');
+      jelly.style.setProperty('--y', (dy * 70).toFixed(1) + 'px');
+    }, { passive: true });
+  }
+</script>
+</body>
+</html>

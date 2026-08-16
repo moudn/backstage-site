@@ -52,7 +52,7 @@
   max-width:1180px; margin:0 auto; padding:clamp(12px,2vw,18px) clamp(20px,5vw,64px);
   display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
 }
-.nav__brand{ display:flex; align-items:baseline; gap:10px; text-decoration:none }
+.nav__brand{ display:flex; align-items:center; text-decoration:none; font-size:15px }
 .nav__dot{ display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--accent) }
 .nav__word{
   font:500 15px/1 var(--font-text);
@@ -111,24 +111,8 @@
   border-bottom:1px solid var(--line); padding-bottom:4px;
 }
 
-/* Section titles: one word or three, centred, across the top of the screen —
-   the arrangement in the reference, where the section announces itself before
-   any of its content. Deliberately not an <h2>: the statement below it is the
-   real heading, and this is a label. It is sized in vw so it spans the measure
-   at any width rather than sitting in the middle of it. */
-.sec-title{
-  margin:0 0 clamp(28px,6vh,72px);
-  text-align:center;
-  font:700 clamp(38px,9vw,132px)/0.95 var(--font-display);
-  letter-spacing:-0.045em;
-  color:var(--text);
-  text-transform:uppercase;
-  text-wrap:nowrap;
-}
-
 /* Panels that carry a section title put it at the top and give the rest of
    the screen to the content, instead of centring the pair as one block. */
-.panel:has(> .reveal > .sec-title),
 .panel:has(> .sec-title){
   align-content:start;
 }
@@ -226,27 +210,41 @@
   border-top:1px solid var(--line-soft); scroll-margin-top:24px;
   justify-items:center; text-align:center;
 }
+/* Steps back so the address can lead. This is the setup line; the address
+   below it is the thing to act on. */
 .contact__title{
-  margin:0 0 clamp(18px,3vh,30px); max-width:20ch;
-  font:700 clamp(24px,3.4vw,40px)/1.18 var(--font-display);
-  letter-spacing:-0.022em; color:var(--text); text-wrap:balance;
+  margin:0 0 clamp(16px,2.6vh,26px); max-width:24ch;
+  font:400 clamp(17px,2vw,22px)/1.4 var(--font-text);
+  letter-spacing:0; color:var(--text-2); text-wrap:balance;
 }
 .contact__email{
   display:inline-block;
   margin:0 0 clamp(20px,3.5vh,34px);
-  /* One line, always. At 6.4vw the address overflowed the measure and broke
-     mid-word — "…co.u / k" — which looks like a bug rather than a wrap. The
-     address is 33 characters, so the size is set from the width available to
-     it instead: ~4.2vw keeps it on a single line from 320px upwards. */
+  /* The centrepiece of the section: the biggest, heaviest thing on the
+     screen. One line, always — at a larger clamp the address overflowed the
+     measure and broke mid-word ("…co.u / k"), which reads as a bug rather
+     than a wrap. It is 33 characters, so the size comes from the width
+     available to it: 4.4vw keeps it on a single line from 320px upwards. */
   white-space:nowrap;
-  font:400 clamp(15px,4.2vw,56px)/1.05 var(--font-display);
-  letter-spacing:-0.035em;
+  font:700 clamp(16px,4.4vw,60px)/1.02 var(--font-display);
+  letter-spacing:-0.042em;
   color:var(--text);
   text-decoration:none;
   max-width:100%;
   transition:opacity 200ms ease;
 }
-.contact__email:hover{ opacity:0.62 }
+/* Underline grows from the centre on hover — it is a link, and at this size
+   a permanent underline would be a heavy horizontal rule across the screen. */
+.contact__email{ position:relative; padding-bottom:0.08em }
+.contact__email::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0; height:2px;
+  background:currentColor;
+  transform:scaleX(0);
+  transition:transform 420ms cubic-bezier(0.16,1,0.3,1);
+}
+.contact__email:hover::after,
+.contact__email:focus-visible::after{ transform:scaleX(1) }
 /* --text-2, not --text-3: this paragraph sits directly over the backdrop
    creature, and the dimmest text colour on the brightest part of the bell was
    not comfortably readable. */
