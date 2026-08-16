@@ -111,6 +111,28 @@
   border-bottom:1px solid var(--line); padding-bottom:4px;
 }
 
+/* Section titles: one word or three, centred, across the top of the screen —
+   the arrangement in the reference, where the section announces itself before
+   any of its content. Deliberately not an <h2>: the statement below it is the
+   real heading, and this is a label. It is sized in vw so it spans the measure
+   at any width rather than sitting in the middle of it. */
+.sec-title{
+  margin:0 0 clamp(28px,6vh,72px);
+  text-align:center;
+  font:700 clamp(38px,9vw,132px)/0.95 var(--font-display);
+  letter-spacing:-0.045em;
+  color:var(--text);
+  text-transform:uppercase;
+  text-wrap:nowrap;
+}
+
+/* Panels that carry a section title put it at the top and give the rest of
+   the screen to the content, instead of centring the pair as one block. */
+.panel:has(> .reveal > .sec-title),
+.panel:has(> .sec-title){
+  align-content:start;
+}
+
 /* ── intro ────────────────────────────────────────────────────────────── */
 .intro{ padding:clamp(64px,10vw,120px) 0 clamp(56px,8vw,96px); max-width:940px }
 .intro__title{

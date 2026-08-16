@@ -130,13 +130,14 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
         style={{
           position: "absolute",
           left: "50%",
-          top: "42%",
+          top: "45%",
           transform: "translate(-50%, -50%)",
-          width: "min(72vh, 90vw)",
-          // Was 94svh centred at 43%, which put the canvas bottom at 90% of
-          // the section and clipped the ends of the tentacles. 82svh at 42%
-          // finishes at 83%, clear of both the section edge and the slogan.
-          height: "82svh",
+          width: "min(84vh, 96vw)",
+          // Centre and height are a pair, and the constraint is the bottom
+          // edge: centre + height/2 must stay inside the section or the
+          // tentacle ends are clipped. 45% + 46% = 91%, with the slogan
+          // sitting in the last 9%. Change one, recheck the other.
+          height: "92svh",
           zIndex: 2,
           pointerEvents: "none",
         }}
@@ -221,7 +222,7 @@ const RING_CSS = `
   bottom:clamp(20px,4.5vh,54px);
   transform:translateX(-50%);
   z-index:3;
-  width:min(480px, 84vw);
+  width:min(420px, 82vw);
   text-align:center;
   padding:clamp(10px,1.4vh,16px) clamp(14px,2.4vw,24px);
   background:radial-gradient(120% 140% at 50% 60%, var(--bg) 38%, transparent 78%);
@@ -231,8 +232,8 @@ const RING_CSS = `
    near its size the slogan competes with it and the screen has two titles. */
 .jf-slogan__line{
   margin:0;
-  font:400 clamp(14px,1.35vw,19px)/1.45 Helvetica Neue,Helvetica,Arial,sans-serif;
-  letter-spacing:0.005em;
+  font:400 clamp(12px,0.95vw,14px)/1.5 Helvetica Neue,Helvetica,Arial,sans-serif;
+  letter-spacing:0.04em;
   color:var(--text-2);
   text-wrap:balance;
 }

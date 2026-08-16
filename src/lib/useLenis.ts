@@ -31,12 +31,26 @@ export function useLenis() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
-      // ~0.9s to settle. Slower reads as expensive; much slower reads as
-      // broken, because the page keeps moving after the visitor has stopped.
-      duration: 0.9,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
+      /* Emulating the reference's weight, which is
+       *
+       *   ScrollSmoother.create({ smooth: innerWidth > 1024 ? 1.5 : 0.2,
+       *                           smoothTouch: 0, normalizeScroll: true })
+       *
+       * `smooth: 1.5` means the view takes ~1.5s to catch up with the real
+       * scroll position, decaying exponentially towards it. That is Lenis's
+       * *lerp* mode, not its duration mode: `duration` + `easing` runs a
+       * fixed-length tween per gesture, and with an ease-out most of the
+       * distance is covered in the first fraction of it — measured at 240ms
+       * of actual travel, nothing like a 1.5s glide, which is why setting
+       * duration: 1.5 changed almost nothing.
+       *
+       * lerp is the fraction of the remaining distance covered each frame.
+       * Tuned by measurement rather than by the formula: 0.055 still covered 84%
+       * of the distance in 200ms. 0.03 is the value that actually lags. */
+      lerp: 0.03,
       // Touch devices already have inertial scrolling in hardware, and
-      // doubling it up feels laggy and fights the address bar.
+      // doubling it up feels laggy and fights the address bar. This is the
+      // reference's smoothTouch: 0.
       smoothWheel: true,
       syncTouch: false,
     });

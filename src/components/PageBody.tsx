@@ -48,11 +48,15 @@ export function PageBody() {
             </Reveal>
           </section>
 
-          <section id="problem" className="panel section split">
-            <ScrollReveal mode="scrub" as="h2" className="h2" baseRotation={2}>
-              Being handed a tool is being handed more work.
-            </ScrollReveal>
-            <div>
+          <section id="problem" className="panel section">
+            <Reveal>
+              <p className="sec-title">What we do</p>
+            </Reveal>
+            <div className="split">
+              <ScrollReveal mode="scrub" as="h2" className="h2" baseRotation={2}>
+                Being handed a tool is being handed more work.
+              </ScrollReveal>
+              <div>
               <ScrollReveal mode="scrub" className="body-copy" textClassName="mb-18">
                 Buy an AI platform and you have bought a rollout, a training plan, a licence
                 renewal, and somebody internal who now owns all three. Six months later the
@@ -72,12 +76,16 @@ export function PageBody() {
                     <p className="problem__label">What you don't</p>
                     <p className="problem__value">The machinery.</p>
                   </div>
-                </div>
-              </Reveal>
+                  </div>
+                </Reveal>
+              </div>
             </div>
           </section>
 
           <section id="julian" className="panel panel--tall section">
+            <Reveal>
+              <p className="sec-title">Our products</p>
+            </Reveal>
             <div className="split">
               <div>
                 <Reveal>
@@ -132,6 +140,9 @@ export function PageBody() {
               website; an address lets them write it where they already write
               everything else, from an account we can actually reply from. */}
           <section id="contact" className="panel contact">
+            <Reveal>
+              <p className="sec-title">Get in touch</p>
+            </Reveal>
             <ScrollReveal mode="scrub" as="h2" className="contact__title" baseRotation={2}>
               Tell us what's eating your week.
             </ScrollReveal>

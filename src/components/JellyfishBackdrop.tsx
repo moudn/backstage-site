@@ -52,16 +52,32 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
     setEnabled(!small && !weak && !still);
   }, []);
 
-  // Only alive once the title card has been scrolled past.
+  /* Only over the two sections it belongs to.
+   *
+   * Running it behind the whole page put a creature behind the intro, the
+   * "what we do" copy and the Julian table, where it has nothing to do with
+   * what is being said and just reads as a busy background. Behind the held
+   * step sequence and the contact screen it is doing a job: those are the two
+   * moments that are otherwise a lot of empty space. */
   useEffect(() => {
     if (!enabled) return;
-    const title = document.getElementById("title");
-    if (!title) return;
+    const targets = ["how", "contact"]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => !!el);
+    if (!targets.length) return;
+
+    const showing = new Set<Element>();
     const io = new IntersectionObserver(
-      ([entry]) => setVisible(!entry.isIntersecting),
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) showing.add(entry.target);
+          else showing.delete(entry.target);
+        }
+        setVisible(showing.size > 0);
+      },
       { threshold: 0 }
     );
-    io.observe(title);
+    targets.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, [enabled]);
 
