@@ -13,8 +13,10 @@ npm run build    # -> dist/, plain static files
 ## Deploying
 
 The site is hosted on **Cloudflare Pages**, connected to this repository:
-every push to `main` builds and deploys. Project settings, also recorded in
-`wrangler.toml`:
+every push to `main` builds and deploys. Set these in the Pages project's
+build configuration — deliberately *not* in a `wrangler.toml`, because when
+that file is present Pages reads its project settings from it and a mismatch
+between the `name` there and the real project name fails the build:
 
 | Setting | Value |
 | --- | --- |
