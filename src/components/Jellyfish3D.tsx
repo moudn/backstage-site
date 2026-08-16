@@ -45,6 +45,16 @@ type Palette = {
  * only the dome enough to hold an edge against #fafaff. Everything that made
  * the original read as a jellyfish rather than a purple blob is unchanged.
  */
+/* The backdrop needs its own colours, not the title card's.
+ *
+ * Light mode's creature is a pale pearl dome, which is right in front of you
+ * at full size on the title card and almost invisible once it is a low-opacity
+ * shape behind body copy on a near-white page — measured at a mean shift of
+ * 12.8/255 against 31.4 for dark, i.e. less than half the presence. Saturation
+ * is what survives being faded down, so the backdrop keeps the violet-pink
+ * whichever theme is on and lets opacity do the rest. */
+export type Variant = "title" | "backdrop";
+
 const PALETTES: Record<Theme, Palette> = {
   /* Dark: the original's pink pulled through the site's violet, so the
      creature belongs to this page rather than looking borrowed. */
@@ -77,6 +87,23 @@ const PALETTES: Record<Theme, Palette> = {
     armTop: "#F7D6EF",
     armTip: "#DE8FC8",
     opacity: 1.15,
+  },
+};
+
+const BACKDROP_PALETTES: Record<Theme, Palette> = {
+  dark: {
+    bellApex: "#5B2CC9", bellMid: "#9B5CF0", bellEdge: "#E4B5F0", bellSpeck: "#2A1065",
+    rimTint: "#FF8FD0", core: "#FF6FBF",
+    tentacleTop: "#E9B6E6", tentacleTip: "#F7D6EF",
+    armTop: "#F3D9F0", armTip: "#D98FD8",
+    opacity: 0.95,
+  },
+  light: {
+    bellApex: "#7A48D8", bellMid: "#9E6BE8", bellEdge: "#C89BE8", bellSpeck: "#3A2170",
+    rimTint: "#E77FC4", core: "#FF6FBF",
+    tentacleTop: "#D97FC4", tentacleTip: "#E9A8DC",
+    armTop: "#E2A0D4", armTip: "#C46BB0",
+    opacity: 1.25,
   },
 };
 
@@ -404,12 +431,14 @@ export function Jellyfish3D({
   loop = 20,
   theme,
   quality = "high",
+  variant = "title",
 }: {
   loop?: number;
   theme: Theme;
   quality?: "high" | "low";
+  variant?: Variant;
 }) {
-  const palette = PALETTES[theme];
+  const palette = variant === "backdrop" ? BACKDROP_PALETTES[theme] : PALETTES[theme];
   return (
     <Canvas
       flat

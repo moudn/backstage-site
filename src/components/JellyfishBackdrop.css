@@ -29,14 +29,16 @@
 }
 
 /* Opacity is the whole balance of this thing: high enough to be a presence
-   behind the type, low enough that the type stays comfortably readable. Light
-   and dark need different numbers because the creature is pale on a near-white
-   page and saturated on a near-black one. */
-:root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.3 }
+   behind the type, low enough that the type stays comfortably readable.
+   Light needs *more* than dark, not less — a violet creature loses contrast
+   against near-white faster than it does against near-black. These numbers
+   are measured, not guessed: see the check in verify_site.py, which fails if
+   either theme drops below a real visible shift. */
+:root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.5 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.42 }
+  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.44 }
 }
-:root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.42 }
+:root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.44 }
 
 /* A slow independent drift on top of the scroll-driven movement, so the
    creature is alive even when the page is still. */

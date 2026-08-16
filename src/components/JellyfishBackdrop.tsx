@@ -104,7 +104,7 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
       <div className="jf-backdrop__inner">
         {visible && (
           <Suspense fallback={null}>
-            <Jellyfish3D loop={34} theme={theme} quality="low" />
+            <Jellyfish3D loop={34} theme={theme} quality="low" variant="backdrop" />
           </Suspense>
         )}
       </div>
