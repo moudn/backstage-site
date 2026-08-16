@@ -1,0 +1,16 @@
+# Cloudflare Pages project settings.
+#
+# The dashboard asks for these when you connect the repository; keeping them
+# here as well means the answers are recorded rather than remembered:
+#
+#   Framework preset   None  (or Vite)
+#   Build command      npm run build
+#   Output directory   dist
+#   Node version       22
+#
+# Nothing here is required for a dashboard-connected deploy — Pages reads the
+# build settings from the project, not from this file — but it is what you
+# would need if you ever deploy with `wrangler pages deploy dist`.
+
+name = "backstage-site"
+pages_build_output_dir = "dist"

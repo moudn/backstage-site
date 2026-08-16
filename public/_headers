@@ -1,0 +1,20 @@
+# Cloudflare Pages reads this file from the build output root.
+
+# Fingerprinted build assets: the filename changes whenever the contents do,
+# so they can be cached forever. This is what makes a repeat visit instant.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts are fingerprinted too and are the largest thing after the 3D chunk.
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+# Everything else — index.html above all. It is small, and it is what points
+# at the hashed assets, so it must never be served stale or a deploy appears
+# not to have happened.
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  # Denies embedding the site in a frame on another domain.
+  X-Frame-Options: DENY

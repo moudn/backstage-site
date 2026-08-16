@@ -4,15 +4,12 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  /* Relative asset URLs.
+  /* Absolute asset URLs, because the site is served from the root of its own
+   * domain now rather than from a GitHub Pages subpath.
    *
-   * GitHub Pages serves a project site from a subpath —
-   * moudn.github.io/backstage-site/ — but Vite's default `base: '/'` writes
-   * absolute URLs like /assets/index.js, which resolve to the domain root and
-   * 404. The page loads as a blank white screen with no obvious cause.
-   *
-   * './' makes every asset URL relative to index.html, so the same build works
-   * at a subpath, at a domain root, and opened from disk. Change this only if
-   * the site moves to its own domain and something needs absolute paths. */
-  base: './',
+   * This matters most for 404.html, which the host serves for *any*
+   * unrecognised path. With relative URLs, a request for /a/b/c resolves
+   * ./assets/… against /a/b/ — so the error page's own assets 404 as well.
+   * Absolute paths always resolve from the root. */
+  base: '/',
 })

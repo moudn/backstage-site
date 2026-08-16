@@ -5,11 +5,11 @@
  * tool/platform/software, plain English, British spelling, and never the
  * words "free trial". */
 
-export const CONTACT_EMAIL = "hello@backstageconsultancy.co.uk";
+export const CONTACT_EMAIL = "hello@backstageconsultancy.com";
 
 /* Not live yet — the page carries a "Going live shortly." note beneath it.
    Remove the note, or gate the link, once Julian's site ships. */
-export const JULIAN_URL = "https://julian.backstageconsultancy.co.uk";
+export const JULIAN_URL = "https://julian.backstageconsultancy.com";
 
 export const JULIAN_ROWS: { k: string; v: string }[] = [
   { k: "Research", v: "Reads each company before writing a word to it." },

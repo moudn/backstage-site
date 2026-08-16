@@ -10,8 +10,31 @@ npm run dev      # http://localhost:5173
 npm run build    # -> dist/, plain static files
 ```
 
-`dist/` deploys as-is to Netlify, Vercel, Cloudflare Pages or any static host.
-No server needed.
+## Deploying
+
+The site is hosted on **Cloudflare Pages**, connected to this repository:
+every push to `main` builds and deploys. Project settings, also recorded in
+`wrangler.toml`:
+
+| Setting | Value |
+| --- | --- |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Node version | `22` (also in `.nvmrc`) |
+
+`public/_headers` is read from the build output and sets the caching. The
+fingerprinted files under `/assets` and the `.woff2` fonts are immutable and
+cached for a year; `index.html` is `must-revalidate`, because it is what
+points at the hashed assets and a stale copy makes a deploy look like it
+never happened.
+
+`base` in `vite.config.ts` is `'/'`, not `'./'`. The site is served from the
+root of its own domain, and relative paths break `404.html` specifically: the
+host serves that page for *any* unrecognised path, so at `/a/b/c` a relative
+`./assets/…` resolves against `/a/b/` and 404s in turn.
+
+There is no GitHub Actions workflow. It was removed when the site moved off
+GitHub Pages — leaving it would deploy the site to two places at once.
 
 ## What's here
 
