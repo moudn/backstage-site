@@ -52,7 +52,7 @@
   max-width:1180px; margin:0 auto; padding:clamp(12px,2vw,18px) clamp(20px,5vw,64px);
   display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
 }
-.nav__brand{ display:flex; align-items:center; text-decoration:none; font-size:15px }
+.nav__brand{ display:flex; align-items:baseline; gap:10px; text-decoration:none }
 .nav__dot{ display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--accent) }
 .nav__word{
   font:500 15px/1 var(--font-text);

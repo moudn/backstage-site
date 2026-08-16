@@ -135,19 +135,6 @@ The same reduced-motion trap applies to `Reveal`: its hidden state sits inside
 `@media (prefers-reduced-motion: no-preference)` rather than being switched off
 later, so there is no way for those visitors to end up with invisible content.
 
-## The mark
-
-`Logo.tsx` is the Backstage mark redrawn as geometry — a bar over two
-round-bottomed columns, which reads as a proscenium arch with two curtains
-under it. It uses `currentColor`, so one component serves both themes with no
-second asset, and it weighs a few hundred bytes rather than a PNG.
-
-Dropped from the original: the vertical "EST. 2026" and the italic serif
-"ackstage". Both fought the mark at small sizes, and the serif belongs to a
-different typographic voice than the one the site uses now — the wordmark is
-set in Sora beside it instead. The star is kept but sits behind at 16%
-opacity rather than competing with the letterform.
-
 ## The 404
 
 `public/404.html`, which GitHub Pages serves for any unrecognised path. It is

@@ -16,7 +16,6 @@
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
 import { SectionTitle } from "./SectionTitle";
-import { Logo } from "./Logo";
 import { StepSequence } from "./StepSequence";
 import { CONTACT_EMAIL, JULIAN_ROWS, JULIAN_URL } from "../data/content";
 import "../styles/page.css";
@@ -158,11 +157,8 @@ export function PageBody() {
         </main>
 
         <footer className="footer">
-          <a className="footer__brand" href="#top" aria-label="Backstage, back to top">
-            <Logo />
-          </a>
+          <span>Backstage — AI consultancy · UK</span>
           <span className="footer__meta">
-            <span>AI consultancy · UK</span>
             <span>Est. 2026</span>
             <span>© {new Date().getFullYear()} Backstage Consultancy</span>
           </span>
