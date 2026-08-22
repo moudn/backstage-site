@@ -1,6 +1,6 @@
-/* Everything below the two full-screen sections. Copy and structure carried
- * over from Backstage.dc.html; see src/data/content.ts for the hard rules
- * that govern edits to any of this wording.
+/* Everything below the two full-screen sections. All copy comes from
+ * src/data/content.ts — see the note at the top of that file for why none of
+ * it is inline here, and for the hard rules that govern edits to any of it.
  *
  * On the scroll reveal: ScrollReveal is used for the big text moments —
  * section headings and lead paragraphs — where a word-by-word reveal reads as
@@ -8,6 +8,11 @@
  * instead. Word-splitting a five-item reference table makes it harder to
  * read, not more impressive, and constant motion across a page of detail is
  * tiring.
+ *
+ * Heading levels: GlowHorizon owns the h1 and the jellyfish slogan is the
+ * first h2. Each section's big centred label (SectionTitle) is the h2 that
+ * opens it, and the sentence beneath is an h3 — so the outline matches what
+ * the page looks like, which is what both a screen reader and a crawler walk.
  *
  * "How we work" is no longer a grid of four cards; it is StepSequence, a held
  * section the reader advances through.
@@ -17,7 +22,16 @@ import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
 import { SectionTitle } from "./SectionTitle";
 import { StepSequence } from "./StepSequence";
-import { CONTACT_EMAIL, JULIAN_ROWS, JULIAN_URL } from "../data/content";
+import {
+  CONTACT,
+  CONTACT_EMAIL,
+  FOOTER,
+  INTRO,
+  JULIAN,
+  JULIAN_ROWS,
+  JULIAN_URL,
+  PROBLEM,
+} from "../data/content";
 import "../styles/page.css";
 import "../styles/panels.css";
 
@@ -31,50 +45,44 @@ export function PageBody() {
         <main id="top">
           <section className="panel intro">
             <Reveal>
-              <p className="eyebrow">AI consultancy · UK</p>
+              <p className="eyebrow">{INTRO.eyebrow}</p>
             </Reveal>
             <ScrollReveal mode="scrub" className="intro__opening" baseRotation={2}>
-              Tell us which process is eating your week. We build whatever fixes it, we run
-              it, and we hand back the finished work. Nobody at your end logs into anything.
+              {INTRO.opening}
             </ScrollReveal>
             <Reveal delay={120}>
               <div className="intro__actions">
                 <a className="btn-pill" href="#contact">
-                  Tell us what's eating your week
+                  {INTRO.primaryCta}
                 </a>
                 <a className="link-rule" href="#how">
-                  See how we work
+                  {INTRO.secondaryCta}
                 </a>
               </div>
             </Reveal>
           </section>
 
           <section id="problem" className="panel section">
-            <SectionTitle>What we do</SectionTitle>
+            <SectionTitle>{PROBLEM.title}</SectionTitle>
             <div className="split">
-              <ScrollReveal mode="scrub" as="h2" className="h2" baseRotation={2}>
-                Being handed a tool is being handed more work.
+              <ScrollReveal mode="scrub" as="h3" className="h2" baseRotation={2}>
+                {PROBLEM.heading}
               </ScrollReveal>
               <div>
-              <ScrollReveal mode="scrub" className="body-copy" textClassName="mb-18">
-                Buy an AI platform and you have bought a rollout, a training plan, a licence
-                renewal, and somebody internal who now owns all three. Six months later the
-                problem you started with is still yours. You just own some software as well.
-              </ScrollReveal>
-              <ScrollReveal mode="scrub" className="body-copy body-copy--spaced">
-                We do the opposite. You name the process. We build whatever fixes it, we keep
-                it running, and what comes back to you is the finished work.
-              </ScrollReveal>
-              <Reveal delay={80}>
-                <div className="problem__pair">
-                  <div className="problem__cell">
-                    <p className="problem__label">What you get</p>
-                    <p className="problem__value">The output.</p>
-                  </div>
-                  <div className="problem__cell">
-                    <p className="problem__label">What you don't</p>
-                    <p className="problem__value">The machinery.</p>
-                  </div>
+                <ScrollReveal mode="scrub" className="body-copy" textClassName="mb-18">
+                  {PROBLEM.body[0]}
+                </ScrollReveal>
+                <ScrollReveal mode="scrub" className="body-copy body-copy--spaced">
+                  {PROBLEM.body[1]}
+                </ScrollReveal>
+                <Reveal delay={80}>
+                  <div className="problem__pair">
+                    {PROBLEM.pair.map((cell) => (
+                      <div className="problem__cell" key={cell.label}>
+                        <p className="problem__label">{cell.label}</p>
+                        <p className="problem__value">{cell.value}</p>
+                      </div>
+                    ))}
                   </div>
                 </Reveal>
               </div>
@@ -82,25 +90,22 @@ export function PageBody() {
           </section>
 
           <section id="julian" className="panel panel--tall section">
-            <SectionTitle>Our products</SectionTitle>
+            <SectionTitle>{JULIAN.title}</SectionTitle>
             <div className="split">
               <div>
                 <Reveal>
-                  <p className="eyebrow">Our first product</p>
+                  <p className="eyebrow">{JULIAN.eyebrow}</p>
                 </Reveal>
-                <ScrollReveal mode="scrub" as="h2" className="h2" baseRotation={2}>
-                  You don't run Julian. Julian runs your outbound.
+                <ScrollReveal mode="scrub" as="h3" className="h2" baseRotation={2}>
+                  {JULIAN.heading}
                 </ScrollReveal>
                 <ScrollReveal mode="scrub" className="julian__lede">
-                  Julian is an AI sales agent that works your outbound the way a diligent
-                  junior would — one company at a time, in your name, from your own inbox.
-                  Priced by how many leads it works each month, with thirty days before
-                  anything is charged.
+                  {JULIAN.lede}
                 </ScrollReveal>
                 <Reveal delay={120}>
                   <div>
                     <a className="julian__link" href={JULIAN_URL}>
-                      Julian's own site
+                      {JULIAN.linkLabel}
                       <span
                         aria-hidden="true"
                         style={{ font: "400 11px/1 ui-monospace,Menlo,monospace", color: "var(--text-3)" }}
@@ -109,7 +114,7 @@ export function PageBody() {
                       </span>
                     </a>
                     {/* Remove once Julian's site is live. */}
-                    <p className="julian__note">Going live shortly.</p>
+                    <p className="julian__note">{JULIAN.note}</p>
                   </div>
                 </Reveal>
               </div>
@@ -137,9 +142,9 @@ export function PageBody() {
               website; an address lets them write it where they already write
               everything else, from an account we can actually reply from. */}
           <section id="contact" className="panel contact">
-            <SectionTitle>Get in touch</SectionTitle>
-            <ScrollReveal mode="scrub" as="h2" className="contact__title" baseRotation={2}>
-              Tell us what's eating your week.
+            <SectionTitle>{CONTACT.title}</SectionTitle>
+            <ScrollReveal mode="scrub" as="h3" className="contact__title" baseRotation={2}>
+              {CONTACT.heading}
             </ScrollReveal>
             {/* The address is the call to action, so it is the largest and
                 heaviest thing on the screen — the arrangement the reference
@@ -150,16 +155,15 @@ export function PageBody() {
               </a>
             </Reveal>
             <ScrollReveal mode="scrub" className="contact__lede">
-              One process, in your own words. We'll come back to you and say whether it's
-              something we can take off your hands.
+              {CONTACT.lede}
             </ScrollReveal>
           </section>
         </main>
 
         <footer className="footer">
-          <span>Backstage — AI consultancy · UK</span>
+          <span>{FOOTER.line}</span>
           <span className="footer__meta">
-            <span>Est. 2026</span>
+            <span>{FOOTER.est}</span>
             <span>© {new Date().getFullYear()} Backstage Consultancy</span>
           </span>
         </footer>

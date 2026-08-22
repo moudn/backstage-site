@@ -4,6 +4,7 @@ import { JellyfishBackdrop } from "./components/JellyfishBackdrop";
 import { PageBody } from "./components/PageBody";
 import { SiteNav } from "./components/SiteNav";
 import { SplashCursor } from "./components/SplashCursor";
+import { HERO } from "./data/content";
 import { useAnchorScroll } from "./lib/useAnchorScroll";
 import { useLenis } from "./lib/useLenis";
 import { useTheme } from "./lib/useTheme";
@@ -21,11 +22,7 @@ export default function App() {
       <SplashCursor theme={theme} />
       <SiteNav theme={theme} onToggleTheme={toggle} />
 
-      <GlowHorizon
-        eyebrow="Backstage · AI consultancy · UK"
-        lines={["Welcome to your new", "AI-powered world"]}
-        scrollTo="#title"
-      />
+      <GlowHorizon eyebrow={HERO.eyebrow} lines={HERO.lines} scrollTo="#title" />
 
       <div id="title">
         <JellyfishSection theme={theme} />

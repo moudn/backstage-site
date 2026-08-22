@@ -25,7 +25,7 @@ import "./SectionTitle.css";
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 
 export function SectionTitle({ children }: { children: string }) {
-  const ref = useRef<HTMLParagraphElement>(null);
+  const ref = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -78,7 +78,7 @@ export function SectionTitle({ children }: { children: string }) {
   let index = 0;
 
   return (
-    <p ref={ref} className="sec-title" aria-label={children}>
+    <h2 ref={ref} className="sec-title" aria-label={children}>
       {words.map((word, w) => (
         <span className="sec-title__word" key={`${word}-${w}`} aria-hidden="true">
           {[...word].map((ch, c) => (
@@ -92,7 +92,7 @@ export function SectionTitle({ children }: { children: string }) {
           ))}
         </span>
       ))}
-    </p>
+    </h2>
   );
 }
 

@@ -14,7 +14,7 @@
  */
 
 import { useEffect, useRef } from "react";
-import { STEPS } from "../data/content";
+import { HOW_TITLE, STEPS } from "../data/content";
 import "./StepSequence.css";
 
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
@@ -101,7 +101,7 @@ export function StepSequence() {
     >
       <div className="steps-seq__stage">
         <div className="steps-seq__head">
-          <h2 className="h2 steps-seq__title">How we work</h2>
+          <h2 className="h2 steps-seq__title">{HOW_TITLE}</h2>
           <p className="steps-seq__counter">
             <span className="steps-seq__counter-now">{STEPS[0]!.n}</span>
             <span className="steps-seq__counter-sep">/</span>

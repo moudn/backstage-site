@@ -57,6 +57,9 @@ GitHub Pages — leaving it would deploy the site to two places at once.
 | `src/components/StepSequence.tsx` + `.css` | The held "How we work" sequence. |
 | `src/components/JellyfishBackdrop.tsx` + `.css` | The drifting jellyfish behind the body copy. |
 | `src/components/SplashCursor.tsx` | Fluid cursor trail, adapted from reactbits.dev. |
+| `src/data/seo.ts` | Everything that describes the site to machines. Imported by `vite.config.ts`, not by the app. |
+| `tools/og-image.mjs` | Renders `public/og.png`, the social share card. Run by hand: `npm run og`. |
+| `public/robots.txt` | Crawler policy, including an explicit decision on the AI crawlers. |
 
 ## Two things worth knowing before editing
 
@@ -160,9 +163,51 @@ The same reduced-motion trap applies to `Reveal`: its hidden state sits inside
 `@media (prefers-reduced-motion: no-preference)` rather than being switched off
 later, so there is no way for those visitors to end up with invisible content.
 
+## Search, and being found
+
+The head metadata, the JSON-LD and the no-script document are all written
+into `index.html` during the build by the `backstage-seo` plugin in
+`vite.config.ts`, from `src/data/seo.ts` and `src/data/content.ts`. None of it
+is hand-written and none of it ships in the bundle, for one reason: React
+cannot help here. A `<meta>` tag added on mount arrives long after a crawler
+has read the document and moved on.
+
+**The problem this is solving.** The built page is `<div id="root"></div>` and
+nothing else — every word is written by JavaScript. Google runs JavaScript and
+gets there eventually, on a second pass. The crawlers behind the AI answer
+engines mostly do not run it at all, so to them this site was a blank
+document. That is the gap the `<noscript>` copy closes, and it is why
+`robots.txt` names GPTBot, ClaudeBot and PerplexityBot explicitly rather than
+leaving them to a wildcard: whether an assistant can describe this company
+when someone asks it for a UK AI consultancy is a decision, and it should be
+a recorded one.
+
+**What is deliberately not claimed.** The structured data says the company
+operates in the United Kingdom and nothing narrower. There is no street
+address, no phone number, no rating, no client list — because none of those
+are established facts, and structured data is a set of claims made to Google
+in machine-readable form. Inventing one to win a local search is how you earn
+a manual action. If a real address exists, add it and switch the schema to
+`LocalBusiness`; until then this is the honest shape.
+
+**What this cannot do.** Technical SEO makes a site *eligible* to rank. It
+does not make it rank for "AI consultancy" — that is a head term with a
+decade of incumbents, and one page of ~600 words will not take it, however
+well marked up. What this setup can realistically win is the brand search,
+long-tail phrasing, and citation by AI answer engines. Ranking for the head
+terms needs pages that do not exist yet, and writing them means having
+something true to say.
+
+**The brand collision is real.** "Backstage" alone belongs to Spotify's
+developer portal and to Backstage.com, and both are enormous. Every machine-
+readable name here is "Backstage Consultancy" for that reason. Keep it
+consistent everywhere the company is written down — Companies House,
+LinkedIn, email signatures, directories — or there is nothing for Google to
+attach a brand to.
+
 ## The 404
 
-`public/404.html`, which GitHub Pages serves for any unrecognised path. It is
+`public/404.html`, which the host serves for any unrecognised path. It is
 deliberately standalone — no bundle, no webfont, no framework, about 4KB
 inline. A 404 is the one page that has to render when something has already
 gone wrong, and a 404 that depends on the app bundle is a blank screen when
@@ -197,7 +242,16 @@ starts when someone scrolls near the jellyfish. The canvas also unmounts when
 the section leaves the viewport, and the creature drops from 28 tentacles to
 14 on small screens or low core counts.
 
-Initial load is ~63KB gzipped; the jellyfish chunk is ~237KB gzipped.
+Measured from `npm run build`: the initial JavaScript is ~123KB gzipped and
+the CSS ~6KB; the jellyfish chunk is a further ~237KB gzipped, and does not
+load until someone scrolls to it. (This section previously claimed ~63KB
+initial. That was stale — it dated from before GSAP, ScrollTrigger, Lenis and
+the fluid cursor went in, and none of those are code-split.)
+
+If that number ever needs to come down, GSAP + ScrollTrigger and the fluid
+cursor are the candidates to measure first — neither is code-split, so both
+are downloaded before anything renders. Measure before cutting: which of them
+actually dominates has not been checked.
 
 ## The contact form
 

@@ -1,9 +1,18 @@
 <!doctype html>
-<html lang="en">
+<!-- en-GB, not en: the copy is written in British English and the company
+     sells into the UK. It is the signal a search engine uses to decide which
+     regional results a page belongs in. -->
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- The description, canonical, Open Graph, Twitter and JSON-LD tags are
+         injected here during the build by the `backstage-seo` plugin in
+         vite.config.ts, from src/data/seo.ts. They are not written by hand
+         because they quote the page's own copy, and two copies of the same
+         sentence drift apart. Run `npm run build` and read dist/index.html to
+         see the finished head. -->
     <title>Backstage</title>
   </head>
   <body>

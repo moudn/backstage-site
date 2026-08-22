@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Scratch file written by tools/og-image.mjs while it renders the card.
+tools/.og.html

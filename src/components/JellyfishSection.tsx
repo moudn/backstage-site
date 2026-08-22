@@ -14,6 +14,7 @@
  */
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { SLOGAN } from "../data/content";
 import type { Theme } from "../lib/useTheme";
 
 /* three.js is ~900KB of the bundle. Splitting it out means the hero — which
@@ -176,9 +177,7 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
           Two h1s on one page is a broken outline, and this reads as the
           company's statement rather than the page's title. */}
       <div className="jf-slogan">
-        <h2 className="jf-slogan__line">
-          We work backstage, so you can take centre stage.
-        </h2>
+        <h2 className="jf-slogan__line">{SLOGAN}</h2>
       </div>
 
     </section>

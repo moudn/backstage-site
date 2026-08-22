@@ -1,0 +1,48 @@
+# Backstage Consultancy — https://backstageconsultancy.com
+
+# Everything is public. There is one page and nothing behind a login.
+User-agent: *
+Allow: /
+
+# The AI answer engines are allowed deliberately, not by omission.
+#
+# GPTBot, ClaudeBot, PerplexityBot and Google-Extended are the crawlers that
+# decide whether an assistant can name this company when somebody asks it to
+# recommend a UK AI consultancy. That is a referral channel, and for this
+# business it is likely to matter sooner than a page-one ranking for a term
+# the large consultancies have owned for a decade.
+#
+# The trade-off, stated so the decision can be revisited rather than
+# inherited: allowing these means the page's copy is used as training and
+# retrieval material, without attribution guarantees and without a click.
+# There is no proprietary text on this site, so the exchange is a good one
+# today. If that stops being true — a real blog, client work written up,
+# anything worth taking — disallow the ones that only take.
+#
+# Listed explicitly rather than relying on the wildcard above, because these
+# are the lines somebody will come looking for when the policy is questioned.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://backstageconsultancy.com/sitemap.xml
