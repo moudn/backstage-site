@@ -4,7 +4,8 @@
   --arc-h: 78%;
   --arc-bleed: 10%;
   --rim-clear: clamp(20px, 6svh, 64px);
-  --enter: cubic-bezier(0.16,1,0.3,1);
+  /* --enter and --fade now live in tokens.css, with a note on why the
+     two are not interchangeable. */
   position:relative;
   height:100svh;
   min-height:560px;
@@ -66,7 +67,7 @@
   display:grid;
   place-items:center;
   align-content:center;
-  gap:clamp(16px,2.6vw,24px);
+  gap:clamp(12px,2vw,20px);
   text-align:center;
   z-index:3;
 }
@@ -75,27 +76,80 @@
   margin:0;
   font:400 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
   letter-spacing:0.22em; text-transform:uppercase; color:var(--text-3);
-  animation:riseIn 900ms var(--enter) 900ms both;
+  animation:riseUp 900ms var(--enter) 900ms both, riseFade 1215ms var(--fade) 900ms both;
 }
 
 .glow-horizon__title{
   margin:0;
   /* Height-aware as well as width-aware. The bowl's depth is a fraction of
      the viewport HEIGHT, so type sized purely in vw outgrows it on a wide but
-     short window — min() keeps whichever axis is tighter in charge. */
-  font:600 clamp(28px, min(6.4vw, 7.6svh), 68px)/1.1 var(--font-text);
-  letter-spacing:-0.02em; color:var(--text); text-wrap:balance;
-  max-width:16ch;
+     short window — min() keeps whichever axis is tighter in charge, and on a
+     short window it is the height term that decides whether the headline
+     fits. Going from two lines to three is why 7.6svh came down to 6.1svh and
+     the leading tightened: without both, the third line grows through the rim,
+     which is the failure the note at the top of this file is about. */
+  font:600 clamp(23px, min(5.2vw, 5.2svh), 54px)/1.02 var(--font-text);
+  letter-spacing:-0.02em; color:var(--text);
+  /* balance is OFF deliberately. The three lines are authored to taper —
+     19 characters, then 10, then 5 — and balance would even them back out,
+     which is the whole shape gone. */
+  text-wrap:nowrap;
+  max-width:none;
 }
 .glow-horizon__title span{ display:block }
-.glow-horizon__title span:nth-child(1){ animation:riseIn 1100ms var(--enter) 1200ms both }
-.glow-horizon__title span:nth-child(2){ color:var(--accent); animation:riseIn 1100ms var(--enter) 1500ms both }
+.glow-horizon__title span:nth-child(1){ animation:riseUp 1100ms var(--enter) 1200ms both, riseFade 1485ms var(--fade) 1200ms both }
+
+/* The lower two lines carry the gradient — the taper's point, lit.
+ *
+ * `color` is set FIRST and is a real colour: if background-clip lands, the
+ * transparent fill hides it and the gradient shows; if it does not, the text
+ * is still the accent colour rather than invisible. Painting text with a
+ * background is the one effect where the failure mode is "nothing is there",
+ * so it needs a floor under it.
+ *
+ * Only the standard `background-clip` is written. Do NOT add
+ * `-webkit-background-clip` next to it — the CSS minifier collapses such a
+ * pair and emits only the prefixed one, which is exactly how the nav lost its
+ * backdrop blur in Chrome. The build adds whatever prefixes its targets need.
+ *
+ * The box has to shrink to the glyphs, or the gradient is sampled across the
+ * full container width and a short line like "world" gets a flat slice of the
+ * middle of the ramp instead of running through it.
+ *
+ * `display: block` + `width: fit-content` + auto inline margins, NOT
+ * `inline-block`. Both shrink-wrap, but inline-block also puts the two spans
+ * on the same line — which collapsed the headline to "AI-poweredworld" and
+ * lost the taper entirely. Block keeps each line its own; fit-content shrinks
+ * the box; the auto margins put it back in the centre. */
+.glow-horizon__title span:nth-child(2),
+.glow-horizon__title span:nth-child(3){
+  display:block;
+  width:fit-content;
+  margin-inline:auto;
+  color:var(--accent);
+  background-image:var(--grad-hero);
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.glow-horizon__title span:nth-child(2){ animation:riseUp 1100ms var(--enter) 1500ms both, riseFade 1485ms var(--fade) 1500ms both }
+.glow-horizon__title span:nth-child(3){ animation:riseUp 1100ms var(--enter) 1780ms both, riseFade 1485ms var(--fade) 1780ms both }
+
+/* Forced-colours mode replaces author colours wholesale and a gradient
+   clipped to text has nothing to replace, so hand the text back a real fill
+   rather than leaving a headline that is not there. */
+@media (forced-colors: active){
+  .glow-horizon__title span:nth-child(2),
+  .glow-horizon__title span:nth-child(3){
+    background-image:none;
+    -webkit-text-fill-color:currentColor;
+  }
+}
 
 .glow-horizon__scroll{
   position:absolute; bottom:clamp(24px,4vh,44px); left:50%;
   /* Centred with the `translate` property, NOT with transform.
    *
-   * It used to be `transform: translateX(-50%)`, and the riseIn animation
+   * It used to be `transform: translateX(-50%)`, and the riseUp animation
    * below ends on `transform: translateY(0)` with fill-mode `both` — so the
    * moment the entrance finished, the animation's final value replaced the
    * centring transform outright and the element sat with its left edge on the
@@ -109,7 +163,7 @@
   z-index:4;
   font:400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
   letter-spacing:0.18em; text-transform:uppercase; color:var(--text-3); text-decoration:none;
-  animation:riseIn 900ms var(--enter) 2300ms both;
+  animation:riseUp 900ms var(--enter) 2300ms both, riseFade 1215ms var(--fade) 2300ms both;
 }
 
 /* Short viewports — short laptops as well as landscape phones. Below this a

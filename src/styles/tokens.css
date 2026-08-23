@@ -12,6 +12,11 @@
   --line:oklch(0.905 0.01 250);
   --line-soft:oklch(0.94 0.008 250);
   --accent:oklch(0.52 0.13 240);
+  /* Hero headline gradient. Runs along the same axis as that theme's
+     jellyfish, so the biggest text on the page and the creature behind it
+     are obviously the same palette: light goes accent blue -> the teal of
+     the creature's core, dark goes violet -> the pink of its tentacles. */
+  --grad-hero:linear-gradient(102deg, oklch(0.52 0.13 240) 0%, oklch(0.62 0.11 205) 100%);
   --btn-bg:oklch(0.28 0.02 260);
   --btn-fg:oklch(0.985 0.005 250);
   --field:oklch(1 0 0 / 0.7);
@@ -40,6 +45,7 @@
     --line:oklch(0.30 0.025 285);
     --line-soft:oklch(0.235 0.022 285);
     --accent:oklch(0.70 0.17 295);
+    --grad-hero:linear-gradient(102deg, oklch(0.70 0.17 295) 0%, oklch(0.76 0.17 345) 100%);
     --btn-bg:oklch(0.96 0.008 285);
     --btn-fg:oklch(0.145 0.015 285);
     --field:oklch(1 0 0 / 0.05);
@@ -68,6 +74,7 @@
   --line:oklch(0.30 0.025 285);
   --line-soft:oklch(0.235 0.022 285);
   --accent:oklch(0.70 0.17 295);
+  --grad-hero:linear-gradient(102deg, oklch(0.70 0.17 295) 0%, oklch(0.76 0.17 345) 100%);
   --btn-bg:oklch(0.96 0.008 285);
   --btn-fg:oklch(0.145 0.015 285);
   --field:oklch(1 0 0 / 0.05);
@@ -95,6 +102,11 @@
   --line:oklch(0.905 0.01 250);
   --line-soft:oklch(0.94 0.008 250);
   --accent:oklch(0.52 0.13 240);
+  /* Hero headline gradient. Runs along the same axis as that theme's
+     jellyfish, so the biggest text on the page and the creature behind it
+     are obviously the same palette: light goes accent blue -> the teal of
+     the creature's core, dark goes violet -> the pink of its tentacles. */
+  --grad-hero:linear-gradient(102deg, oklch(0.52 0.13 240) 0%, oklch(0.62 0.11 205) 100%);
   --btn-bg:oklch(0.28 0.02 260);
   --btn-fg:oklch(0.985 0.005 250);
   --field:oklch(1 0 0 / 0.7);
@@ -124,6 +136,26 @@
     system-ui,Arial,sans-serif;
 }
 
+/* Two easings, and the distinction matters more than it looks.
+ *
+ * --enter is an expo-out: it covers 49% of its distance in the first 10% of
+ * its duration and 83% by a quarter. That is exactly right for MOVEMENT — the
+ * dramatic deceleration is what makes a slide feel expensive rather than
+ * mechanical.
+ *
+ * It is wrong for OPACITY. The eye reads that early ramp as the thing simply
+ * being there, so a 700ms fade on this curve is perceptually a 175ms pop. Use
+ * --fade for anything that changes opacity or blur: it is symmetric, reaching
+ * 14% at a quarter and 50% at halfway, which is what "gradually fades in"
+ * actually looks like.
+ *
+ * Rule of thumb: --enter moves things, --fade reveals them. A single
+ * transition often wants both, one per property. */
+:root{
+  --enter:cubic-bezier(0.16, 1, 0.3, 1);
+  --fade:cubic-bezier(0.37, 0, 0.63, 1);
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
@@ -135,9 +167,18 @@ body{
 }
 :focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px}
 
-@keyframes riseIn{
-  from{opacity:0;transform:translateY(18px);filter:blur(6px)}
-  to{opacity:1;transform:translateY(0);filter:blur(0)}
+/* Split in two so each half can have its own curve — one animation cannot.
+   riseUp moves on --enter; riseFade reveals on --fade. Used together:
+     animation: riseUp 1100ms var(--enter) both, riseFade 1400ms var(--fade) both;
+   There is no combined `riseIn` any more — one animation cannot carry two
+   timing functions, which was the whole problem. */
+@keyframes riseUp{
+  from{transform:translateY(18px)}
+  to{transform:translateY(0)}
+}
+@keyframes riseFade{
+  from{opacity:0;filter:blur(7px)}
+  to{opacity:1;filter:blur(0)}
 }
 
 

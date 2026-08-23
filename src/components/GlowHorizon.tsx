@@ -23,7 +23,7 @@ export function GlowHorizon({
   scrollTo,
 }: {
   eyebrow: string;
-  lines: [string, string];
+  lines: readonly string[];
   scrollTo: string;
 }) {
   return (
@@ -41,8 +41,9 @@ export function GlowHorizon({
       <div className="glow-horizon__content">
         <p className="glow-horizon__eyebrow">{eyebrow}</p>
         <h1 className="glow-horizon__title">
-          <span>{lines[0]}</span>
-          <span>{lines[1]}</span>
+          {lines.map((line, i) => (
+            <span key={i}>{line}</span>
+          ))}
         </h1>
       </div>
 

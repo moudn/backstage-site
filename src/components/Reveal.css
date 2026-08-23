@@ -11,8 +11,12 @@
     transform:translateY(16px);
   }
   .reveal{
+    /* Two curves on purpose — see the note on --enter/--fade in tokens.css.
+       The opacity is also longer than the movement: the slide can finish and
+       settle while the element is still arriving, which reads as softer than
+       both landing together. */
     transition:
-      opacity 700ms cubic-bezier(0.16,1,0.3,1) var(--reveal-delay, 0ms),
-      transform 700ms cubic-bezier(0.16,1,0.3,1) var(--reveal-delay, 0ms);
+      opacity 950ms var(--fade) var(--reveal-delay, 0ms),
+      transform 750ms var(--enter) var(--reveal-delay, 0ms);
   }
 }

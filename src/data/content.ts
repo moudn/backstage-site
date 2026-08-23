@@ -21,7 +21,12 @@ export const JULIAN_URL = "https://julian.backstageconsultancy.com";
 
 export const HERO = {
   eyebrow: "Backstage · AI consultancy · UK",
-  lines: ["Welcome to your new", "AI-powered world"] as [string, string],
+  /* Three lines, each shorter than the one above, so the headline tapers to a
+     point: "Welcome to your new" / "AI-powered" / "world". The taper is the
+     shape — do not reflow these into two lines or rebalance them by word
+     count, and note that `text-wrap: balance` is deliberately off on the
+     title for the same reason. */
+  lines: ["Welcome to your new", "AI-powered", "world"] as [string, string, string],
 };
 
 export const SLOGAN = "We work backstage, so you can take centre stage.";

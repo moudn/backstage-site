@@ -82,7 +82,7 @@ function crawlableBody() {
     .join('')
 
   return `<noscript><div class="nojs">
-<h1>${esc(HERO.lines[0])} ${esc(HERO.lines[1])}</h1>
+<h1>${esc(HERO.lines.join(' '))}</h1>
 <p>${esc(HERO.eyebrow)}</p>
 <h2>${esc(SLOGAN)}</h2>
 <p>${esc(INTRO.opening)}</p>

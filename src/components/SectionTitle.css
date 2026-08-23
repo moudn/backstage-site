@@ -34,8 +34,11 @@
   .sec-title__ch{
     opacity:0;
     transform:translateY(0.42em);
-    transition:opacity 620ms cubic-bezier(0.16,1,0.3,1),
-               transform 780ms cubic-bezier(0.16,1,0.3,1);
+    /* --fade on the opacity, --enter on the movement. On the old shared
+       expo-out each letter was visually complete in about 150ms, so a
+       stagger meant to read as assembling read as popping. */
+    transition:opacity 820ms var(--fade),
+               transform 780ms var(--enter);
   }
   .sec-title[data-shown="true"] .sec-title__ch{
     opacity:1;
