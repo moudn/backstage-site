@@ -25,17 +25,25 @@ const Jellyfish3D = lazy(() =>
   import("./Jellyfish3D").then((m) => ({ default: m.Jellyfish3D }))
 );
 
+/* The hue sweep, per theme, because the two creatures no longer start from
+ * the same colour and a single range cannot serve both.
+ *
+ * Dark starts violet (~285deg), so rotating a little forward opens on pink
+ * and sweeping backwards runs through to blue — the whole journey stays
+ * inside the palette. Rotating *forward* by any real amount from violet lands
+ * in yellow-green; at +150 the contact screen came out olive and gold,
+ * colours that appear nowhere else on the site.
+ *
+ * Light now starts blue-teal, and the same numbers applied to it would undo
+ * the point of that: -68 from blue lands in green. So light gets a much
+ * narrower sweep that stays between teal and indigo. */
+const HUE_SWEEP: Record<Theme, { start: number; end: number }> = {
+  dark: { start: 22, end: -68 },
+  light: { start: 18, end: -26 },
+};
 /* How far the creature travels across the whole scrollable body. These are
  * what make it read as something the page moves past rather than a fixed
- * image: it drifts sideways, rises, and turns slowly as you go.
- *
- * The hue range is the fiddly one. The creature is violet (~285deg), so
- * rotating *forward* by any real amount lands in yellow-green — at +150 the
- * contact screen came out olive and gold, colours that appear nowhere else on
- * the site. Sweeping backwards instead runs violet -> blue, and starting a
- * little forward opens on pink: the whole journey stays inside the palette. */
-const HUE_START = 22;   // deg, at the top of the page — violet toward pink
-const HUE_END = -68;    // deg, at the bottom — violet toward blue
+ * image: it drifts sideways, rises, and turns slowly as you go. */
 const DRIFT_X = 420;   // px travelled left-to-right, centred on 0
 const DRIFT_Y = 260;   // px risen over the page
 const ROTATE = 14;     // degrees of slow turn
@@ -60,6 +68,9 @@ function driftFor(viewportW: number, viewportH: number) {
 export function JellyfishBackdrop({ theme }: { theme: Theme }) {
   const ref = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);
+  /** Canvas exists and has drawn. Wider band than `visible`. */
+  const [mounted, setMounted] = useState(false);
+  /** Creature is faded in. Only while its section owns the screen. */
   const [visible, setVisible] = useState(false);
 
   /* Screen size is deliberately *not* a condition here any more.
@@ -93,7 +104,25 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
    * "what we do" copy and the Julian table, where it has nothing to do with
    * what is being said and just reads as a busy background. Behind the held
    * step sequence and the contact screen it is doing a job: those are the two
-   * moments that are otherwise a lot of empty space. */
+   * moments that are otherwise a lot of empty space.
+   *
+   * Two observers, not one, and the reason is a bug this had:
+   *
+   * #how is roughly 400vh tall and sits directly after "Our products". With a
+   * plain `threshold: 0` the creature appeared the instant #how's top edge
+   * crossed the bottom of the screen — which happens while the reader is
+   * still part-way up the Julian section. Because the backdrop is fixed and
+   * fills the viewport, it turned up behind copy it has nothing to do with,
+   * reading as a second image colliding with the page rather than as
+   * something the page is moving past.
+   *
+   *  - `shown` uses a band across the middle of the viewport, so the creature
+   *    only appears once its section genuinely owns the screen.
+   *  - `mounted` uses a generous margin, so the canvas exists and has drawn
+   *    a frame before that happens. Fading in a canvas that mounts at the
+   *    same moment gets you a fade from black to nothing.
+   *
+   * The opacity itself is CSS, keyed off `data-shown` — see the .css file. */
   useEffect(() => {
     if (!enabled) return;
     const targets = ["how", "contact"]
@@ -101,19 +130,31 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
       .filter((el): el is HTMLElement => !!el);
     if (!targets.length) return;
 
-    const showing = new Set<Element>();
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) showing.add(entry.target);
-          else showing.delete(entry.target);
-        }
-        setVisible(showing.size > 0);
-      },
-      { threshold: 0 }
-    );
-    targets.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    const watch = (
+      rootMargin: string,
+      set: (on: boolean) => void
+    ) => {
+      const showing = new Set<Element>();
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) showing.add(entry.target);
+            else showing.delete(entry.target);
+          }
+          set(showing.size > 0);
+        },
+        { threshold: 0, rootMargin }
+      );
+      targets.forEach((el) => io.observe(el));
+      return io;
+    };
+
+    const near = watch("15% 0px 15% 0px", setMounted);
+    const over = watch("-35% 0px -35% 0px", setVisible);
+    return () => {
+      near.disconnect();
+      over.disconnect();
+    };
   }, [enabled]);
 
   // Colour follows scroll position. Written straight to a custom property on
@@ -128,7 +169,8 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
       frame = 0;
       const total = document.documentElement.scrollHeight - window.innerHeight;
       const progress = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
-      const hue = HUE_START + progress * (HUE_END - HUE_START);
+      const sweep = HUE_SWEEP[theme];
+      const hue = sweep.start + progress * (sweep.end - sweep.start);
       /* Recomputed here rather than cached, so a rotation or a resize is
          picked up — this already runs on resize. */
       const drift = driftFor(window.innerWidth, window.innerHeight);
@@ -149,14 +191,14 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [enabled]);
+  }, [enabled, theme]);
 
   if (!enabled) return null;
 
   return (
-    <div ref={ref} className="jf-backdrop" aria-hidden="true">
+    <div ref={ref} className="jf-backdrop" aria-hidden="true" data-shown={visible}>
       <div className="jf-backdrop__inner">
-        {visible && (
+        {mounted && (
           <Suspense fallback={null}>
             <Jellyfish3D loop={34} theme={theme} quality="low" variant="backdrop" />
           </Suspense>

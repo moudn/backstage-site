@@ -104,8 +104,10 @@ export const FOOTER = {
   /* Deliberately in the footer and nowhere else. A privacy notice has to be
      easy to find, which the footer satisfies — it is the first place anybody
      looks for one — but it is not a thing to sell, so it stays out of the
-     nav. /privacy, not /privacy.html: the host serves the clean path, and
-     public/_redirects makes that true regardless of host. */
+     nav. /privacy, not /privacy.html: Workers' default html_handling serves
+     the clean path and 301s the .html form to it. Do not "help" that with a
+     _redirects rewrite — pointing /privacy back at /privacy.html makes the
+     two rules chase each other and the page dies in a redirect loop. */
   privacy: { href: "/privacy", label: "Privacy" },
 };
 

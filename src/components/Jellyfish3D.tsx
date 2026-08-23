@@ -74,18 +74,29 @@ const PALETTES: Record<Theme, Palette> = {
     // creature cropping the word is the point of the composition.
     opacity: 0.82,
   },
-  /* Light: the original, with the dome weighted to survive a white page. */
+  /* Light: blue and teal rather than the original's lavender-and-pink.
+   *
+   * The pink came from the reference demo, which drew it against near-black.
+   * On this page's near-white it read as a separate palette sitting on top of
+   * the site rather than part of it — the light theme's own accents, its
+   * focus ring and the fluid cursor are all blue. This is the same creature
+   * moved onto that axis: a cool blue-grey dome, teal core, and tentacles
+   * that run from teal to near-white instead of pink to white.
+   *
+   * The dome stays weighted darker than the original's pearl for the same
+   * reason as before — a pale translucent bell glows on black and disappears
+   * on white. */
   light: {
-    bellApex: "#B9B4CE",
-    bellMid: "#C8C2D8",
-    bellEdge: "#A79FC4",
+    bellApex: "#93A9C2",
+    bellMid: "#A8BFD2",
+    bellEdge: "#7F9BB8",
     bellSpeck: "#1A1A22",
-    rimTint: "#BDB3E6",
-    core: "#FF6FBF",
-    tentacleTop: "#E79FD8",
-    tentacleTip: "#F3D9F0",
-    armTop: "#F7D6EF",
-    armTip: "#DE8FC8",
+    rimTint: "#A7D2E6",
+    core: "#2E93C4",
+    tentacleTop: "#79BFD6",
+    tentacleTip: "#D6EDF5",
+    armTop: "#CDE7F2",
+    armTip: "#5FAAC8",
     opacity: 1.15,
   },
 };
@@ -98,11 +109,16 @@ const BACKDROP_PALETTES: Record<Theme, Palette> = {
     armTop: "#F3D9F0", armTip: "#D98FD8",
     opacity: 0.95,
   },
+  /* Saturated enough to survive being drawn at 0.34–0.5 opacity behind body
+     copy, and on the same blue-teal axis as the light title card above.
+     JellyfishBackdrop rotates these on scroll — see HUE_SWEEP there, which
+     keeps the light sweep narrow so blue stays blue rather than turning
+     green the way the old violet range would. */
   light: {
-    bellApex: "#7A48D8", bellMid: "#9E6BE8", bellEdge: "#C89BE8", bellSpeck: "#3A2170",
-    rimTint: "#E77FC4", core: "#FF6FBF",
-    tentacleTop: "#D97FC4", tentacleTip: "#E9A8DC",
-    armTop: "#E2A0D4", armTip: "#C46BB0",
+    bellApex: "#2F6FB8", bellMid: "#4E9AD4", bellEdge: "#93C9E4", bellSpeck: "#12324F",
+    rimTint: "#63C6D2", core: "#2E93C4",
+    tentacleTop: "#5FAEC8", tentacleTip: "#A2D6E6",
+    armTop: "#9BCEDE", armTip: "#4F9BB6",
     opacity: 1.25,
   },
 };

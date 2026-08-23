@@ -3,12 +3,20 @@
   inset:0;
   z-index:0;
   pointer-events:none;
+  /* Faded rather than switched. The canvas mounts on a wider band than this
+     opacity follows (see the two observers in the .tsx), so by the time the
+     creature is asked to appear it has already drawn — it drifts in instead
+     of snapping on halfway up the screen. */
+  opacity:0;
+  transition:opacity 900ms cubic-bezier(0.33,1,0.68,1);
   /* Behind the page's own content, which is why .page must not paint an
      opaque background over the top — see the note in page.css. */
   display:grid;
   place-items:center;
   overflow:hidden;
 }
+
+.jf-backdrop[data-shown="true"]{ opacity:1 }
 
 .jf-backdrop__inner{
   /* Deliberately larger than the viewport. The reference sites put a creature

@@ -27,9 +27,9 @@ rediscovered.
 | Output directory | `dist` |
 | Node version | `22` (also in `.nvmrc`) |
 
-`public/_headers` and `public/_redirects` are read from the build output.
-Both are supported natively by Workers static assets, in the same format
-Pages used, so nothing about them had to change. `_headers` sets the caching:
+`public/_headers` is read from the build output. Workers static assets
+supports it natively, in the same format Pages used, so nothing about it had
+to change. It sets the caching:
 the fingerprinted files under `/assets` and the `.woff2` fonts are immutable
 and cached for a year; `index.html` is `must-revalidate`, because it is what
 points at the hashed assets and a stale copy makes a deploy look like it
@@ -274,8 +274,12 @@ interests for B2B marketing, and makes opting out a one-word reply. Under
 Article 21 an objection to direct marketing is absolute — there is nothing to
 weigh, so the copy does not pretend otherwise.
 
-`public/_redirects` rewrites `/privacy` to `/privacy.html` so the clean path
-works regardless of what is serving the site.
+**There is deliberately no `_redirects` rule for `/privacy`.** There was one,
+as belt and braces, and it caused an infinite redirect loop: Workers' default
+`html_handling` is `auto-trailing-slash`, which already 301s `/privacy.html`
+to `/privacy`. The rewrite sent `/privacy` back to `/privacy.html`, which
+Workers redirected to `/privacy`, forever — Safari reports it as "too many
+redirects". The clean path works on its own; the safeguard was the bug.
 
 ## The 404
 

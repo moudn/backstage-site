@@ -8,10 +8,10 @@
   --bg-2:oklch(0.965 0.007 250);
   --text:oklch(0.28 0.02 260);
   --text-2:oklch(0.44 0.02 260);
-  --text-3:oklch(0.55 0.05 288);
+  --text-3:oklch(0.55 0.06 245);
   --line:oklch(0.905 0.01 250);
   --line-soft:oklch(0.94 0.008 250);
-  --accent:oklch(0.50 0.13 288);
+  --accent:oklch(0.52 0.13 240);
   --btn-bg:oklch(0.28 0.02 260);
   --btn-fg:oklch(0.985 0.005 250);
   --field:oklch(1 0 0 / 0.7);
@@ -91,10 +91,10 @@
   --bg-2:oklch(0.965 0.007 250);
   --text:oklch(0.28 0.02 260);
   --text-2:oklch(0.44 0.02 260);
-  --text-3:oklch(0.55 0.05 288);
+  --text-3:oklch(0.55 0.06 245);
   --line:oklch(0.905 0.01 250);
   --line-soft:oklch(0.94 0.008 250);
-  --accent:oklch(0.50 0.13 288);
+  --accent:oklch(0.52 0.13 240);
   --btn-bg:oklch(0.28 0.02 260);
   --btn-fg:oklch(0.985 0.005 250);
   --field:oklch(1 0 0 / 0.7);

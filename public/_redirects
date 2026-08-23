@@ -1,7 +1,0 @@
-# Clean URL for the privacy notice.
-#
-# Vite emits it as /privacy.html. Workers static assets already serves that at
-# /privacy on its own, but this makes the path work the same way whatever is
-# serving the site — and a legal notice is the wrong page to discover a
-# 404 on. 200, not 301: rewrite in place rather than bounce the visitor.
-/privacy   /privacy.html   200
