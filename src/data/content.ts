@@ -85,10 +85,21 @@ export const STEPS: { n: string; title: string; body: string }[] = [
     title: "Keep a human at every decision that matters",
     body: "Automation takes the repetitive middle. A person still makes the calls that carry consequences — and that person can be one of ours or one of yours.",
   },
+  /* Was "Use it first" — Julian runs our own outreach, we don't sell what we
+     haven't lived with. Replaced for two reasons: it was the only step that
+     named a product, in a section about method rather than catalogue; and it
+     sat next to an offer made to early clients that is not going to be
+     extended to everyone, so leaving it there implied a promise.
+
+     What replaced it deliberately makes no commercial commitment. "You can
+     judge it yourself" is a statement about what the work looks like — the
+     finished output, not a dashboard — not an undertaking about notice
+     periods or refunds. If a walk-away guarantee is ever offered in writing,
+     it belongs in terms, not in a step describing how the work is done. */
   {
     n: "04",
-    title: "Use it first",
-    body: "Julian runs our own outreach. We do not sell anything we have not lived with ourselves.",
+    title: "Keep it earning its place",
+    body: "Going live is the middle, not the end. The process shifts, and something built once quietly stops fitting it. We keep adjusting what we run for you — and because what comes back is finished work rather than a dashboard, you can judge it yourself.",
   },
 ];
 

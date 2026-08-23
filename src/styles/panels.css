@@ -7,11 +7,18 @@
  * as separate moments rather than as a continuous wall of text.
  */
 
+/* This is the single control for the space between sections.
+ *
+ * `.section`, `.intro` and `.contact` all set their own vertical padding in
+ * page.css, and every one of them is overridden here — panels.css is imported
+ * after page.css, so for anything carrying `.panel` this padding-block is what
+ * actually applies. Change the rhythm of the page here; changing it in
+ * page.css looks like it works and does nothing. */
 .panel{
   min-height:100svh;
   display:grid;
   align-content:center;
-  padding-block:clamp(72px,11vh,132px);
+  padding-block:clamp(104px,15vh,184px);
 }
 
 /* Panels whose content genuinely can exceed the viewport — the contact form,
@@ -21,7 +28,22 @@
 
 /* On a short window a centred full-height panel wastes most of the screen on
    padding, and on a phone one section per screen just means more scrolling for
-   the same words. */
+   the same words. Dropping min-height is right; dropping the padding with it
+   was not — without a screen of its own, that padding is the *only* thing
+   separating one section from the next, so it needs to be more generous here
+   than on a desktop, not less. Sections were running straight into each other
+   with 56px between a paragraph and the next 40px title. */
 @media (max-height:719px), (max-width:599px){
-  .panel{ min-height:0; padding-block:clamp(56px,8vh,84px) }
+  .panel{ min-height:0; padding-block:clamp(88px,12vh,128px) }
+}
+
+/* The section-level scroll drift, written by DriftSection via useScrollDrift.
+   Translate only — no scale. Scaling a whole section nudges its children off
+   the pixel grid and softens every line of body copy on the page, which is a
+   heavy price for a movement nobody is meant to consciously notice. The
+   fallback means a section sits exactly where it belongs with no script. */
+.drift{ transform:translate3d(0, var(--t-shift, 0px), 0) }
+
+@media (prefers-reduced-motion: reduce){
+  .drift{ transform:none }
 }

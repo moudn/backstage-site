@@ -9,9 +9,13 @@
  *     that makes it feel attached to the scroll rather than triggered by it —
  *     the trick the reference leans on throughout.
  *
- * The drift is written straight to the DOM on a rAF. It changes every scroll
- * frame; a React re-render per frame would be wasted work and would fight
- * Lenis for the frame budget.
+ * The drift now comes from useScrollDrift, which DriftSection also uses at a
+ * smaller amount. That is the important part: this title used to be the only
+ * thing on the page moving with scroll, and a title drifting against a static
+ * block of copy reads as the title having come loose rather than as depth.
+ * The section carries the copy along underneath, slightly slower, and the two
+ * transforms compose — so the amount here is smaller than it was while the
+ * title's total travel is unchanged.
  *
  * Accessibility: the whole word is in the accessible name via aria-label, and
  * the per-letter spans are hidden, so a screen reader says "What we do" and
@@ -19,13 +23,16 @@
  * is transformed — the title is simply there.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import { useScrollDrift } from "../lib/useScrollDrift";
 import "./SectionTitle.css";
 
-const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+/** Was 34 when the title drifted alone. DriftSection now contributes 14 of
+ *  that beneath it, and the two compose. */
+const TITLE_SHIFT = 20;
 
 export function SectionTitle({ children }: { children: string }) {
-  const ref = useRef<HTMLHeadingElement>(null);
+  const ref = useScrollDrift<HTMLHeadingElement>(TITLE_SHIFT, 0.035);
 
   useEffect(() => {
     const el = ref.current;
@@ -43,34 +50,10 @@ export function SectionTitle({ children }: { children: string }) {
       { threshold: 0.25 }
     );
     io.observe(el);
-
-    let frame = 0;
-    function apply() {
-      frame = 0;
-      const rect = el!.getBoundingClientRect();
-      // -1 well below the fold, 0 at the vertical centre, 1 well above it.
-      const progress = clamp(
-        (window.innerHeight / 2 - (rect.top + rect.height / 2)) / (window.innerHeight / 2),
-        -1,
-        1
-      );
-      el!.style.setProperty("--t-shift", `${(progress * -34).toFixed(1)}px`);
-      el!.style.setProperty("--t-scale", (1 - Math.abs(progress) * 0.035).toFixed(4));
-    }
-    function onScroll() {
-      if (!frame) frame = requestAnimationFrame(apply);
-    }
-
-    apply();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      io.disconnect();
-      if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
+    /* The drift used to live here too. It is useScrollDrift's job now — this
+       effect only decides when the letters play in. */
+    return () => io.disconnect();
+  }, [ref]);
 
   /* Split on words first, then letters, so a title still wraps between words
      on a narrow screen instead of breaking mid-word. */

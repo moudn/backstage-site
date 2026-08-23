@@ -225,11 +225,26 @@
   text-decoration:none; border-bottom:1px solid var(--line); padding-bottom:4px;
 }
 .julian__note{ margin:12px 0 0; font:400 12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--text-3) }
+/* Hairlines drawn as borders, NOT as 1px gaps over a coloured parent.
+ *
+ * The gap trick — parent painted `--line-soft`, every child painted `--bg`,
+ * a 1px gap between them so the parent shows through — is a tidy way to get
+ * pixel-perfect separators, and it was the one thing on this page painting an
+ * opaque fill. The jellyfish drifts behind the whole body, and it disappeared
+ * behind exactly this list: five solid rectangles of page colour sitting on
+ * top of it.
+ *
+ * Borders give the same result and paint nothing, so the creature shows
+ * through. If a separator ever needs to change, change the border — do not
+ * reintroduce a background to get it. */
 .julian__rows{
-  margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:1px;
-  background:var(--line-soft); border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
+  margin:0; padding:0; list-style:none; display:flex; flex-direction:column;
+  border-top:1px solid var(--line-soft);
 }
-.julian__row{ background:var(--bg); padding:18px 0; display:grid; gap:5px }
+.julian__row{
+  padding:18px 0; display:grid; gap:5px;
+  border-bottom:1px solid var(--line-soft);
+}
 .julian__key{
   margin:0; font:400 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
   letter-spacing:0.16em; text-transform:uppercase; color:var(--accent);
@@ -243,20 +258,11 @@
    scroll region or its progress runs out before the last step. */
 .how{ border-top:1px solid var(--line-soft); scroll-margin-top:0 }
 
-/* ── offer ────────────────────────────────────────────────────────────── */
-.offer{
-  position:relative; overflow:hidden; border-radius:18px;
-  background:var(--bg-2); border:1px solid var(--line-soft); padding:clamp(30px,5vw,60px);
-}
-.offer__aurora{
-  position:absolute; inset:-60% -20% auto -20%; height:200%; pointer-events:none;
-  filter:blur(80px); opacity:var(--aur-op);
-  background:
-    radial-gradient(36% 40% at 78% 30%, var(--aur-2), transparent 70%),
-    radial-gradient(30% 36% at 96% 70%, var(--aur-1), transparent 70%);
-  animation:drift2 44s ease-in-out infinite;
-}
-.offer__inner{ position:relative; max-width:660px }
+/* The .offer rules that were here are gone. The section itself was removed a
+   while back and nothing has rendered these since; they also carried the only
+   other opaque `background: var(--bg-2)` in the file, which is exactly the
+   thing that hid the jellyfish behind the Julian list. Dead styles that paint
+   are worth deleting rather than leaving to be copied. */
 
 /* ── contact ──────────────────────────────────────────────────────────── */
 /* Centred, and the address is the largest thing on the screen. There is no

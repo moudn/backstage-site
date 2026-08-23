@@ -18,6 +18,7 @@
  * section the reader advances through.
  */
 
+import { DriftSection } from "./DriftSection";
 import { FooterCrowd } from "./FooterCrowd";
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
@@ -44,7 +45,7 @@ export function PageBody() {
 
       <div className="shell">
         <main id="top">
-          <section className="panel intro">
+          <DriftSection className="panel intro">
             <Reveal>
               <p className="eyebrow">{INTRO.eyebrow}</p>
             </Reveal>
@@ -61,9 +62,9 @@ export function PageBody() {
                 </a>
               </div>
             </Reveal>
-          </section>
+          </DriftSection>
 
-          <section id="problem" className="panel section">
+          <DriftSection id="problem" className="panel section">
             <SectionTitle>{PROBLEM.title}</SectionTitle>
             <div className="split">
               <ScrollReveal mode="scrub" as="h3" className="h2" baseRotation={2}>
@@ -88,9 +89,9 @@ export function PageBody() {
                 </Reveal>
               </div>
             </div>
-          </section>
+          </DriftSection>
 
-          <section id="julian" className="panel panel--tall section">
+          <DriftSection id="julian" className="panel panel--tall section">
             <SectionTitle>{JULIAN.title}</SectionTitle>
             <div className="split">
               <div>
@@ -129,7 +130,7 @@ export function PageBody() {
                 ))}
               </ul>
             </div>
-          </section>
+          </DriftSection>
 
           {/* No .panel / .section here: the sequence is a tall scroll region
               that manages its own height, and a section's vertical padding
@@ -142,7 +143,7 @@ export function PageBody() {
               somebody to compose their problem in a textarea on a stranger's
               website; an address lets them write it where they already write
               everything else, from an account we can actually reply from. */}
-          <section id="contact" className="panel contact">
+          <DriftSection id="contact" className="panel contact">
             <SectionTitle>{CONTACT.title}</SectionTitle>
             <ScrollReveal mode="scrub" as="h3" className="contact__title" baseRotation={2}>
               {CONTACT.heading}
@@ -158,7 +159,7 @@ export function PageBody() {
             <ScrollReveal mode="scrub" className="contact__lede">
               {CONTACT.lede}
             </ScrollReveal>
-          </section>
+          </DriftSection>
         </main>
 
         {/* The crowd is positioned against this element, so the footer is the
