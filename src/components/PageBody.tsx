@@ -18,6 +18,7 @@
  * section the reader advances through.
  */
 
+import { FooterCrowd } from "./FooterCrowd";
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
 import { SectionTitle } from "./SectionTitle";
@@ -160,8 +161,14 @@ export function PageBody() {
           </section>
         </main>
 
+        {/* The crowd is positioned against this element, so the footer is the
+            containing block — hence position: relative in the CSS. It is also
+            why the hover rules for the crowd key off .footer rather than the
+            crowd itself: the whole footer is the hover target, not a band of
+            silhouettes the pointer has to find. */}
         <footer className="footer">
-          <span>{FOOTER.line}</span>
+          <FooterCrowd />
+          <span className="footer__brand">{FOOTER.line}</span>
           <span className="footer__meta">
             <span>{FOOTER.est}</span>
             <a className="footer__link" href={FOOTER.privacy.href}>

@@ -72,6 +72,8 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
   const [mounted, setMounted] = useState(false);
   /** Creature is faded in. Only while its section owns the screen. */
   const [visible, setVisible] = useState(false);
+  /** Overrides the above once the footer's crowd takes the screen. */
+  const [suppressed, setSuppressed] = useState(false);
 
   /* Screen size is deliberately *not* a condition here any more.
    *
@@ -151,9 +153,29 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
 
     const near = watch("15% 0px 15% 0px", setMounted);
     const over = watch("-35% 0px -35% 0px", setVisible);
+
+    /* Hand the bottom of the page over to the footer.
+     *
+     * The contact section is still inside the band when the reader reaches
+     * the end, so the creature was being drawn straight through the crowd —
+     * a jellyfish sitting in the audience, two metaphors arguing in the same
+     * 200 pixels. Fading it out as the house arrives also gives the page an
+     * ending: the stage atmosphere clears, and what is left is the people
+     * watching. */
+    const footer = document.querySelector(".footer");
+    let byeFooter: IntersectionObserver | undefined;
+    if (footer) {
+      byeFooter = new IntersectionObserver(
+        ([entry]) => setSuppressed(!!entry?.isIntersecting),
+        { threshold: 0, rootMargin: "-55% 0px 0px 0px" }
+      );
+      byeFooter.observe(footer);
+    }
+
     return () => {
       near.disconnect();
       over.disconnect();
+      byeFooter?.disconnect();
     };
   }, [enabled]);
 
@@ -196,7 +218,7 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
   if (!enabled) return null;
 
   return (
-    <div ref={ref} className="jf-backdrop" aria-hidden="true" data-shown={visible}>
+    <div ref={ref} className="jf-backdrop" aria-hidden="true" data-shown={visible && !suppressed}>
       <div className="jf-backdrop__inner">
         {mounted && (
           <Suspense fallback={null}>

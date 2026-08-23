@@ -270,20 +270,71 @@
    the one place on a single-page site where that triple appears as plain
    text on every screen. Worth having it legible. */
 .footer{
+  position:relative;               /* containing block for .crowd */
   display:flex; flex-wrap:wrap; gap:8px clamp(16px,4vw,40px);
   align-items:baseline; justify-content:space-between;
   margin-top:clamp(48px,8vh,96px);
-  padding:clamp(22px,3vh,32px) 0 clamp(28px,4vh,44px);
-  border-top:1px solid var(--line, rgba(128,128,150,0.18));
+  /* Deep enough that the crowd has somewhere to stand. The bottom padding is
+     the house: text sits above it, silhouettes fill it. */
+  padding:clamp(22px,3vh,32px) 0 clamp(150px,22vh,250px);
+  /* The stage edge. A plain rule reads as a divider; the gradient makes it a
+     lip with light on it, which is the join between stage and house. */
+  border-top:1px solid transparent;
+  border-image:linear-gradient(90deg,
+      transparent,
+      color-mix(in oklab, var(--accent) 45%, var(--line)) 22%,
+      color-mix(in oklab, var(--accent) 65%, var(--line)) 50%,
+      color-mix(in oklab, var(--accent) 45%, var(--line)) 78%,
+      transparent) 1;
   font:400 13px/1.5 var(--font-text);
   color:var(--text-3);
 }
+/* Text has to clear the crowd, which is painted at z-index 0 behind it. */
+.footer__brand,
+.footer__meta{ position:relative; z-index:1 }
+
 .footer__meta{
   display:flex; flex-wrap:wrap; gap:8px clamp(14px,2.5vw,28px);
 }
-.footer__link{
-  color:inherit; text-decoration:none;
-  border-bottom:1px solid var(--line, rgba(128,128,150,0.28));
-  padding-bottom:1px; transition:color 160ms ease, border-color 160ms ease;
+
+/* The brand line lights up with the rest of the room on hover — it is not a
+   link, so it gets colour and nothing that implies it can be clicked. */
+.footer__brand{ transition:color 320ms ease }
+@media (hover: hover) and (pointer: fine){
+  .footer:hover .footer__brand{ color:var(--text-2) }
 }
-.footer__link:hover{ color:var(--text); border-bottom-color:currentColor }
+
+/* The one real link down here. The rule wipes in from the left rather than
+   fading, so it reads as something being drawn under the word. */
+.footer__link{
+  position:relative;
+  color:inherit; text-decoration:none;
+  padding-bottom:2px;
+  transition:color 220ms ease;
+}
+.footer__link::after{
+  content:"";
+  position:absolute; left:0; bottom:0;
+  width:100%; height:1px;
+  background:currentColor;
+  transform:scaleX(0);
+  transform-origin:0 50%;
+  transition:transform 380ms cubic-bezier(0.22,1,0.36,1);
+}
+/* Present from the start for anyone who cannot hover, and for keyboard
+   focus, so the link never depends on a pointer to look like one. */
+.footer__link::before{
+  content:"";
+  position:absolute; left:0; bottom:0;
+  width:100%; height:1px;
+  background:currentColor;
+  opacity:0.28;
+}
+.footer__link:hover,
+.footer__link:focus-visible{ color:var(--accent) }
+.footer__link:hover::after,
+.footer__link:focus-visible::after{ transform:scaleX(1) }
+
+@media (prefers-reduced-motion: reduce){
+  .footer__link::after{ transition:none }
+}

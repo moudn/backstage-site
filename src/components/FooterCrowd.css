@@ -1,0 +1,124 @@
+.crowd{
+  position:absolute;
+  bottom:0;
+  /* Full bleed. The footer lives inside .shell, which is capped at 1180px, so
+     `inset: auto 0 0 0` left the audience stopping dead in line with the body
+     copy and bare page either side of it. A house does not end where the
+     column does. */
+  left:50%;
+  width:100vw;
+  transform:translateX(-50%);
+  height:clamp(150px, 22vh, 250px);
+  pointer-events:none;
+  /* Deliberately NOT overflow:hidden — the spill has to reach up past the top
+     edge. The clip lives on .crowd__stage instead. */
+  /* Under the footer's own text, over the page background. */
+  z-index:0;
+}
+
+/* The crop. Only the figures are clipped, so their bodies run off the bottom
+   of the page instead of ending in mid-air. */
+.crowd__stage{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+}
+
+.crowd__svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+/* Depth, carried four ways at once. Size and height come from the geometry in
+   the .tsx; opacity and travel are here.
+
+   The near row is still well under 1. A hard black crowd turns the bottom of
+   the page into a wall and drags the eye down out of the footer text, which
+   is the thing somebody is actually trying to read. */
+.crowd__row{ fill:var(--text) }
+
+/* Depth of field is what sells it. Size and opacity alone give you the same
+   sticker printed at three scales; blurring the far rows is the thing that
+   puts air between them, because it is what a lens focused on the front row
+   actually does. */
+.crowd__row--back{ opacity:0.09; filter:blur(2.5px) }
+.crowd__row--mid{ opacity:0.14; filter:blur(1.1px) }
+.crowd__row--front{ opacity:0.22 }
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .crowd__row--back{ opacity:0.15 }
+  :root:not([data-theme="light"]) .crowd__row--mid{ opacity:0.22 }
+  :root:not([data-theme="light"]) .crowd__row--front{ opacity:0.32 }
+}
+:root[data-theme="dark"] .crowd__row--back{ opacity:0.15 }
+:root[data-theme="dark"] .crowd__row--mid{ opacity:0.22 }
+:root[data-theme="dark"] .crowd__row--front{ opacity:0.32 }
+
+/* --crowd-p is written by the component: 0 as the crowd's top edge reaches
+   the bottom of the screen, 1 a viewport later. The near row travels furthest
+   because it is nearest — the whole point of the effect. */
+@media (prefers-reduced-motion: no-preference){
+  .crowd__row{ transition:transform 120ms linear }
+  .crowd__row--back{  transform:translateY(calc(var(--crowd-p, 0) * -5px)) }
+  .crowd__row--mid{   transform:translateY(calc(var(--crowd-p, 0) * -13px)) }
+  .crowd__row--front{ transform:translateY(calc(var(--crowd-p, 0) * -26px)) }
+}
+
+/* Phone screens. Long cycle and mostly dark, so they read as somebody
+   lifting a phone rather than as a string of fairy lights. */
+.crowd__light{
+  fill:var(--accent);
+  opacity:0;
+}
+@media (prefers-reduced-motion: no-preference){
+  .crowd__light{ animation:crowd-blink 11s ease-in-out infinite }
+}
+@keyframes crowd-blink{
+  0%, 42%   { opacity:0 }
+  50%, 62%  { opacity:0.85 }
+  70%, 100% { opacity:0 }
+}
+
+/* Light thrown from the stage — that is, from the site above — onto the
+   people at the front. It is what makes the footer read as a lit room rather
+   than a band of shapes at the bottom of the page. */
+.crowd__spill{
+  position:absolute;
+  left:50%;
+  top:-42%;
+  width:min(1100px, 120%);
+  height:150%;
+  transform:translateX(-50%);
+  /* Three stops rather than two. A single falloff to transparent leaves a
+     faint ring where the gradient's rate of change turns over — visible as a
+     seam once the surrounding page is flat colour. */
+  background:radial-gradient(
+    ellipse 58% 58% at 50% 0%,
+    color-mix(in oklab, var(--accent) 24%, transparent) 0%,
+    color-mix(in oklab, var(--accent) 8%, transparent) 38%,
+    transparent 76%
+  );
+  opacity:0.55;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .crowd__spill{ opacity:0.75 }
+}
+:root[data-theme="dark"] .crowd__spill{ opacity:0.75 }
+
+/* The house lifts very slightly when the footer is hovered. Small enough to
+   be felt rather than watched — this is the last thing on the page, not a
+   feature. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference){
+  .footer:hover .crowd__row--front{
+    transform:translateY(calc(var(--crowd-p, 0) * -26px - 4px));
+  }
+  .footer:hover .crowd__row--mid{
+    transform:translateY(calc(var(--crowd-p, 0) * -13px - 2px));
+  }
+  .footer:hover .crowd__spill{ opacity:0.8 }
+  .crowd__spill{ transition:opacity 500ms ease }
+  .footer:hover .crowd__row{ transition:transform 420ms cubic-bezier(0.22,1,0.36,1) }
+}

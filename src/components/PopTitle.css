@@ -1,0 +1,62 @@
+.pop-title{
+  margin:0;
+  text-align:center;
+  /* Perspective lives here so all the letters share one camera — see the note
+     in PopTitle.tsx about why per-letter perspective looks wrong. 900px is
+     shallow enough that the outer letters swing visibly without the line
+     shearing apart at wide viewports. */
+  perspective:900px;
+  perspective-origin:50% 55%;
+}
+
+.pop-title__word{
+  display:inline-block;
+  white-space:nowrap;
+  /* Passes the container's 3D context down to the letters. Without this the
+     word span flattens its children and the Z translation does nothing. */
+  transform-style:preserve-3d;
+}
+.pop-title__word:not(:last-child)::after{
+  content:" ";
+  display:inline-block;
+  width:0.26em;
+}
+
+.pop-title__ch{
+  display:inline-block;
+  /* Below the optical centre, so the tilt pivots around the baseline area
+     and the letters appear to stand up rather than rotate on the spot. */
+  transform-origin:50% 68%;
+}
+
+@media (prefers-reduced-motion: no-preference){
+  .pop-title__ch{
+    opacity:0;
+    transform:translate3d(0, 0.16em, -460px) rotateX(-42deg) scale(0.94);
+    filter:blur(9px);
+    font-variation-settings:"wght" 220;
+    /* The transform overshoots and the rest do not: a letter that arrives and
+       settles reads as weight. Opacity and blur resolving early means the
+       overshoot happens on something already legible, rather than a smear
+       still coming into focus. */
+    transition:
+      opacity 420ms ease-out,
+      filter 520ms ease-out,
+      transform 900ms cubic-bezier(0.34, 1.46, 0.64, 1),
+      font-variation-settings 900ms cubic-bezier(0.34, 1.46, 0.64, 1);
+    will-change:transform, opacity, filter;
+  }
+
+  .pop-title[data-shown="true"] .pop-title__ch{
+    opacity:1;
+    transform:translate3d(0, 0, 0) rotateX(0deg) scale(1);
+    filter:blur(0);
+    font-variation-settings:"wght" 700;
+  }
+}
+
+/* Under reduced motion nothing above applies, so the letters are simply
+   there, at full weight — the same rule SectionTitle follows. The starting
+   state deliberately lives inside the no-preference query rather than being
+   switched off afterwards, so there is no path to a permanently invisible
+   title if the observer never fires. */

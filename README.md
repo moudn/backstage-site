@@ -88,6 +88,8 @@ GitHub Pages — leaving it would deploy the site to two places at once.
 | `src/components/StepSequence.tsx` + `.css` | The held "How we work" sequence. |
 | `src/components/JellyfishBackdrop.tsx` + `.css` | The drifting jellyfish behind the body copy. |
 | `src/components/SplashCursor.tsx` | Fluid cursor trail, adapted from reactbits.dev. |
+| `src/components/PopTitle.tsx` + `.css` | The held section's title, which comes out of the page rather than drifting past. |
+| `src/components/FooterCrowd.tsx` + `.css` | The audience in the footer. Generated, three rows deep. |
 | `src/data/seo.ts` | Everything that describes the site to machines. Imported by `vite.config.ts`, not by the app. |
 | `tools/og-image.mjs` | Renders `public/og.png`, the social share card. Run by hand: `npm run og`. |
 | `public/robots.txt` | Crawler policy, including an explicit decision on the AI crawlers. |
@@ -194,6 +196,68 @@ would come back:
 The same reduced-motion trap applies to `Reveal`: its hidden state sits inside
 `@media (prefers-reduced-motion: no-preference)` rather than being switched off
 later, so there is no way for those visitors to end up with invisible content.
+
+## The footer is the house
+
+The site is the stage, so the footer is the audience looking back at it. It is
+the one place the company's name can be drawn instead of explained, and it is
+the last thing on the page.
+
+Three rows of figures, receding, with depth carried by four things at once —
+further away means smaller, higher in the frame, fainter, **and blurred**.
+That last one does most of the work: size and opacity alone give you the same
+sticker printed at three scales, and it is the defocus that puts air between
+the rows, because that is what a lens focused on the front row actually does.
+They also move at different rates as the footer arrives, which is the same
+parallax idea as the jellyfish behind the body copy applied to a flat shape.
+
+The figures are **generated from a seeded RNG**, not drawn by hand, so the
+spacing is irregular the way a crowd is but identical on every render. An
+unseeded `Math.random()` would reshuffle the audience on every mount, and in
+StrictMode you would watch it happen twice.
+
+Two things that were wrong on the first pass and are easy to reintroduce:
+
+- **`.crowd` must not be `overflow: hidden`.** The stage-light spill reaches
+  up past the top edge, and clipping it cuts a hard horizontal line across a
+  glow. The crop lives on `.crowd__stage`, around the SVG only.
+- **Spacing is set against shoulder width.** Shoulders are drawn at 1.45× the
+  head radius, so a figure is ~2.9r across; any gap below that fuses the row
+  into one continuous mass that reads as a hedge.
+
+The crowd is full-bleed (`left: 50%; width: 100vw`) because the footer lives
+inside `.shell`, which is capped at 1180px — a house does not end where the
+text column does.
+
+**The jellyfish backdrop gets out of the way.** The contact section is still
+inside the backdrop's band when the reader reaches the bottom, so the creature
+was being drawn straight through the audience — two metaphors arguing in the
+same 200 pixels. A third observer on `.footer` suppresses it, which also gives
+the page an ending: the stage atmosphere clears and what is left is the people
+watching.
+
+## Two title animations, on purpose
+
+`SectionTitle` is used by every section that is scrolled past: letters rise
+and fade on entry, and the line drifts against scroll position.
+
+`PopTitle` is used by exactly one, "How we work", because that section is not
+scrolled past — it pins itself and holds while four steps advance. The same
+treatment there reads as a smaller version of a thing that then refuses to
+leave. Instead the letters come *out* of the page: pushed back in Z, tilted
+away, blurred and thin, then springing onto the picture plane with an
+overshoot.
+
+The weight is animated too, `wght` 220 → 700, which is free because Sora is a
+variable font and one file already covers every weight. A letter that thickens
+as it lands looks lit rather than moved.
+
+Perspective sits on the container, not on each letter. Per-letter
+`perspective()` gives every character its own vanishing point and they fly at
+the viewer in parallel like a wall; one shared camera makes the outer letters
+swing wider than the middle ones, which is what a real lens does. That needs
+`transform-style: preserve-3d` on the word spans, or the Z translation is
+flattened away and nothing happens.
 
 ## Search, and being found
 
