@@ -23,9 +23,18 @@ export function SiteNav({ theme, onToggleTheme }: { theme: Theme; onToggleTheme:
           <span className="nav__word">Backstage</span>
         </a>
         <nav className="nav__links">
+          {/* Two stacked copies of the label inside a mask: the first slides
+              up and out, the second arrives from below. The duplicate is
+              aria-hidden and the real one keeps the accessible name, so this
+              reads as one link rather than the label twice. */}
           {NAV_LINKS.map((l) => (
             <a key={l.href} href={l.href} data-strong={l.strong ? "true" : undefined}>
-              {l.label}
+              <span className="nav__label">
+                <span className="nav__label-line">{l.label}</span>
+                <span className="nav__label-line nav__label-line--in" aria-hidden="true">
+                  {l.label}
+                </span>
+              </span>
             </a>
           ))}
           <button

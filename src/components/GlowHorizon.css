@@ -92,7 +92,20 @@
 .glow-horizon__title span:nth-child(2){ color:var(--accent); animation:riseIn 1100ms var(--enter) 1500ms both }
 
 .glow-horizon__scroll{
-  position:absolute; bottom:clamp(24px,4vh,44px); left:50%; transform:translateX(-50%);
+  position:absolute; bottom:clamp(24px,4vh,44px); left:50%;
+  /* Centred with the `translate` property, NOT with transform.
+   *
+   * It used to be `transform: translateX(-50%)`, and the riseIn animation
+   * below ends on `transform: translateY(0)` with fill-mode `both` — so the
+   * moment the entrance finished, the animation's final value replaced the
+   * centring transform outright and the element sat with its left edge on the
+   * centre line, offset right by half its own width. Wide viewports hid it
+   * (half of "SCROLL" is about 25px); a phone did not.
+   *
+   * `translate` is its own property and composes with `transform` instead of
+   * being overwritten by it, so the animation can have `transform` to itself.
+   * That is also why the reduced-motion block below no longer restates it. */
+  translate:-50% 0;
   z-index:4;
   font:400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
   letter-spacing:0.18em; text-transform:uppercase; color:var(--text-3); text-decoration:none;
@@ -120,5 +133,6 @@
   .glow-horizon__eyebrow,
   .glow-horizon__title span,
   .glow-horizon__scroll{opacity:1;filter:none;transform:none}
-  .glow-horizon__scroll{transform:translateX(-50%)}
+  /* No `transform: translateX(-50%)` restatement here any more — the centring
+     lives on the `translate` property, which this block never touches. */
 }

@@ -30,7 +30,8 @@
      to no transform at all. */
   transform:
     translate3d(var(--jf-x, 0px), var(--jf-y, 0px), 0)
-    rotate(var(--jf-rot, 0deg));
+    rotate(var(--jf-rot, 0deg))
+    scale(var(--jf-scale, 1));
   filter:hue-rotate(var(--jf-hue, 0deg));
   will-change:transform, filter;
   animation:jf-backdrop-drift 42s ease-in-out infinite;
