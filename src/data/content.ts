@@ -52,6 +52,18 @@ export const JULIAN = {
   eyebrow: "Our first product",
   heading: "You don't run Julian. Julian runs your outbound.",
   lede: "Julian is an AI sales agent that works your outbound the way a diligent junior would — one company at a time, in your name, from your own inbox. Priced by how many leads it works each month, with thirty days before anything is charged.",
+  /* Moved here from step 04 of "How we work", which used to be "Use it
+     first". It was the only step in that sequence naming a product, and the
+     sequence is about method — but the claim itself is worth keeping and this
+     is where it belongs: next to the product it is actually about.
+
+     It is set apart from the lede rather than folded into it because it is a
+     different kind of statement. The lede describes what Julian does; this is
+     the one line on the page vouching for it, and it is only worth anything
+     while it stays literally true. If Julian ever stops running our outbound,
+     delete it. */
+  ourOwn:
+    "Julian runs our own outreach. We do not sell anything we have not lived with ourselves.",
   linkLabel: "Julian's own site",
   note: "Going live shortly.",
 };

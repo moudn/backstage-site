@@ -219,6 +219,19 @@
   font:400 clamp(16.5px,2vw,18px)/1.66 var(--font-text);
   color:var(--text-2); text-wrap:pretty;
 }
+/* The one line on the page vouching for the product, so it is marked as an
+   aside rather than more prose: a rule down the left, slightly tighter type.
+   Deliberately no background — the jellyfish drifts behind this column, and
+   an opaque panel here would punch the same hole in it that the rows list
+   used to. Border and colour only. */
+.julian__proof{
+  margin:0 0 26px; max-width:520px;
+  padding-left:clamp(14px,2vw,18px);
+  border-left:2px solid color-mix(in oklab, var(--accent) 55%, transparent);
+  font:400 clamp(15px,1.8vw,16px)/1.6 var(--font-text);
+  color:var(--text-2); text-wrap:pretty;
+}
+
 .julian__link{
   display:inline-flex; align-items:baseline; gap:9px;
   font:400 15px/1 var(--font-text); color:var(--text);

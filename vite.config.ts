@@ -95,6 +95,7 @@ ${PROBLEM.body.map((p) => `<p>${esc(p)}</p>`).join('')}
 <h2>${esc(JULIAN.title)}</h2>
 <h3>${esc(JULIAN.heading)}</h3>
 <p>${esc(JULIAN.lede)}</p>
+<p>${esc(JULIAN.ourOwn)}</p>
 <ul>${rows}</ul>
 <p><a href="${esc(JULIAN_URL)}">${esc(JULIAN.linkLabel)}</a> — ${esc(JULIAN.note)}</p>
 

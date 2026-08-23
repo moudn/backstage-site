@@ -104,6 +104,13 @@ export function PageBody() {
                 <ScrollReveal mode="scrub" className="julian__lede">
                   {JULIAN.lede}
                 </ScrollReveal>
+                {/* Set apart from the lede: the paragraph above describes the
+                    product, this vouches for it. A plain fade rather than the
+                    word-by-word reveal — one short claim read one word at a
+                    time turns a statement of fact into a flourish. */}
+                <Reveal delay={100}>
+                  <p className="julian__proof">{JULIAN.ourOwn}</p>
+                </Reveal>
                 <Reveal delay={120}>
                   <div>
                     <a className="julian__link" href={JULIAN_URL}>
