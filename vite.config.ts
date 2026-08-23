@@ -1,3 +1,4 @@
+import { resolve } from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -15,6 +16,16 @@ import {
   SLOGAN,
   STEPS,
 } from './src/data/content.ts'
+import {
+  COMPANY_NUMBER,
+  ICO_REGISTRATION,
+  LEGAL_FORM,
+  LEGAL_NAME,
+  POLICY_EFFECTIVE,
+  POSTAL_ADDRESS,
+  PROCESSORS,
+  assertLegalIdentityComplete,
+} from './src/data/legal.ts'
 import {
   DESCRIPTION,
   LOCALE,
@@ -95,8 +106,51 @@ ${PROBLEM.body.map((p) => `<p>${esc(p)}</p>`).join('')}
 <p>${esc(CONTACT.lede)}</p>
 <p><a href="mailto:${esc(CONTACT_EMAIL)}">${esc(CONTACT_EMAIL)}</a></p>
 
-<p>${esc(FOOTER.line)} · ${esc(FOOTER.est)}</p>
+<p>${esc(FOOTER.line)} · ${esc(FOOTER.est)} · <a href="${esc(FOOTER.privacy.href)}">${esc(FOOTER.privacy.label)}</a></p>
 </div></noscript>`
+}
+
+/* Fills the {{TOKENS}} in privacy.html from src/data/legal.ts.
+ *
+ * The notice is hand-written HTML rather than generated prose — it is a legal
+ * document, and it should be editable by somebody who is not a programmer,
+ * including a solicitor reviewing it. Only the identity facts are injected,
+ * because those are the ones that must not disagree with anything else on the
+ * site, and the ones that are embarrassing to get wrong. */
+function fillPrivacy(html: string) {
+  const form =
+    LEGAL_FORM === 'sole trader'
+      ? 'a sole trader'
+      : LEGAL_FORM === 'partnership'
+        ? 'a partnership'
+        : 'a company registered in England and Wales'
+
+  const companyLine = COMPANY_NUMBER
+    ? `<p>Registered in England and Wales, company number <strong>${esc(COMPANY_NUMBER)}</strong>.</p>`
+    : ''
+
+  /* Omitted rather than faked while the fee is unpaid. Publishing a
+     registration number you do not hold is a worse problem than not having
+     one yet. */
+  const icoLine = ICO_REGISTRATION
+    ? `<p>Registered with the Information Commissioner's Office, registration number <strong>${esc(ICO_REGISTRATION)}</strong>.</p>`
+    : ''
+
+  const rows = PROCESSORS.map(
+    (p) =>
+      `<tr><td><strong>${esc(p.name)}</strong><br /><span style="color:var(--text-3)">${esc(p.where)}</span></td>` +
+      `<td>${esc(p.role)}</td><td>${esc(p.data)}</td></tr>`
+  ).join('')
+
+  return html
+    .replaceAll('{{LEGAL_NAME}}', esc(LEGAL_NAME))
+    .replaceAll('{{LEGAL_FORM_SENTENCE}}', form)
+    .replaceAll('{{POSTAL_ADDRESS_HTML}}', POSTAL_ADDRESS.split('\n').map(esc).join('<br />'))
+    .replaceAll('{{COMPANY_NUMBER_LINE}}', companyLine)
+    .replaceAll('{{ICO_REGISTRATION_LINE}}', icoLine)
+    .replaceAll('{{PROCESSOR_ROWS}}', rows)
+    .replaceAll('{{POLICY_EFFECTIVE}}', esc(POLICY_EFFECTIVE))
+    .replaceAll('{{CONTACT_EMAIL}}', esc(CONTACT_EMAIL))
 }
 
 /** Writes the head metadata, the JSON-LD and the no-script document into
@@ -106,7 +160,19 @@ ${PROBLEM.body.map((p) => `<p>${esc(p)}</p>`).join('')}
 function seo(): Plugin {
   return {
     name: 'backstage-seo',
-    transformIndexHtml(html) {
+
+    /* Before anything is built, not while it is being written out. */
+    buildStart() {
+      assertLegalIdentityComplete()
+    },
+
+    transformIndexHtml(html, ctx) {
+      /* This hook runs for every HTML entry, and privacy.html wants none of
+         what follows — it is a standalone document with its own head and no
+         bundle. Without this branch it would get the marketing page's title,
+         its Open Graph tags and a second copy of the whole site's copy. */
+      if (ctx.path.includes('privacy')) return fillPrivacy(html)
+
       const head = `
     <meta name="description" content="${esc(DESCRIPTION)}" />
     <link rel="canonical" href="${SITE_URL}/" />
@@ -156,6 +222,12 @@ function seo(): Plugin {
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>${SITE_URL}/privacy</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
 `,
       })
@@ -174,4 +246,20 @@ export default defineConfig({
    * ./assets/… against /a/b/ — so the error page's own assets 404 as well.
    * Absolute paths always resolve from the root. */
   base: '/',
+
+  build: {
+    rollupOptions: {
+      /* Two HTML entries. privacy.html has to be listed here — not dropped in
+       * public/ — so that the build processes it and the {{TOKENS}} get
+       * filled. Files in public/ are copied byte for byte and would ship with
+       * the placeholders still in them.
+       *
+       * index.html must be repeated: naming any input replaces the default
+       * rather than adding to it. */
+      input: {
+        index: resolve(__dirname, 'index.html'),
+        privacy: resolve(__dirname, 'privacy.html'),
+      },
+    },
+  },
 })

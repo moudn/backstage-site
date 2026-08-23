@@ -101,6 +101,12 @@ export const CONTACT = {
 export const FOOTER = {
   line: "Backstage — AI consultancy · UK",
   est: "Est. 2026",
+  /* Deliberately in the footer and nowhere else. A privacy notice has to be
+     easy to find, which the footer satisfies — it is the first place anybody
+     looks for one — but it is not a thing to sell, so it stays out of the
+     nav. /privacy, not /privacy.html: the host serves the clean path, and
+     public/_redirects makes that true regardless of host. */
+  privacy: { href: "/privacy", label: "Privacy" },
 };
 
 export const NAV_LINKS: { href: string; label: string; strong?: boolean }[] = [

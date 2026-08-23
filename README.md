@@ -60,6 +60,7 @@ GitHub Pages — leaving it would deploy the site to two places at once.
 | `src/data/seo.ts` | Everything that describes the site to machines. Imported by `vite.config.ts`, not by the app. |
 | `tools/og-image.mjs` | Renders `public/og.png`, the social share card. Run by hand: `npm run og`. |
 | `public/robots.txt` | Crawler policy, including an explicit decision on the AI crawlers. |
+| `privacy.html` + `src/data/legal.ts` | The privacy notice, and the controller identity the build injects into it. |
 
 ## Two things worth knowing before editing
 
@@ -204,6 +205,46 @@ readable name here is "Backstage Consultancy" for that reason. Keep it
 consistent everywhere the company is written down — Companies House,
 LinkedIn, email signatures, directories — or there is nothing for Google to
 attach a brand to.
+
+## The privacy notice
+
+`privacy.html`, at the repo root rather than in `public/` — it is a second
+Rollup input, so the build processes it and fills its placeholders from
+`src/data/legal.ts`. Anything in `public/` is copied byte for byte and would
+ship with `{{LEGAL_NAME}}` still in it.
+
+It is standalone in the same way `404.html` is: no bundle, no framework, no
+webfont, no JavaScript at all. A legal notice has to render for everybody, on
+anything — including for the person who has scripting switched off precisely
+because they care about being tracked. Linked from the footer only; it needs
+to be easy to find, which the footer satisfies, but it is not a thing to sell.
+
+**The build fails while `src/data/legal.ts` holds placeholders.** That is
+deliberate and it is the most important thing in this section. A privacy
+notice that goes live reading `[LEGAL NAME]` is worse than not having one: it
+is a published admission that nobody checked, and under UK GDPR Article 13 the
+controller's identity and contact details are not optional. A failed build
+takes thirty seconds to fix; a wrong notice sits there for months. The failure
+names the exact fields.
+
+**The notice describes what the site actually does, which is unusually
+little.** No cookies, no analytics, no third-party requests at all — the fonts
+are self-hosted, so Google is never told a visitor's IP. The only client-side
+storage is `backstage-theme`, one word in `localStorage`, written only when
+someone presses the toggle and never transmitted. That is why there is no
+consent banner: PECR requires consent for storage that is not necessary for a
+service the visitor asked for, and a preference they set by pressing a button
+is not that. If analytics are ever added, this stops being true — change the
+notice first.
+
+Section 5 covers the outbound programme, and it is the section most likely to
+matter. It states where prospect details came from, relies on legitimate
+interests for B2B marketing, and makes opting out a one-word reply. Under
+Article 21 an objection to direct marketing is absolute — there is nothing to
+weigh, so the copy does not pretend otherwise.
+
+`public/_redirects` rewrites `/privacy` to `/privacy.html` so the clean path
+works regardless of what is serving the site.
 
 ## The 404
 

@@ -164,6 +164,9 @@ export function PageBody() {
           <span>{FOOTER.line}</span>
           <span className="footer__meta">
             <span>{FOOTER.est}</span>
+            <a className="footer__link" href={FOOTER.privacy.href}>
+              {FOOTER.privacy.label}
+            </a>
             <span>© {new Date().getFullYear()} Backstage Consultancy</span>
           </span>
         </footer>
