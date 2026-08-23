@@ -1,4 +1,5 @@
-# Cloudflare Pages reads this file from the build output root.
+# Read from the build output root by Cloudflare Workers static assets, in the
+# same format Pages used.
 
 # Fingerprinted build assets: the filename changes whenever the contents do,
 # so they can be cached forever. This is what makes a repeat visit instant.

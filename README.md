@@ -12,11 +12,14 @@ npm run build    # -> dist/, plain static files
 
 ## Deploying
 
-The site is hosted on **Cloudflare Pages**, connected to this repository:
-every push to `main` builds and deploys. Set these in the Pages project's
-build configuration — deliberately *not* in a `wrangler.toml`, because when
-that file is present Pages reads its project settings from it and a mismatch
-between the `name` there and the real project name fails the build:
+The site is hosted on **Cloudflare Workers with static assets**, connected to
+this repository: every push to `main` builds and deploys.
+
+**It is Workers, not Pages.** Cloudflare consolidated onto Workers and Pages
+is legacy for new projects — the dashboard no longer offers the choice, it
+just says "Create an application" and gives you a Worker. This matters more
+than a naming difference, so it is written down here rather than left to be
+rediscovered.
 
 | Setting | Value |
 | --- | --- |
@@ -24,11 +27,39 @@ between the `name` there and the real project name fails the build:
 | Output directory | `dist` |
 | Node version | `22` (also in `.nvmrc`) |
 
-`public/_headers` is read from the build output and sets the caching. The
-fingerprinted files under `/assets` and the `.woff2` fonts are immutable and
-cached for a year; `index.html` is `must-revalidate`, because it is what
+`public/_headers` and `public/_redirects` are read from the build output.
+Both are supported natively by Workers static assets, in the same format
+Pages used, so nothing about them had to change. `_headers` sets the caching:
+the fingerprinted files under `/assets` and the `.woff2` fonts are immutable
+and cached for a year; `index.html` is `must-revalidate`, because it is what
 points at the hashed assets and a stale copy makes a deploy look like it
 never happened.
+
+**The custom 404 needs configuration that plain static hosting did not.**
+Workers static assets defaults `not_found_handling` to `none`, which serves
+Cloudflare's own bare 404 and never looks at `public/404.html`. To use ours it
+has to be set explicitly, in a Wrangler config committed here:
+
+```jsonc
+// wrangler.jsonc
+{
+  "name": "<the exact Worker name from the dashboard>",
+  "compatibility_date": "2026-08-23",
+  "assets": {
+    "directory": "./dist/",
+    "not_found_handling": "404-page"
+  }
+}
+```
+
+The `name` has to match the existing Worker exactly. A mismatch does not
+error usefully — it deploys to a *different* Worker, which leaves the custom
+domain still pointing at the old one and the site apparently frozen. This is
+the same trap that made an earlier speculative `wrangler.toml` break the
+build, and the lesson is the same: never guess this value.
+
+Check whether it is needed before adding it — visit any nonsense path and see
+whether the jellyfish 404 or Cloudflare's plain one comes back.
 
 `base` in `vite.config.ts` is `'/'`, not `'./'`. The site is served from the
 root of its own domain, and relative paths break `404.html` specifically: the
