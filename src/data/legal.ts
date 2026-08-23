@@ -1,11 +1,11 @@
 /* Who the data controller actually is.
  *
  * ─────────────────────────────────────────────────────────────────────────
- *  FILL THESE IN BEFORE THE NEXT DEPLOY. The build fails while any of them
- *  is still UNSET — deliberately. A privacy notice that goes live reading
- *  "[LEGAL NAME]" is worse than not having one: it is a published admission
- *  that nobody checked, and under UK GDPR Article 13 the controller's
- *  identity and contact details are not optional fields.
+ *  The build fails while any of these is still UNSET — deliberately, and the
+ *  guard stays even though they are all filled in now. A privacy notice that
+ *  goes live reading "[LEGAL NAME]" is worse than not having one: it is a
+ *  published admission that nobody checked, and under UK GDPR Article 13 the
+ *  controller's identity and contact details are not optional fields.
  *
  *  A failed build takes thirty seconds to fix. A wrong privacy notice sits
  *  there for months.
@@ -44,11 +44,7 @@ export const COMPANY_NUMBER: string = "";
  *  controller's contact details, and the ICO has taken enforcement action
  *  over notices that were vague about exactly this.
  *
- *  Use "\n" between lines, e.g.
- *      "12 Example Road\nCheltenham\nGL50 1AA"
- *
- *  >>> THIS IS THE ONLY FIELD STILL OUTSTANDING. The build fails until it
- *  >>> is filled in, which is deliberate — see the note at the top. */
+ *  Use "\n" between lines. */
 export const POSTAL_ADDRESS: string = "95 Oxford Road\nGloucester\nGL1 3EE";
 
 /** ICO registration number, once you have paid the data protection fee.
