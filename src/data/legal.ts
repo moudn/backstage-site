@@ -49,7 +49,7 @@ export const COMPANY_NUMBER: string = "";
  *
  *  >>> THIS IS THE ONLY FIELD STILL OUTSTANDING. The build fails until it
  *  >>> is filled in, which is deliberate — see the note at the top. */
-export const POSTAL_ADDRESS: string = UNSET;
+export const POSTAL_ADDRESS: string = "95 Oxford Road\nGloucester\nGL1 3EE";
 
 /** ICO registration number, once you have paid the data protection fee.
  *  Set to "" until then — the notice omits the line rather than lying.
