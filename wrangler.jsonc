@@ -1,0 +1,42 @@
+{
+  // The Worker this repository deploys to. It must match the existing Worker
+  // exactly: a mismatch does not fail usefully, it deploys to a *different*
+  // Worker and leaves backstageconsultancy.com pointing at the old one, which
+  // looks from the outside like the site has frozen.
+  //
+  // "backstage-site", not "backstageconsultancy.com". The domain is a custom
+  // domain attached to this Worker, not the Worker itself — Worker names are
+  // lowercase letters, digits and hyphens only, so a name with a dot in it is
+  // not a valid one.
+  "name": "backstage-site",
+
+  "compatibility_date": "2026-08-23",
+
+  "assets": {
+    "directory": "./dist/",
+
+    // The reason this file exists.
+    //
+    // Left alone, Cloudflare's dashboard detects a Vite/React project and
+    // configures the Worker as a single-page application, which serves
+    // index.html with **HTTP 200** for every unrecognised path. So /nonsense,
+    // /pricing, and every stale or mistyped inbound link returned "200 OK,
+    // here is the homepage".
+    //
+    // That is worse than a plain 404, and not only cosmetically. Google calls
+    // it a soft 404: an unbounded set of distinct URLs all serving identical
+    // content, which burns crawl budget and dilutes the indexing signals the
+    // rest of this repo works to establish.
+    //
+    // This site has no client-side routing — it is one page with anchor links
+    // — so SPA mode buys nothing and costs that. "404-page" serves
+    // dist/404.html with a real 404 status instead.
+    "not_found_handling": "404-page"
+
+    // html_handling is deliberately left at its default, "auto-trailing-slash".
+    // That is what serves /privacy for privacy.html and 301s the .html form to
+    // it. Do not add a _redirects rule pointing /privacy back at
+    // /privacy.html to "help" — the two rules chase each other and the page
+    // dies in a redirect loop. That bug has already happened once.
+  }
+}

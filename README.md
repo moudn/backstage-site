@@ -35,31 +35,30 @@ and cached for a year; `index.html` is `must-revalidate`, because it is what
 points at the hashed assets and a stale copy makes a deploy look like it
 never happened.
 
-**The custom 404 needs configuration that plain static hosting did not.**
-Workers static assets defaults `not_found_handling` to `none`, which serves
-Cloudflare's own bare 404 and never looks at `public/404.html`. To use ours it
-has to be set explicitly, in a Wrangler config committed here:
+**`wrangler.jsonc` is what makes the custom 404 work**, and it is the one
+file here that must not be edited casually.
 
-```jsonc
-// wrangler.jsonc
-{
-  "name": "<the exact Worker name from the dashboard>",
-  "compatibility_date": "2026-08-23",
-  "assets": {
-    "directory": "./dist/",
-    "not_found_handling": "404-page"
-  }
-}
-```
+Left to itself, the dashboard detects a Vite/React project and configures the
+Worker as a single-page application, which serves `index.html` with **HTTP
+200** for every unrecognised path. Measured, not assumed: `/nonsense`
+returned the homepage. That is a soft 404 — an unbounded set of URLs all
+serving identical content — which burns crawl budget and dilutes exactly the
+indexing signals the rest of this repo sets up. This site has no client-side
+routing, so SPA mode buys nothing and costs that. `not_found_handling:
+"404-page"` serves `dist/404.html` with a real 404 status instead.
 
-The `name` has to match the existing Worker exactly. A mismatch does not
-error usefully — it deploys to a *different* Worker, which leaves the custom
-domain still pointing at the old one and the site apparently frozen. This is
-the same trap that made an earlier speculative `wrangler.toml` break the
-build, and the lesson is the same: never guess this value.
+**The `name` must match the existing Worker exactly.** It is
+`backstage-site` — the repo name, which is what Cloudflare defaults to when
+connecting a Git repository. It is *not* `backstageconsultancy.com`: that is a
+custom domain attached to the Worker, and Worker names cannot contain dots.
+A mismatch does not fail usefully; it deploys to a *different* Worker and
+leaves the domain pointing at the old one, which looks from the outside like
+the site has frozen. An earlier speculative `wrangler.toml` broke the build
+the same way. Never guess this value.
 
-Check whether it is needed before adding it — visit any nonsense path and see
-whether the jellyfish 404 or Cloudflare's plain one comes back.
+`html_handling` is deliberately left at its default, `auto-trailing-slash`.
+That is what serves `/privacy` for `privacy.html`. See the note further down
+about why it must not be "helped" with a `_redirects` rule.
 
 `base` in `vite.config.ts` is `'/'`, not `'./'`. The site is served from the
 root of its own domain, and relative paths break `404.html` specifically: the
@@ -94,6 +93,7 @@ GitHub Pages — leaving it would deploy the site to two places at once.
 | `tools/og-image.mjs` | Renders `public/og.png`, the social share card. Run by hand: `npm run og`. |
 | `public/robots.txt` | Crawler policy, including an explicit decision on the AI crawlers. |
 | `privacy.html` + `src/data/legal.ts` | The privacy notice, and the controller identity the build injects into it. |
+| `wrangler.jsonc` | The Worker this deploys to, and the 404 handling. See Deploying — the `name` is load-bearing. |
 
 ## Two things worth knowing before editing
 
