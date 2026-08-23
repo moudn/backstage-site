@@ -18,6 +18,7 @@
  */
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { sample } from "../lib/jellyfishPath";
 import type { Theme } from "../lib/useTheme";
 import "./JellyfishBackdrop.css";
 
@@ -65,51 +66,9 @@ function driftFor(viewportW: number, viewportH: number) {
   };
 }
 
-/* The route the creature swims, across the three sections it now belongs to.
- *
- * `at` is progress along that stretch of page. `x` and `y` are fractions of
- * the drift budget above, so the same path works on a phone and a desktop —
- * the budget shrinks, the shape does not. `h` is position along the theme's
- * hue sweep, kept as a fraction for the same reason.
- *
- * The shape is the point. Two endpoints give you a straight line at constant
- * speed, which is what this was and what made it read as an image being
- * dragged. Here it enters low and turned away, crosses left as the product
- * copy is read, doubles back through the held steps, then rises and settles
- * centre for the contact screen — where it is largest and stillest, because
- * that is the screen with the least on it. */
-type Waypoint = { at: number; x: number; y: number; rot: number; scale: number; h: number };
-
-const PATH: Waypoint[] = [
-  { at: 0.0, x: 0.55, y: 0.55, rot: 0.62, scale: 0.9, h: 0.0 },
-  { at: 0.28, x: -0.45, y: 0.1, rot: -0.42, scale: 1.04, h: 0.25 },
-  { at: 0.55, x: 0.4, y: -0.15, rot: 0.5, scale: 0.96, h: 0.55 },
-  { at: 0.8, x: -0.3, y: -0.4, rot: -0.3, scale: 1.06, h: 0.82 },
-  { at: 1.0, x: 0.0, y: -0.55, rot: 0.0, scale: 1.12, h: 1.0 },
-];
-
-/** Smoothstep. Linear interpolation between waypoints gives a visible corner
- *  at each one — the creature changes direction on a sixpence. Easing the
- *  local segment rounds those off into turns. */
-const ease = (t: number) => t * t * (3 - 2 * t);
-
-function sample(p: number): Omit<Waypoint, "at"> {
-  let i = 0;
-  while (i < PATH.length - 2 && p > PATH[i + 1]!.at) i++;
-  const a = PATH[i]!;
-  const b = PATH[i + 1]!;
-  const span = b.at - a.at || 1;
-  const t = ease(Math.min(1, Math.max(0, (p - a.at) / span)));
-  const mix = (u: number, v: number) => u + (v - u) * t;
-  return {
-    x: mix(a.x, b.x),
-    y: mix(a.y, b.y),
-    rot: mix(a.rot, b.rot),
-    scale: mix(a.scale, b.scale),
-    h: mix(a.h, b.h),
-  };
-}
-
+/* The route itself lives in ../lib/jellyfishPath — pure maths, no React and
+ * no DOM, so it can be run and checked directly rather than only by scrolling
+ * a page whose scroll position Lenis owns. */
 export function JellyfishBackdrop({ theme }: { theme: Theme }) {
   const ref = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);

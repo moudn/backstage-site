@@ -86,6 +86,7 @@ GitHub Pages — leaving it would deploy the site to two places at once.
 | `src/lib/useAnchorScroll.ts` | Routes nav links through Lenis so they land. |
 | `src/components/StepSequence.tsx` + `.css` | The held "How we work" sequence. |
 | `src/components/JellyfishBackdrop.tsx` + `.css` | The drifting jellyfish behind the body copy. |
+| `src/lib/jellyfishPath.ts` | The route it swims. Pure maths, no React or DOM, so it can be checked directly. |
 | `src/components/SplashCursor.tsx` | Fluid cursor trail, adapted from reactbits.dev. |
 | `src/components/PopTitle.tsx` + `.css` | The held section's title, which comes out of the page rather than drifting past. |
 | `src/components/FooterCrowd.tsx` + `.css` | The audience in the footer. Generated, three rows deep. |
