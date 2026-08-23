@@ -27,6 +27,19 @@ export const SITE_URL = "https://backstageconsultancy.com";
 export const ORG_NAME = "Backstage Consultancy";
 export const ORG_SHORT = "Backstage";
 
+/** Profiles that are unambiguously this same organisation.
+ *
+ *  `sameAs` is how an entity gets resolved rather than guessed at: it tells
+ *  Google that the company on this domain and the company on that LinkedIn
+ *  page are one thing, which is most of what "ranking for your own brand"
+ *  actually consists of when the brand name is contested — and "Backstage"
+ *  is contested by Spotify's developer portal and by Backstage.com.
+ *
+ *  Only add a profile that is genuinely controlled by the business. A wrong
+ *  entry here merges two unrelated entities in Google's index, which is
+ *  considerably harder to undo than it is to cause. */
+export const SAME_AS = ["https://www.linkedin.com/company/backstage-consultancy/"];
+
 /* ~55 characters. The service term leads because nobody is searching the
    brand yet, and the brand is ambiguous besides. */
 export const TITLE = "Backstage — AI consultancy, UK. We build it, we run it.";
@@ -59,6 +72,7 @@ export function structuredData(contactEmail: string) {
     name: ORG_NAME,
     alternateName: ORG_SHORT,
     url: SITE_URL,
+    sameAs: SAME_AS,
     email: contactEmail,
     description: DESCRIPTION,
     logo: `${SITE_URL}/favicon.svg`,

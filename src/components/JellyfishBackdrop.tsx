@@ -12,9 +12,9 @@
  *  - It unmounts entirely when it can't be seen — while the title card is on
  *    screen there is already a jellyfish, and running two WebGL scenes to
  *    show one of them is wasted battery.
- *  - It doesn't render at all on small screens, on low core counts, or under
- *    reduced motion. A phone should not be running two fluid simulations and
- *    a 3D scene to read four paragraphs.
+ *  - It doesn't render at all on very low core counts or under reduced
+ *    motion. See the note on the guard below for why screen size is no
+ *    longer one of the conditions.
  */
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
@@ -40,16 +40,51 @@ const DRIFT_X = 420;   // px travelled left-to-right, centred on 0
 const DRIFT_Y = 260;   // px risen over the page
 const ROTATE = 14;     // degrees of slow turn
 
+/* The drift distances above are absolute pixels, chosen against a desktop
+ * viewport. Used unchanged on a phone they are catastrophic: ±210px of
+ * horizontal travel on a 390px-wide screen walks the creature more than half
+ * a screen width, so by the contact section it has left the page entirely
+ * and all that remains is a sliver of bell against the right edge.
+ *
+ * So the travel is capped as a fraction of the viewport. 28% either side is
+ * enough to still read as movement, and keeps the creature behind the text
+ * where it belongs rather than beside it. On a desktop the cap is never the
+ * binding constraint and the original numbers apply unchanged. */
+function driftFor(viewportW: number, viewportH: number) {
+  return {
+    x: Math.min(DRIFT_X, viewportW * 0.56),
+    y: Math.min(DRIFT_Y, viewportH * 0.34),
+  };
+}
+
 export function JellyfishBackdrop({ theme }: { theme: Theme }) {
   const ref = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
 
+  /* Screen size is deliberately *not* a condition here any more.
+   *
+   * It used to be — anything under 900px got nothing — on the reasoning that
+   * "a phone should not be running two fluid simulations and a 3D scene to
+   * read four paragraphs". That reasoning had gone stale on both counts:
+   *
+   *  - There are no fluid simulations on a phone. SplashCursor gates itself
+   *    on `(hover: hover) and (pointer: fine)`, so a touch device never
+   *    starts it.
+   *  - The two 3D scenes never run together. This one only mounts while #how
+   *    or #contact is on screen, and the title card's canvas unmounts once it
+   *    leaves the viewport. A phone runs one at a time, exactly as a desktop
+   *    does, and the 890KB three.js chunk is already downloaded for the title
+   *    card either way — so the marginal cost here is GPU time, not bytes.
+   *
+   * What remains is a guard on genuinely weak hardware and on reduced motion.
+   * The creature already renders at `quality="low"` (14 tentacles, not 28)
+   * and the renderer caps at 2x DPR, which is what keeps this affordable on
+   * a high-density phone screen. */
   useEffect(() => {
-    const small = window.matchMedia("(max-width: 900px)").matches;
     const weak = (navigator.hardwareConcurrency ?? 8) <= 2;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setEnabled(!small && !weak && !still);
+    setEnabled(!weak && !still);
   }, []);
 
   /* Only over the two sections it belongs to.
@@ -94,9 +129,12 @@ export function JellyfishBackdrop({ theme }: { theme: Theme }) {
       const total = document.documentElement.scrollHeight - window.innerHeight;
       const progress = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
       const hue = HUE_START + progress * (HUE_END - HUE_START);
+      /* Recomputed here rather than cached, so a rotation or a resize is
+         picked up — this already runs on resize. */
+      const drift = driftFor(window.innerWidth, window.innerHeight);
       el!.style.setProperty("--jf-hue", `${hue.toFixed(1)}deg`);
-      el!.style.setProperty("--jf-x", `${(progress * DRIFT_X - DRIFT_X / 2).toFixed(1)}px`);
-      el!.style.setProperty("--jf-y", `${(DRIFT_Y / 2 - progress * DRIFT_Y).toFixed(1)}px`);
+      el!.style.setProperty("--jf-x", `${(progress * drift.x - drift.x / 2).toFixed(1)}px`);
+      el!.style.setProperty("--jf-y", `${(drift.y / 2 - progress * drift.y).toFixed(1)}px`);
       el!.style.setProperty("--jf-rot", `${(progress * ROTATE - ROTATE / 2).toFixed(2)}deg`);
     }
     function onScroll() {

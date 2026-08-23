@@ -19,9 +19,9 @@ const UNSET = "UNSET";
  *  Consultancy" alone is a trading name that identifies nobody in law.
  *
  *  Limited company:  "Backstage Consultancy Ltd"
- *  Sole trader:      "Mohammed Minhaj Uddin, trading as Backstage Consultancy"
+ *  Sole trader:      "Mo Uddin, trading as Backstage Consultancy"
  */
-export const LEGAL_NAME: string = "Mohammed Minhaj Uddin, trading as Backstage Consultancy";
+export const LEGAL_NAME: string = "Mo Uddin, trading as Backstage Consultancy";
 
 /** "limited company" | "sole trader" | "partnership" — drives one sentence of
  *  the notice, because a company has to publish its number and a sole trader

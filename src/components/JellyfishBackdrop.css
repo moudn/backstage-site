@@ -48,6 +48,32 @@
   100%{ scale:1 }
 }
 
+/* Phones need a different creature, not just a smaller one.
+ *
+ * The sizes above are relative units, which sounds like it should scale — but
+ * min(150vh, 165vw) picks the *width* branch on a narrow screen and the
+ * *height* branch on a wide one, so the creature ends up about 1.65x the
+ * viewport width on a phone and slightly narrower than the viewport on a
+ * desktop. Same rule, opposite result. On a phone that puts a wall of bell
+ * directly behind the contact address.
+ *
+ * So: smaller, and dimmer. The opacity above is tuned for a desktop, where
+ * the creature sits behind a fraction of the text; here it is behind nearly
+ * all of it, and 0.5 stops being atmosphere and starts being a background
+ * image the copy has to fight. Written flat rather than nested inside the
+ * existing theme rules so the cascade stays obvious. */
+@media (max-width: 900px){
+  .jf-backdrop__inner{
+    width:min(120vh, 124vw);
+    height:116svh;
+  }
+  :root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.34 }
+  :root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.30 }
+}
+@media (max-width: 900px) and (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.30 }
+}
+
 @media (prefers-reduced-motion: reduce){
   .jf-backdrop{ display:none }
 }
