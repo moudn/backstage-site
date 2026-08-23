@@ -198,6 +198,46 @@ The same reduced-motion trap applies to `Reveal`: its hidden state sits inside
 `@media (prefers-reduced-motion: no-preference)` rather than being switched off
 later, so there is no way for those visitors to end up with invisible content.
 
+## The mobile menu
+
+Below 760px the four links plus the theme button wrapped onto three rows and
+turned the bar into a block of text, so there they collapse behind a button
+and open as a glass panel.
+
+**The panel is rendered outside `<header class="nav">`, and that is not a
+style choice.** `.nav` carries a transform for its reveal, and a transformed
+element becomes the containing block for any `position: fixed` descendant — so
+inside the header the panel resolved its `inset` against a 66px-tall bar
+instead of the viewport and came out a sliver hanging above the screen. It is
+a sibling now, still directly after the header in DOM order so the tab order
+is unchanged.
+
+It is also **not a `<dialog>`**, for a related reason: a modal dialog renders
+in the top layer, above the very content `backdrop-filter` needs to sample, so
+the glass goes flat. A plain element with the page inerted behind it gets the
+same containment without that cost.
+
+Four things make the glass read as a pane rather than a tinted box, and all
+four are load-bearing: a translucent fill, a blur, a **saturate** so colours
+coming through stay alive instead of going grey, and a hairline top edge
+brighter than the rest. There is an `@supports not (backdrop-filter)` fallback
+that takes the fill to near-opaque — a 62% wash with no blur behind it is
+unreadable text over unreadable text.
+
+Two behaviours worth knowing, both of which had a failure mode:
+
+- **Lenis is stopped while it is open.** `overflow: hidden` on the body does
+  nothing here, because Lenis sets scroll position programmatically. Verified:
+  the page holds at the same scrollY behind the panel.
+- **The panel closes itself if the window widens past the breakpoint.** Left
+  open it would sit invisible, holding focus, with the page still inert.
+  That is why the breakpoint is tracked in `matchMedia` as well as CSS.
+
+Focus is managed by inerting `#root`'s other children rather than by a
+hand-written focus trap — Tab cannot leave, screen readers skip the page
+behind, and there is no keydown handler to get subtly wrong. Both nav layers
+carry `data-nav-layer` so the sweep knows what to leave alone.
+
 ## The footer is the house
 
 The site is the stage, so the footer is the audience looking back at it. It is

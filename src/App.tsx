@@ -20,7 +20,7 @@ export default function App() {
   return (
     <>
       <SplashCursor theme={theme} />
-      <SiteNav theme={theme} onToggleTheme={toggle} />
+      <SiteNav theme={theme} onToggleTheme={toggle} lenisRef={lenisRef} />
 
       <GlowHorizon eyebrow={HERO.eyebrow} lines={HERO.lines} scrollTo="#title" />
 

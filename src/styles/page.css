@@ -412,3 +412,145 @@
 @media (prefers-reduced-motion: reduce){
   .footer__link::after{ transition:none }
 }
+
+/* ── mobile menu ──────────────────────────────────────────────────────────
+   Below 760px the four links plus the theme button wrapped onto three rows
+   and turned the bar into a block of text. They move behind a button here. */
+
+.nav__burger{
+  display:none;                      /* shown by the media query below */
+  align-items:center; justify-content:center;
+  width:42px; height:42px; margin-right:-8px;
+  border:0; background:transparent; cursor:pointer; color:var(--text);
+  -webkit-tap-highlight-color:transparent;
+}
+.nav__burger-box{
+  position:relative; display:block; width:22px; height:14px;
+}
+.nav__burger-box span{
+  position:absolute; left:0; height:1.5px; width:100%; border-radius:2px;
+  background:currentColor;
+  transition:transform 420ms var(--enter), opacity 200ms var(--fade);
+}
+.nav__burger-box span:nth-child(1){ top:0 }
+.nav__burger-box span:nth-child(2){ top:6.25px }
+.nav__burger-box span:nth-child(3){ top:12.5px }
+
+/* Into a cross. The outer two travel to the middle and rotate; the centre one
+   fades rather than scaling, so nothing is left over at the crossing point. */
+.nav__burger[aria-expanded="true"] .nav__burger-box span:nth-child(1){
+  transform:translateY(6.25px) rotate(45deg);
+}
+.nav__burger[aria-expanded="true"] .nav__burger-box span:nth-child(2){ opacity:0 }
+.nav__burger[aria-expanded="true"] .nav__burger-box span:nth-child(3){
+  transform:translateY(-6.25px) rotate(-45deg);
+}
+
+/* The glass.
+ *
+ * Four layers make it read as a pane rather than a tinted box, and all four
+ * matter: a translucent fill, a blur of whatever is behind it, a *saturate*
+ * so the colours coming through stay alive instead of going grey, and a
+ * hairline top edge brighter than the rest to catch the light.
+ *
+ * Only the standard `backdrop-filter` is written. Adding the -webkit- prefix
+ * beside it is what made the minifier drop the standard property and cost the
+ * nav its blur in Chrome — see the note on .nav above. */
+.nav__panel{
+  position:fixed;
+  inset:var(--nav-h, 62px) 0 0 0;
+  z-index:49;
+  display:flex; flex-direction:column; justify-content:center;
+  gap:clamp(20px,4vh,36px);
+  padding:clamp(24px,6vh,56px) clamp(22px,7vw,44px) clamp(32px,7vh,64px);
+  background:color-mix(in oklab, var(--bg) 62%, transparent);
+  backdrop-filter:blur(26px) saturate(170%);
+  border-top:1px solid color-mix(in oklab, var(--text) 14%, transparent);
+  /* Off-screen and untouchable when closed. visibility is in the transition
+     so it flips only after the slide finishes, rather than snapping. */
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-12px);
+  transition:
+    opacity 420ms var(--fade),
+    transform 520ms var(--enter),
+    visibility 0s linear 520ms;
+}
+.nav__panel[data-open="true"]{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+  transition:
+    opacity 480ms var(--fade),
+    transform 560ms var(--enter),
+    visibility 0s;
+}
+.nav__panel:focus-visible{ outline:none }
+
+/* A wash of the accent bleeding in from one corner, so the pane is not a flat
+   sheet of grey. Sits under the links; never takes pointer events. */
+.nav__panel-sheen{
+  position:absolute; inset:0; pointer-events:none; z-index:-1;
+  background:
+    radial-gradient(70% 55% at 12% 0%, color-mix(in oklab, var(--accent) 26%, transparent), transparent 70%),
+    radial-gradient(60% 50% at 100% 100%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 72%);
+}
+
+.nav__panel-links{ display:flex; flex-direction:column }
+.nav__panel-links a{
+  display:flex; align-items:baseline; gap:14px;
+  padding:clamp(12px,2.2vh,18px) 0;
+  border-bottom:1px solid color-mix(in oklab, var(--text) 10%, transparent);
+  text-decoration:none; color:var(--text);
+  font:600 clamp(24px,7vw,34px)/1.15 var(--font-display);
+  letter-spacing:-0.02em;
+  /* Staggered in from the component, which sets transition-delay per link. */
+  opacity:0; transform:translateY(14px);
+  transition:opacity 520ms var(--fade), transform 560ms var(--enter);
+}
+.nav__panel-links a:first-child{
+  border-top:1px solid color-mix(in oklab, var(--text) 10%, transparent);
+}
+.nav__panel[data-open="true"] .nav__panel-links a{ opacity:1; transform:translateY(0) }
+
+.nav__panel-n{
+  font:400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:0.14em; color:var(--accent);
+}
+
+.nav__panel-foot{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  opacity:0; transform:translateY(14px);
+  transition:opacity 520ms var(--fade), transform 560ms var(--enter);
+}
+.nav__panel[data-open="true"] .nav__panel-foot{ opacity:1; transform:translateY(0) }
+.nav__panel-meta{
+  font:400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:0.18em; text-transform:uppercase; color:var(--text-3);
+}
+
+@media (max-width: 760px){
+  .nav__burger{ display:inline-flex }
+  /* The row of links is replaced by the panel, not hidden from everyone —
+     the panel carries the same links, so nothing is lost to a screen reader. */
+  .nav__links{ display:none }
+  .nav__inner{ flex-wrap:nowrap }
+}
+
+/* Backdrop-filter is the whole effect, and Firefox had it off by default for
+   a long time. Where it is unavailable the fill has to carry the pane on its
+   own, so it goes nearly opaque — a 62% wash with no blur behind it is just
+   unreadable text over unreadable text. */
+@supports not (backdrop-filter: blur(1px)){
+  .nav__panel{ background:color-mix(in oklab, var(--bg) 96%, transparent) }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .nav__panel,
+  .nav__panel-links a,
+  .nav__panel-foot,
+  .nav__burger-box span{ transition:none }
+  .nav__panel{ transform:none }
+  .nav__panel-links a,
+  .nav__panel-foot{ transform:none }
+}
