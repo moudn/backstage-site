@@ -8,7 +8,7 @@
   --bg-2:oklch(0.965 0.007 250);
   --text:oklch(0.28 0.02 260);
   --text-2:oklch(0.44 0.02 260);
-  --text-3:oklch(0.55 0.06 245);
+  --text-3:oklch(0.47 0.07 245);
   --line:oklch(0.905 0.01 250);
   --line-soft:oklch(0.94 0.008 250);
   --accent:oklch(0.52 0.13 240);
@@ -21,12 +21,29 @@
   --btn-fg:oklch(0.985 0.005 250);
   --field:oklch(1 0 0 / 0.7);
   --focus:oklch(0.58 0.13 250);
-  --aur-1:oklch(0.90 0.085 165 / 0.85);
-  --aur-2:oklch(0.88 0.085 275 / 0.80);
-  --aur-3:oklch(0.91 0.07 340 / 0.70);
-  --aur-4:oklch(0.93 0.07 95 / 0.65);
-  --aur-op:0.72;
-  --veil:linear-gradient(180deg, transparent 55%, oklch(0.985 0.005 250 / 0.9) 100%);
+  /* The ambient field — four soft lights drifting behind the whole page.
+     See AmbientField.css. These replace the old --aur-* aurora, which only
+     covered the top 120vh and had to be veiled off at the bottom edge.
+
+     --amb-*, not --field-*, and not by accident: --field two lines above is
+     the fill behind a form input. Two unrelated meanings of "field" one line
+     apart is a trap for whoever edits this next.
+
+     Light keeps to the cool half of the palette on purpose: the accent is
+     blue, the creature is blue-teal, and a warm light in the corner of a
+     near-white page reads as a stain rather than as atmosphere. */
+  --amb-1:oklch(0.86 0.10 238 / 0.60);
+  --amb-2:oklch(0.89 0.09 198 / 0.55);
+  --amb-3:oklch(0.88 0.08 288 / 0.45);
+  --amb-4:oklch(0.91 0.07 220 / 0.40);
+  --amb-op:0.85;
+  /* Normal, not screen. Screen against a near-white ground drives everything
+     to white and the field vanishes. */
+  --amb-blend:normal;
+  --amb-sheen:oklch(0.62 0.11 205 / 0.10);
+  --amb-vignette:oklch(0.90 0.02 250 / 0.38);
+  --grain-op:0.045;
+  --grain-blend:overlay;
   --glow-rim:oklch(0.78 0.05 215);
   --glow-rim-shadow:0px -4px 18px 0px oklch(0.60 0.06 285 / 0.45);
   --glow-1:oklch(0.62 0.07 215);
@@ -41,7 +58,7 @@
     --bg-2:oklch(0.175 0.018 285);
     --text:oklch(0.97 0.006 285);
     --text-2:oklch(0.79 0.012 285);
-    --text-3:oklch(0.68 0.09 295);
+    --text-3:oklch(0.78 0.10 295);
     --line:oklch(0.30 0.025 285);
     --line-soft:oklch(0.235 0.022 285);
     --accent:oklch(0.70 0.17 295);
@@ -50,12 +67,16 @@
     --btn-fg:oklch(0.145 0.015 285);
     --field:oklch(1 0 0 / 0.05);
     --focus:oklch(0.72 0.16 295);
-    --aur-1:oklch(0.50 0.20 285 / 0.85);
-    --aur-2:oklch(0.42 0.18 275 / 0.85);
-    --aur-3:oklch(0.55 0.18 300 / 0.70);
-    --aur-4:oklch(0.40 0.14 265 / 0.60);
-    --aur-op:0.22;
-    --veil:linear-gradient(180deg, transparent 40%, oklch(0.135 0.012 285 / 0.92) 100%);
+    --amb-1:oklch(0.50 0.21 292 / 0.85);
+    --amb-2:oklch(0.44 0.19 268 / 0.80);
+    --amb-3:oklch(0.52 0.19 340 / 0.62);
+    --amb-4:oklch(0.48 0.12 208 / 0.55);
+    --amb-op:0.56;
+    --amb-blend:screen;
+    --amb-sheen:oklch(0.70 0.17 295 / 0.14);
+    --amb-vignette:oklch(0.10 0.015 285 / 0.42);
+    --grain-op:0.07;
+    --grain-blend:overlay;
     --glow-rim:#FFFFFF;
     --glow-rim-shadow:0px -4px 23px 0px #ffffffb5;
     --glow-1:#4922E5;
@@ -70,7 +91,7 @@
   --bg-2:oklch(0.175 0.018 285);
   --text:oklch(0.97 0.006 285);
   --text-2:oklch(0.79 0.012 285);
-  --text-3:oklch(0.68 0.09 295);
+  --text-3:oklch(0.78 0.10 295);
   --line:oklch(0.30 0.025 285);
   --line-soft:oklch(0.235 0.022 285);
   --accent:oklch(0.70 0.17 295);
@@ -79,12 +100,18 @@
   --btn-fg:oklch(0.145 0.015 285);
   --field:oklch(1 0 0 / 0.05);
   --focus:oklch(0.72 0.16 295);
-  --aur-1:oklch(0.50 0.20 285 / 0.85);
-  --aur-2:oklch(0.42 0.18 275 / 0.85);
-  --aur-3:oklch(0.55 0.18 300 / 0.70);
-  --aur-4:oklch(0.40 0.14 265 / 0.60);
-  --aur-op:0.22;
-  --veil:linear-gradient(180deg, transparent 40%, oklch(0.135 0.012 285 / 0.92) 100%);
+  --amb-1:oklch(0.50 0.21 292 / 0.85);
+  --amb-2:oklch(0.44 0.19 268 / 0.80);
+  --amb-3:oklch(0.52 0.19 340 / 0.62);
+  --amb-4:oklch(0.48 0.12 208 / 0.55);
+  --amb-op:0.56;
+  /* Screen, because on a near-black ground these are lights in a dark room —
+     they should add up where they overlap, the way stage lighting does. */
+  --amb-blend:screen;
+  --amb-sheen:oklch(0.70 0.17 295 / 0.14);
+  --amb-vignette:oklch(0.10 0.015 285 / 0.42);
+  --grain-op:0.07;
+  --grain-blend:overlay;
   --glow-rim:#FFFFFF;
   --glow-rim-shadow:0px -4px 23px 0px #ffffffb5;
   --glow-1:#4922E5;
@@ -98,7 +125,7 @@
   --bg-2:oklch(0.965 0.007 250);
   --text:oklch(0.28 0.02 260);
   --text-2:oklch(0.44 0.02 260);
-  --text-3:oklch(0.55 0.06 245);
+  --text-3:oklch(0.47 0.07 245);
   --line:oklch(0.905 0.01 250);
   --line-soft:oklch(0.94 0.008 250);
   --accent:oklch(0.52 0.13 240);
@@ -111,8 +138,15 @@
   --btn-fg:oklch(0.985 0.005 250);
   --field:oklch(1 0 0 / 0.7);
   --focus:oklch(0.58 0.13 250);
-  --aur-op:0.72;
-  --veil:linear-gradient(180deg, transparent 55%, oklch(0.985 0.005 250 / 0.9) 100%);
+  /* The four --amb-* colours are not repeated here: an explicit light theme
+     never matches the dark media query, so it inherits them from :root. Only
+     the numbers the dark block would otherwise have set need restating. */
+  --amb-op:0.85;
+  --amb-blend:normal;
+  --amb-sheen:oklch(0.62 0.11 205 / 0.10);
+  --amb-vignette:oklch(0.90 0.02 250 / 0.38);
+  --grain-op:0.045;
+  --grain-blend:overlay;
   --glow-rim:oklch(0.78 0.05 215);
   --glow-rim-shadow:0px -4px 18px 0px oklch(0.60 0.06 285 / 0.45);
   --glow-1:oklch(0.62 0.07 215);
@@ -154,6 +188,22 @@
 :root{
   --enter:cubic-bezier(0.16, 1, 0.3, 1);
   --fade:cubic-bezier(0.37, 0, 0.63, 1);
+}
+
+/* Accent-coloured SMALL TEXT — the 11px mono keys and labels. Not the accent
+ * itself, which stays exactly as it is for dots, rules, borders and focus
+ * rings, where WCAG asks 3:1 rather than 4.5:1.
+ *
+ * The ambient field is the reason this exists. Against a flat page --accent
+ * measured 5.14:1 in light and 7.05:1 in dark; against the brightest part of
+ * the lit field those fall to 3.91 and 3.68, which is a fail for text this
+ * size. Pulling 35% of the body-text colour into it gives 5.65 and 5.33.
+ *
+ * One declaration rather than four, because the mix resolves per theme: in
+ * light --text is near-black so the label darkens, in dark it is near-white so
+ * the label brightens. Both move it away from the field, which is the point. */
+:root{
+  --label:color-mix(in oklab, var(--accent), var(--text) 35%);
 }
 
 /* The glass. One recipe, used by the nav bar and the mobile menu panel, so
@@ -207,16 +257,9 @@ body{
 }
 
 
-@keyframes drift1{
-  0%{transform:translate3d(0,0,0) scale(1)}
-  50%{transform:translate3d(-4%,3%,0) scale(1.12)}
-  100%{transform:translate3d(0,0,0) scale(1)}
-}
-@keyframes drift2{
-  0%{transform:translate3d(0,0,0) scale(1.06)}
-  50%{transform:translate3d(5%,-4%,0) scale(1)}
-  100%{transform:translate3d(0,0,0) scale(1.06)}
-}
+/* drift1 and drift2 lived here for the old .aurora. Nothing has referenced
+   them since AmbientField took over the background, and its lights carry
+   their own keyframes — four of them, with durations chosen not to resync. */
 
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important;transition:none !important;scroll-behavior:auto !important}

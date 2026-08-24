@@ -40,9 +40,10 @@ import "../styles/panels.css";
 export function PageBody() {
   return (
     <div className="page">
-      <div className="aurora" aria-hidden="true" />
-      <div className="aurora-veil" aria-hidden="true" />
-
+      {/* The .aurora and .aurora-veil pair that used to sit here is gone. It
+          was an absolutely positioned 120vh band, so it lit the first screen
+          and a half and left the rest of the page flat; AmbientField is fixed
+          and covers all of it. */}
       <div className="shell">
         <main id="top">
           <DriftSection className="panel intro">

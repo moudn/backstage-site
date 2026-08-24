@@ -15,28 +15,17 @@
 .page{ position:relative; overflow-x:clip }
 .shell{ position:relative; max-width:1180px; margin:0 auto; padding:0 clamp(20px,5vw,64px); z-index:1 }
 
-/* Ambient aurora behind the body copy, and the veil that settles it down. */
-.aurora{
-  position:absolute; top:0; left:-15%; right:-15%; height:120vh;
-  pointer-events:none; filter:blur(90px); opacity:var(--aur-op); z-index:0;
-  background:
-    radial-gradient(44% 38% at 22% 20%, var(--aur-1), transparent 70%),
-    radial-gradient(40% 34% at 66% 10%, var(--aur-2), transparent 70%),
-    radial-gradient(36% 30% at 92% 34%, var(--aur-3), transparent 70%),
-    radial-gradient(34% 28% at 8% 62%, var(--aur-4), transparent 70%);
-  animation:drift1 38s ease-in-out infinite;
-}
-.aurora-veil{
-  position:absolute; top:0; left:0; right:0; height:120vh;
-  pointer-events:none; background:var(--veil); z-index:0;
-  /* The veil's gradient ends on an opaque page colour and then simply stops.
-     While .page painted its own background that edge was invisible; with the
-     jellyfish backdrop showing through it became a hard horizontal line
-     across the page at exactly 120vh. Fading the element's own bottom out
-     costs nothing and fixes it wherever the veil happens to end. */
-  -webkit-mask-image:linear-gradient(180deg, #000 78%, transparent 100%);
-  mask-image:linear-gradient(180deg, #000 78%, transparent 100%);
-}
+/* The .aurora / .aurora-veil pair is gone — AmbientField replaces it. Worth
+   recording why, because "add a second aurora band lower down" is the obvious
+   wrong fix and this is the second time the edge of that band caused a bug:
+
+     - It was position:absolute at height:120vh, so it lit the first screen and
+       a half of a page several thousand pixels tall. Everything below was flat
+       --bg, which is what made the background feel dead.
+     - Its bottom edge was a hard line, which needed the veil, which needed its
+       own mask because *that* had a hard bottom edge too.
+
+   A fixed layer has no bottom edge to hide. See AmbientField.css. */
 
 /* ── nav (revealed on scroll) ─────────────────────────────────────────── */
 .nav{
@@ -267,7 +256,8 @@
 }
 .julian__key{
   margin:0; font:400 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
-  letter-spacing:0.16em; text-transform:uppercase; color:var(--accent);
+  /* --label, not --accent: 11px mono over the lit field. See tokens.css. */
+  letter-spacing:0.16em; text-transform:uppercase; color:var(--label);
 }
 .julian__val{ margin:0; font:400 16px/1.55 var(--font-text); color:var(--text-2); text-wrap:pretty }
 
@@ -528,7 +518,7 @@
 
 .nav__panel-n{
   font:400 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
-  letter-spacing:0.14em; color:var(--accent);
+  letter-spacing:0.14em; color:var(--label);
 }
 
 .nav__panel-foot{

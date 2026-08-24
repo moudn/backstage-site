@@ -161,9 +161,37 @@ which aligns their content to the top instead of centring it.
 makes it a scroll container, which breaks `position: sticky` for everything
 inside it — the held step sequence stops holding.
 
-`.page` also paints no background of its own. The jellyfish backdrop is fixed
-behind the page and `.page` paints after it, so an opaque colour here hides
-the backdrop completely. The page colour comes from `<body>`.
+`.page` also paints no background of its own. Two fixed layers sit behind it —
+the ambient field and the jellyfish backdrop — and `.page` paints after both,
+so an opaque colour here hides them completely. Anything that genuinely needs
+an opaque ground sets its own.
+
+## The background
+
+`AmbientField` is the page's ground: four large radial-gradient lights drifting
+on their own long cycles, a conic sheen turning slowly over the top of them, a
+vignette, and a layer of static grain. It is fixed to the viewport and entirely
+CSS — no canvas, no rAF, no React state — so it costs four composited layers
+and one repeated noise tile, and does not compete with the WebGL creatures for
+the frame budget.
+
+It replaced `.aurora`, which was `position: absolute` at `height: 120vh`: it lit
+the first screen and a half and left the rest of a several-thousand-pixel page
+flat, and its bottom edge was a hard line that needed a veil, which needed its
+own mask. A fixed layer has no bottom edge to hide. Adding a second band lower
+down is the obvious wrong fix.
+
+Three things to keep in mind when changing it:
+
+- The lights blend `screen` in dark and `normal` in light. Screen against a
+  near-white ground drives everything to white and the field disappears.
+- The grain blends `overlay` and needs an opaque layer under it, which is why
+  `.ambient` paints `--bg`. It is deliberately static: a slow full-screen
+  flicker reads as a glitch and is exactly what motion sensitivity settings
+  exist for. Standing still it still earns its keep by breaking up banding.
+- A lit ground raises the floor under low-contrast text. `--text-3` and the new
+  `--label` were both re-cut for this — see the note in `tokens.css`. If the
+  field is made brighter, re-measure rather than assume.
 
 ## Scroll reveals
 

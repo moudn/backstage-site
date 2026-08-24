@@ -1,0 +1,179 @@
+/* The ambient field.
+ *
+ * Four soft lights drifting behind the entire page, a slow sheen turning over
+ * the top of them, a vignette to keep the edges quiet, and a layer of grain to
+ * break up the gradients. Fixed to the viewport, so it is a room the page
+ * moves through rather than a picture stuck to the top of it.
+ *
+ * This replaces the old .aurora: an absolutely positioned 120vh band that
+ * covered the first screen and a half and then simply stopped. Below it the
+ * page was flat --bg for the remaining several thousand pixels, which is what
+ * made the background dead everywhere except the very top — and the band's
+ * bottom edge needed a mask to hide the hard line where it ended.
+ *
+ * Everything here is CSS. No canvas, no rAF, no React state. The cost is four
+ * composited layers and one repeated 140px noise tile, which is what lets this
+ * run underneath a WebGL creature and a fluid cursor without competing for the
+ * frame budget.
+ */
+
+.ambient{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+  /* Opaque, and deliberately so. The grain blends in `overlay`, which needs
+     something real underneath it — over a transparent layer it has nothing to
+     modulate and the texture disappears. Painting the page colour here makes
+     the field the page's ground; body keeps --bg as the fallback beneath. */
+  background:var(--bg);
+  /* Contains the blend modes below, so `screen` composites the lights against
+     each other and this background rather than punching through to whatever
+     the browser has painted behind the root. */
+  isolation:isolate;
+  /* Nothing inside affects layout or paints outside, so the browser can skip
+     it entirely when working out the rest of the page. */
+  contain:strict;
+}
+
+.ambient__lights{
+  position:absolute;
+  inset:0;
+  opacity:var(--amb-op);
+}
+
+.ambient__light{
+  position:absolute;
+  border-radius:50%;
+  mix-blend-mode:var(--amb-blend);
+  /* No filter:blur(). A radial gradient that fades to transparent at 70% is
+     already softer than anything a blur would give, and blurring a layer this
+     size every frame is the one thing here that would actually cost money.
+     The banding you would normally get from gradients this large is what the
+     grain layer is for. */
+  background:radial-gradient(closest-side circle, var(--c) 0%, transparent 72%);
+  will-change:transform;
+}
+
+/* Sizes in vmax so a light stays a light on a phone in portrait and on a wide
+   monitor — vw alone gives you a stripe on one and a dot on the other.
+   The four durations are deliberately not multiples of each other: at 37, 53,
+   43 and 61 seconds the pattern takes over half an hour to come back round,
+   so it never reads as a loop. */
+.ambient__light--a{
+  --c:var(--amb-1);
+  width:86vmax; height:86vmax; top:-28vmax; left:-22vmax;
+  animation:amb-a 37s ease-in-out infinite alternate;
+}
+.ambient__light--b{
+  --c:var(--amb-2);
+  width:74vmax; height:74vmax; top:-14vmax; right:-24vmax;
+  animation:amb-b 53s ease-in-out infinite alternate;
+}
+.ambient__light--c{
+  --c:var(--amb-3);
+  width:68vmax; height:68vmax; bottom:-26vmax; left:6vmax;
+  animation:amb-c 43s ease-in-out infinite alternate;
+}
+.ambient__light--d{
+  --c:var(--amb-4);
+  width:92vmax; height:92vmax; bottom:-34vmax; right:-18vmax;
+  animation:amb-d 61s ease-in-out infinite alternate;
+}
+
+/* Percentages are of the element's own box, so the travel scales with the
+   light rather than with the screen. */
+@keyframes amb-a{
+  0%   { transform:translate3d(0,0,0) scale(1) }
+  50%  { transform:translate3d(14%, 9%, 0) scale(1.12) }
+  100% { transform:translate3d(4%, 18%, 0) scale(0.94) }
+}
+@keyframes amb-b{
+  0%   { transform:translate3d(0,0,0) scale(1.06) }
+  50%  { transform:translate3d(-13%, 12%, 0) scale(0.9) }
+  100% { transform:translate3d(-3%, 24%, 0) scale(1.14) }
+}
+@keyframes amb-c{
+  0%   { transform:translate3d(0,0,0) scale(0.96) }
+  50%  { transform:translate3d(18%, -14%, 0) scale(1.16) }
+  100% { transform:translate3d(-8%, -6%, 0) scale(1.02) }
+}
+@keyframes amb-d{
+  0%   { transform:translate3d(0,0,0) scale(1.1) }
+  50%  { transform:translate3d(-16%, -10%, 0) scale(0.92) }
+  100% { transform:translate3d(-6%, -22%, 0) scale(1.08) }
+}
+
+/* One slow turn over the whole thing. A conic gradient rotating on a square
+   larger than the viewport's diagonal, so no corner is ever empty. This is the
+   layer that makes the field feel like it is being lit rather than just
+   sliding about — the lights move, and separately the light on them turns. */
+.ambient__sheen{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:180vmax;
+  height:180vmax;
+  margin:-90vmax 0 0 -90vmax;
+  background:conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    var(--amb-sheen) 70deg,
+    transparent 150deg,
+    transparent 210deg,
+    var(--amb-sheen) 290deg,
+    transparent 360deg
+  );
+  animation:amb-turn 96s linear infinite;
+  will-change:transform;
+}
+@keyframes amb-turn{
+  to{ transform:rotate(360deg) }
+}
+
+/* Settles the edges so the type in the middle of the screen is always on the
+   calmest part of the field.
+ *
+ * Kept deliberately weak and pushed out to the last third. The first version
+ * was 0.75 alpha starting at 32%, and measuring the field on its own showed
+ * the middle of the screen coming out at rgb(7,7,12) in dark mode — darker
+ * than --bg itself. A vignette that subtracts from the page colour does not
+ * frame the field, it erases it. */
+.ambient__vignette{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(
+    120% 96% at 50% 42%,
+    transparent 46%,
+    color-mix(in oklab, var(--amb-vignette) 38%, transparent) 78%,
+    var(--amb-vignette) 100%
+  );
+}
+
+/* Grain.
+ *
+ * Static, on purpose. Real film grain runs at 24fps; anything slow enough to
+ * be cheap reads as a glitch rather than as texture, and a flickering
+ * full-screen layer is exactly the kind of thing that makes people with motion
+ * sensitivity close the tab. It earns its place standing still: it is what
+ * stops gradients this large from banding on an 8-bit display.
+ *
+ * `overlay` against mid-grey noise is a no-op at 0.5 luminance and pushes
+ * either way from there, so it adds texture without shifting the colour
+ * underneath — which is why one tile works for both themes. */
+.ambient__grain{
+  position:absolute;
+  inset:0;
+  opacity:var(--grain-op);
+  mix-blend-mode:var(--grain-blend);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:140px 140px;
+}
+
+/* No reduced-motion block here on purpose. tokens.css already carries a global
+   `*{ animation:none !important }` under that query, which stops the lights and
+   the sheen where their 0% keyframes put them — a still composition, which is
+   what the sizes and offsets were chosen against. The field itself stays: it
+   is colour, and removing it would be changing the design rather than the
+   motion. */

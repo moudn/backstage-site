@@ -1,3 +1,4 @@
+import { AmbientField } from "./components/AmbientField";
 import { GlowHorizon } from "./components/GlowHorizon";
 import { JellyfishSection } from "./components/JellyfishSection";
 import { JellyfishBackdrop } from "./components/JellyfishBackdrop";
@@ -19,6 +20,11 @@ export default function App() {
 
   return (
     <>
+      {/* First, and it has to stay first. Everything here paints at z-index 0
+          or auto, so DOM order is what puts the field underneath the backdrop
+          creature and the page rather than over them. */}
+      <AmbientField />
+
       <SplashCursor theme={theme} />
       <SiteNav theme={theme} onToggleTheme={toggle} lenisRef={lenisRef} />
 
