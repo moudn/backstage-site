@@ -355,9 +355,15 @@
   display:flex; flex-wrap:wrap; gap:8px clamp(16px,4vw,40px);
   align-items:baseline; justify-content:space-between;
   margin-top:clamp(48px,8vh,96px);
-  /* Deep enough that the crowd has somewhere to stand. The bottom padding is
-     the house: text sits above it, silhouettes fill it. */
-  padding:clamp(22px,3vh,32px) 0 clamp(150px,22vh,250px);
+  /* The band's height, declared once and used by both the footer's padding and
+     the crowd itself (FooterCrowd.css reads --crowd-h) so the space reserved
+     and the space occupied cannot disagree. */
+  --crowd-h:clamp(150px, 22vh, 250px);
+  /* Padding is the band PLUS clear air, not just the band. When it was exactly
+     --crowd-h the footer text's bottom edge landed on the crowd's top edge —
+     measured at 0px between them — and the audience read as crowding the type
+     rather than sitting behind it. */
+  padding:clamp(22px,3vh,32px) 0 calc(var(--crowd-h) + clamp(30px,6vh,72px));
   /* The stage edge. A plain rule reads as a divider; the gradient makes it a
      lip with light on it, which is the join between stage and house. */
   border-top:1px solid transparent;

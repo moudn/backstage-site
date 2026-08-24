@@ -19,19 +19,43 @@
 .jf-backdrop[data-shown="true"]{ opacity:1 }
 
 .jf-backdrop__inner{
-  /* Deliberately larger than the viewport. The reference sites put a creature
-     big enough to run off both edges behind the words; something that fits
-     neatly on screen reads as an illustration rather than as a world the page
-     is moving through. */
-  width:min(150vh, 165vw);
-  height:145svh;
+  /* Sized against the *creature*, not the box.
+   *
+   * The box is a viewport onto a 3D scene shot through a 34deg lens, so the
+   * jellyfish does not fill it. Measured (diff a screenshot of the page
+   * against the same screenshot with the backdrop hidden, then take the
+   * bounding box of what changed) the creature occupies the bottom 74% of the
+   * box — it runs from 0.26H to 1.00H, which puts its centre 0.13H *below* the
+   * box centre. Two consequences, both of which used to show:
+   *
+   *  - This was 145svh. Multiply by the 1.12 the path reaches and the 1.07 of
+   *    the drift keyframe and the box renders at 1.74x the viewport, so the
+   *    creature alone came out 1160px tall on a 900px screen. A third of it
+   *    was under the fold — and because a desktop browser window is shorter
+   *    than the screen, that read as the taskbar eating the animation.
+   *  - The 0.13H bias then hung what was left off the bottom edge rather than
+   *    the top, so the clipping was entirely at the feet.
+   *
+   * 96svh puts the creature at ~0.85x the viewport height at its largest,
+   * leaving room for the vertical drift underneath it. Width only has to
+   * clear the creature's own 0.58H — anything wider is canvas pixels being
+   * rendered for nothing. */
+  width:min(105vh, 160vw);
+  height:96svh;
   /* --jf-* are written by the component on scroll. The fallbacks matter: with
      no script this still renders as a static creature rather than collapsing
-     to no transform at all. */
+     to no transform at all.
+
+     --jf-bias is the 0.13H correction, and it is deliberately the innermost
+     function in the list: percentages resolve against the untransformed box,
+     so sitting inside scale() it picks up both that and the `scale` property
+     from the drift keyframe — exactly the two factors the creature's own
+     offset scales by. */
   transform:
     translate3d(var(--jf-x, 0px), var(--jf-y, 0px), 0)
     rotate(var(--jf-rot, 0deg))
-    scale(var(--jf-scale, 1));
+    scale(var(--jf-scale, 1))
+    translateY(var(--jf-bias, -13%));
   filter:hue-rotate(var(--jf-hue, 0deg));
   will-change:transform, filter;
   animation:jf-backdrop-drift 42s ease-in-out infinite;
@@ -75,6 +99,11 @@
   .jf-backdrop__inner{
     width:min(120vh, 124vw);
     height:116svh;
+    /* No bias correction here, on purpose. A phone viewport is tall and narrow,
+       so the creature already reads as filling the screen; lifting it 13%
+       walks the bell straight back up into the "Our products" copy, which is
+       the overlap the path rewrite was for. */
+    --jf-bias:0%;
   }
   :root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.34 }
   :root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.30 }

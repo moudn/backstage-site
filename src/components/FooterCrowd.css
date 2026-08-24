@@ -8,7 +8,7 @@
   left:50%;
   width:100vw;
   transform:translateX(-50%);
-  height:clamp(150px, 22vh, 250px);
+  height:var(--crowd-h);
   pointer-events:none;
   /* Deliberately NOT overflow:hidden — the spill has to reach up past the top
      edge. The clip lives on .crowd__stage instead. */
@@ -57,14 +57,20 @@
 :root[data-theme="dark"] .crowd__row--mid{ opacity:0.22 }
 :root[data-theme="dark"] .crowd__row--front{ opacity:0.32 }
 
-/* --crowd-p is written by the component: 0 as the crowd's top edge reaches
-   the bottom of the screen, 1 a viewport later. The near row travels furthest
-   because it is nearest — the whole point of the effect. */
+/* --crowd-p is written by the component: 0 as the crowd's top edge reaches the
+   bottom of the screen, 1 once the band is fully in view. The near row travels
+   furthest because it is nearest — the whole point of the effect.
+
+   Note the (1 - p): the rows come to REST at zero, not travel to -26px. They
+   used to translate upward as p rose, so at the bottom of the page — where a
+   reader actually stops — the front row sat 26 units clear of the bottom edge,
+   leaving a strip of empty background beneath the audience. The parallax
+   should happen on the way in and settle flush, not end mid-air. */
 @media (prefers-reduced-motion: no-preference){
   .crowd__row{ transition:transform 120ms linear }
-  .crowd__row--back{  transform:translateY(calc(var(--crowd-p, 0) * -5px)) }
-  .crowd__row--mid{   transform:translateY(calc(var(--crowd-p, 0) * -13px)) }
-  .crowd__row--front{ transform:translateY(calc(var(--crowd-p, 0) * -26px)) }
+  .crowd__row--back{  transform:translateY(calc((1 - var(--crowd-p, 0)) * 5px)) }
+  .crowd__row--mid{   transform:translateY(calc((1 - var(--crowd-p, 0)) * 13px)) }
+  .crowd__row--front{ transform:translateY(calc((1 - var(--crowd-p, 0)) * 26px)) }
 }
 
 /* Phone screens. Long cycle and mostly dark, so they read as somebody
@@ -90,7 +96,13 @@
   left:50%;
   top:-42%;
   width:min(1100px, 120%);
-  height:150%;
+  /* Ends exactly on the crowd's bottom edge: -42% + 142% = 100%.
+     It was 150%, which put 16px of gradient BELOW the band — and since .crowd
+     is deliberately not overflow:hidden (the spill has to reach up past the
+     top edge), that overshoot grew the document and left a pale strip under
+     the audience with no figures in it. That strip was the "gap between the
+     image and the bottom of the page". */
+  height:142%;
   transform:translateX(-50%);
   /* Three stops rather than two. A single falloff to transparent leaves a
      faint ring where the gradient's rate of change turns over — visible as a
@@ -113,10 +125,10 @@
    feature. */
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference){
   .footer:hover .crowd__row--front{
-    transform:translateY(calc(var(--crowd-p, 0) * -26px - 4px));
+    transform:translateY(calc((1 - var(--crowd-p, 0)) * 26px - 4px));
   }
   .footer:hover .crowd__row--mid{
-    transform:translateY(calc(var(--crowd-p, 0) * -13px - 2px));
+    transform:translateY(calc((1 - var(--crowd-p, 0)) * 13px - 2px));
   }
   .footer:hover .crowd__spill{ opacity:0.8 }
   .crowd__spill{ transition:opacity 500ms ease }

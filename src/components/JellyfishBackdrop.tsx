@@ -45,9 +45,10 @@ const HUE_SWEEP: Record<Theme, { start: number; end: number }> = {
 /* How far the creature travels across the whole scrollable body. These are
  * what make it read as something the page moves past rather than a fixed
  * image: it drifts sideways, rises, and turns slowly as you go. */
-const DRIFT_X = 420;   // px travelled left-to-right, centred on 0
-const DRIFT_Y = 260;   // px risen over the page
-const ROTATE = 14;     // degrees of slow turn
+const DRIFT_X = 420;        // px travelled left-to-right, centred on 0
+const DRIFT_Y_PHONE = 260;  // px risen over the page, on a tall narrow screen
+const DRIFT_Y_DESK = 150;   // ...and on a wide short one, where there is less room
+const ROTATE = 14;          // degrees of slow turn
 
 /* The drift distances above are absolute pixels, chosen against a desktop
  * viewport. Used unchanged on a phone they are catastrophic: ±210px of
@@ -57,12 +58,22 @@ const ROTATE = 14;     // degrees of slow turn
  *
  * So the travel is capped as a fraction of the viewport. 28% either side is
  * enough to still read as movement, and keeps the creature behind the text
- * where it belongs rather than beside it. On a desktop the cap is never the
- * binding constraint and the original numbers apply unchanged. */
+ * where it belongs rather than beside it.
+ *
+ * Vertical travel splits at the same 900px the stylesheet uses, and for the
+ * same reason the box does. A desktop window is wide and short — 720 or 820
+ * usable pixels is normal once the taskbar, tab strip and bookmarks bar have
+ * had their share — so the creature is close to the full height of it, and
+ * 260px of rise pushes a third of the animation under the fold. A phone has
+ * height to spare and needs the movement more, since almost nothing else on
+ * the screen is moving. */
 function driftFor(viewportW: number, viewportH: number) {
+  const phone = viewportW <= 900;
   return {
     x: Math.min(DRIFT_X, viewportW * 0.56),
-    y: Math.min(DRIFT_Y, viewportH * 0.34),
+    y: phone
+      ? Math.min(DRIFT_Y_PHONE, viewportH * 0.34)
+      : Math.min(DRIFT_Y_DESK, viewportH * 0.2),
   };
 }
 
