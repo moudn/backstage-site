@@ -28,6 +28,62 @@
      a reduced-motion visitor whose JS failed would be left looking at a title
      that never becomes visible. */
   will-change:transform, opacity;
+
+  /* Cut as glass — see the --glass-* tokens.
+   *
+   * The letters are deliberately not solid. Behind them the ambient field is
+   * drifting and shifting hue with the scroll, and a partly transparent letter
+   * lets that move through it, which is the thing that actually reads as glass:
+   * a flat gradient fill just reads as gradient text.
+   *
+   * Per CHARACTER rather than on .sec-title, and that is forced rather than
+   * chosen. background-clip:text on the parent would have to resolve the clip
+   * against children that are individually translated by the entrance
+   * animation. Each character is its own inline-block of identical height, so
+   * a vertical ramp lands in the same place on every one and the line still
+   * reads as one continuous pane.
+   *
+   * `color` is set first and is a real colour: if background-clip:text does not
+   * land, the heading is still there. Painting text with a background is the
+   * one effect whose failure mode is "nothing is on the screen".
+   *
+   * Standard `background-clip` only — do NOT hand-write -webkit-background-clip
+   * beside it. The minifier collapses such a pair and keeps only the prefixed
+   * one, which is how the nav lost its blur in Chrome. */
+  color:var(--text);
+  background-image:linear-gradient(
+    177deg,
+    var(--glass-lip) 0%,
+    var(--glass-body) 13%,
+    var(--glass-body) 58%,
+    var(--glass-base) 92%,
+    var(--glass-base) 100%
+  );
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Depth, applied once to the whole heading rather than per letter.
+ *
+ * drop-shadow traces the alpha of what was actually painted — which, with the
+ * fill clipped to text, is the glyphs — so it gives a real cast shadow instead
+ * of a rectangle. One filter on the parent, not thirty on the characters: a
+ * 132px title is around thirty inline-blocks, and a per-character filter is
+ * thirty separate offscreen passes that all re-run while the entrance
+ * animation is changing their opacity. */
+.sec-title{
+  filter:drop-shadow(0 clamp(6px, 1.2vw, 16px) clamp(14px, 2.4vw, 34px) var(--glass-cast));
+}
+
+/* Forced-colours mode replaces author colours wholesale, and a gradient
+   clipped to text has nothing to replace — so hand the glyphs a real fill back
+   rather than leaving a heading that is not there. Same guard as the hero. */
+@media (forced-colors: active){
+  .sec-title__ch{
+    background-image:none;
+    -webkit-text-fill-color:currentColor;
+  }
+  .sec-title{ filter:none }
 }
 
 @media (prefers-reduced-motion: no-preference){

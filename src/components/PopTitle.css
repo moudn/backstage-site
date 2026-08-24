@@ -27,6 +27,35 @@
   /* Below the optical centre, so the tilt pivots around the baseline area
      and the letters appear to stand up rather than rotate on the spot. */
   transform-origin:50% 68%;
+
+  /* Same glass as .sec-title__ch — see the long note there. Every big heading
+     on the site is cut the same way, which is the point: this one is a
+     different component only because it also stands up out of the page. */
+  color:var(--text);
+  background-image:linear-gradient(
+    177deg,
+    var(--glass-lip) 0%,
+    var(--glass-body) 13%,
+    var(--glass-body) 58%,
+    var(--glass-base) 92%,
+    var(--glass-base) 100%
+  );
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* No drop-shadow on .pop-title, deliberately — unlike .sec-title.
+ *
+ * .pop-title carries `perspective` and its words carry `transform-style:
+ * preserve-3d`. A filter on that ancestor forces the subtree into a flat
+ * offscreen buffer, which collapses the 3D context and the letters stop
+ * standing up. The heading gets its depth from the animation instead. */
+
+@media (forced-colors: active){
+  .pop-title__ch{
+    background-image:none;
+    -webkit-text-fill-color:currentColor;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference){

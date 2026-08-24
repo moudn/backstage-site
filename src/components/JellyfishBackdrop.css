@@ -64,14 +64,20 @@
 /* Opacity is the whole balance of this thing: high enough to be a presence
    behind the type, low enough that the type stays comfortably readable.
    Light needs *more* than dark, not less — a violet creature loses contrast
-   against near-white faster than it does against near-black. These numbers
-   are measured, not guessed: see the check in verify_site.py, which fails if
-   either theme drops below a real visible shift. */
-:root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.5 }
+   against near-white faster than it does against near-black.
+
+   These went up when AmbientField landed. They were tuned against a flat
+   near-black or near-white page, where 0.44 was plenty to read as a creature.
+   Against a lit, coloured, drifting ground it stopped being one: it was still
+   drawing — data-shown true, opacity 1, canvas painting at every scroll
+   position — but at that strength it had become another soft shape in a
+   background already full of soft shapes. The fix for "I can't see it" here is
+   contrast against what is behind it, not presence. */
+:root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.66 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.44 }
+  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.62 }
 }
-:root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.44 }
+:root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.62 }
 
 /* A slow independent drift on top of the scroll-driven movement, so the
    creature is alive even when the page is still. */
@@ -105,11 +111,15 @@
        the overlap the path rewrite was for. */
     --jf-bias:0%;
   }
-  :root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.34 }
-  :root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.30 }
+  /* Raised with the desktop numbers above, and for the same reason. A phone is
+     the worst case for this: the creature was already the dimmest here — 0.30
+     against a page that was flat — and it is now competing with the lit field
+     across almost the whole screen rather than behind a fraction of it. */
+  :root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.48 }
+  :root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.44 }
 }
 @media (max-width: 900px) and (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.30 }
+  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.44 }
 }
 
 @media (prefers-reduced-motion: reduce){

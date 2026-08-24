@@ -31,6 +31,15 @@ import "./FooterCrowd.css";
 const W = 1600;
 const H = 260;
 
+/* Where the drawing actually starts.
+ *
+ * The back row sits at y=104 with up to 8 units of jitter and a head radius
+ * that tops out near 10.6, so nothing is painted above y≈89 — the top third of
+ * the viewBox is empty. That empty band matters because of how the SVG is
+ * fitted: see the preserveAspectRatio note below. Cropping the viewBox to the
+ * ink means the band is filled with people rather than with nothing. */
+const TOP = 84;
+
 /** mulberry32 — small, fast, and deterministic from a fixed seed. */
 function rng(seed: number) {
   return () => {
@@ -140,8 +149,22 @@ export function FooterCrowd() {
       <div className="crowd__stage">
       <svg
         className="crowd__svg"
-        viewBox={`0 0 ${W} ${H}`}
-        preserveAspectRatio="xMidYMax slice"
+        viewBox={`0 ${TOP} ${W} ${H - TOP}`}
+        /* YMin, not YMax — this was cutting the heads off.
+         *
+         * `slice` scales the drawing to COVER the band and clips whatever
+         * overflows; the alignment keyword decides which edge is kept. The
+         * band is far wider in proportion than the viewBox (1440x198 against
+         * 1600x176), so the overflow is vertical, and YMax pinned the BOTTOM
+         * edge — which put the overflow at the top and sliced the back row's
+         * heads clean off.
+         *
+         * YMin pins the top instead, so the overflow falls off the bottom.
+         * That is also what the drawing wants: the figures' bodies are meant
+         * to run off the bottom of the page rather than end in mid-air, which
+         * is why the shoulder ellipses are drawn far below the frame. Heads
+         * are the part that has to survive. */
+        preserveAspectRatio="xMidYMin slice"
         focusable="false"
       >
         {ROWS.map((r, i) => (

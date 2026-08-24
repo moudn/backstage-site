@@ -42,8 +42,17 @@
   --amb-blend:normal;
   --amb-sheen:oklch(0.62 0.11 205 / 0.10);
   --amb-vignette:oklch(0.90 0.02 250 / 0.38);
+  --amb-sweep:-28deg;
   --grain-op:0.045;
   --grain-blend:overlay;
+  /* The section headings, cut as glass. See SectionTitle.css.
+     Read top to bottom: a specular lip where the light lands, a dense body,
+     then a base that thins out and takes an accent tint so the bottom of each
+     letter dissolves into the field drifting behind it. */
+  --glass-lip:oklch(0.72 0.09 232 / 0.85);
+  --glass-body:oklch(0.28 0.02 260 / 0.94);
+  --glass-base:oklch(0.34 0.07 245 / 0.66);
+  --glass-cast:oklch(0.45 0.08 245 / 0.20);
   --glow-rim:oklch(0.78 0.05 215);
   --glow-rim-shadow:0px -4px 18px 0px oklch(0.60 0.06 285 / 0.45);
   --glow-1:oklch(0.62 0.07 215);
@@ -75,8 +84,13 @@
     --amb-blend:screen;
     --amb-sheen:oklch(0.70 0.17 295 / 0.14);
     --amb-vignette:oklch(0.10 0.015 285 / 0.42);
+    --amb-sweep:-60deg;
     --grain-op:0.07;
     --grain-blend:overlay;
+    --glass-lip:oklch(1 0 0 / 0.96);
+    --glass-body:oklch(0.97 0.006 285 / 0.86);
+    --glass-base:oklch(0.86 0.09 295 / 0.52);
+    --glass-cast:oklch(0.06 0.02 285 / 0.60);
     --glow-rim:#FFFFFF;
     --glow-rim-shadow:0px -4px 23px 0px #ffffffb5;
     --glow-1:#4922E5;
@@ -110,8 +124,13 @@
   --amb-blend:screen;
   --amb-sheen:oklch(0.70 0.17 295 / 0.14);
   --amb-vignette:oklch(0.10 0.015 285 / 0.42);
+  --amb-sweep:-60deg;
   --grain-op:0.07;
   --grain-blend:overlay;
+  --glass-lip:oklch(1 0 0 / 0.96);
+  --glass-body:oklch(0.97 0.006 285 / 0.86);
+  --glass-base:oklch(0.86 0.09 295 / 0.52);
+  --glass-cast:oklch(0.06 0.02 285 / 0.60);
   --glow-rim:#FFFFFF;
   --glow-rim-shadow:0px -4px 23px 0px #ffffffb5;
   --glow-1:#4922E5;
@@ -145,8 +164,13 @@
   --amb-blend:normal;
   --amb-sheen:oklch(0.62 0.11 205 / 0.10);
   --amb-vignette:oklch(0.90 0.02 250 / 0.38);
+  --amb-sweep:-28deg;
   --grain-op:0.045;
   --grain-blend:overlay;
+  --glass-lip:oklch(0.72 0.09 232 / 0.85);
+  --glass-body:oklch(0.28 0.02 260 / 0.94);
+  --glass-base:oklch(0.34 0.07 245 / 0.66);
+  --glass-cast:oklch(0.45 0.08 245 / 0.20);
   --glow-rim:oklch(0.78 0.05 215);
   --glow-rim-shadow:0px -4px 18px 0px oklch(0.60 0.06 285 / 0.45);
   --glow-1:oklch(0.62 0.07 215);

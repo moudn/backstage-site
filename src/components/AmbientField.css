@@ -41,6 +41,22 @@
   position:absolute;
   inset:0;
   opacity:var(--amb-op);
+  /* The scroll-driven colour change.
+   *
+   * --amb-p is 0 at the top of the document and 1 at the bottom, written by
+   * the component on a rAF; --amb-sweep is how far the hue travels over that,
+   * and it is per theme because the two palettes start from different places.
+   * Dark opens violet and sweeps back through blue to teal; light opens
+   * blue-teal and has far less room before it lands somewhere green, so its
+   * sweep is less than half as long.
+   *
+   * The direction matches the jellyfish backdrop's own hue sweep, so the
+   * creature and the room it swims in change together rather than drifting
+   * apart as you read.
+   *
+   * The fallback of 0 is what a reduced-motion visitor gets: the opening
+   * colours, held. */
+  filter:hue-rotate(calc(var(--amb-p, 0) * var(--amb-sweep)));
 }
 
 .ambient__light{

@@ -72,7 +72,11 @@ export function JellyfishSection({ theme }: { theme: Theme }) {
         width: "100%",
         overflow: "hidden",
         isolation: "isolate",
-        background: "var(--bg)",
+        /* No background. It used to paint `var(--bg)`, which on a near-white
+           light theme was a flat white slab sitting in the middle of the lit
+           field — the title card visibly a different page from everything
+           above and below it. The field is fixed behind the whole document
+           and shows through here like anywhere else. */
       }}
     >
       <style>{RING_CSS}</style>
@@ -226,7 +230,10 @@ const RING_CSS = `
   width:min(420px, 82vw);
   text-align:center;
   padding:clamp(10px,1.4vh,16px) clamp(14px,2.4vw,24px);
-  background:radial-gradient(120% 140% at 50% 60%, var(--bg) 38%, transparent 78%);
+  /* Translucent, not solid --bg. This is a readability pad under the slogan;
+     at full page colour it read as a pale disc floating on the field once the
+     panel stopped painting its own background. */
+  background:radial-gradient(120% 140% at 50% 60%, color-mix(in oklab, var(--bg) 74%, transparent) 38%, transparent 78%);
   pointer-events:none;
 }
 /* Deliberately small. BACKSTAGE is the title on this screen; at anything
