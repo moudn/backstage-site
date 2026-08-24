@@ -41,16 +41,23 @@
 /* ── nav (revealed on scroll) ─────────────────────────────────────────── */
 .nav{
   position:fixed; top:0; left:0; right:0; z-index:50;
-  background:color-mix(in oklab, var(--bg) 82%, transparent);
-  /* Standard property ONLY. Do not hand-write the -webkit- prefix next to it.
+  /* Same glass as the mobile menu panel — see the recipe in tokens.css. It
+     used to be an 82% fill with a 14px blur, which is translucent but reads as
+     a tinted bar rather than a pane; the fill came down and the blur and
+     saturation went up.
    *
-   * Written as `backdrop-filter: …; -webkit-backdrop-filter: …;` the build's
-   * CSS minifier collapsed the pair and emitted *only* the prefixed one, which
-   * Chrome and Edge do not support — so the nav shipped with no blur at all
-   * in every browser except Safari, and page copy scrolled visibly through it.
-   * Left to itself the build adds whatever prefixes its targets need. */
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--line-soft);
+   * Standard `backdrop-filter` ONLY. Do not hand-write the -webkit- prefix
+   * next to it. Written as a pair the build's CSS minifier collapsed them and
+   * emitted *only* the prefixed one, which Chrome and Edge do not support — so
+   * the nav shipped with no blur at all in every browser except Safari, and
+   * page copy scrolled visibly through it. Left alone the build adds whatever
+   * prefixes its targets need. */
+  background:var(--glass-fill);
+  backdrop-filter:var(--glass-blur);
+  border-bottom:1px solid var(--glass-edge);
+  /* Lifts the pane off the page rather than letting it sit flush. Very low
+     alpha: this should be felt at the edge, not seen as a shadow. */
+  box-shadow:0 14px 34px -26px color-mix(in oklab, var(--text) 60%, transparent);
   opacity:0; transform:translateY(-100%); pointer-events:none;
   transition:opacity 320ms ease, transform 380ms cubic-bezier(0.16,1,0.3,1);
 }
@@ -463,9 +470,9 @@
   display:flex; flex-direction:column; justify-content:center;
   gap:clamp(20px,4vh,36px);
   padding:clamp(24px,6vh,56px) clamp(22px,7vw,44px) clamp(32px,7vh,64px);
-  background:color-mix(in oklab, var(--bg) 62%, transparent);
-  backdrop-filter:blur(26px) saturate(170%);
-  border-top:1px solid color-mix(in oklab, var(--text) 14%, transparent);
+  background:var(--glass-fill);
+  backdrop-filter:var(--glass-blur);
+  border-top:1px solid var(--glass-edge);
   /* Off-screen and untouchable when closed. visibility is in the transition
      so it flips only after the slide finishes, rather than snapping. */
   opacity:0;
@@ -541,8 +548,12 @@
    a long time. Where it is unavailable the fill has to carry the pane on its
    own, so it goes nearly opaque — a 62% wash with no blur behind it is just
    unreadable text over unreadable text. */
+/* Backdrop-filter is the whole effect, and where it is unavailable the fill
+   has to carry the pane on its own — so it goes nearly opaque. Covers both
+   users of the recipe, not just the panel. */
 @supports not (backdrop-filter: blur(1px)){
-  .nav__panel{ background:color-mix(in oklab, var(--bg) 96%, transparent) }
+  .nav,
+  .nav__panel{ background:var(--glass-fill-solid) }
 }
 
 @media (prefers-reduced-motion: reduce){

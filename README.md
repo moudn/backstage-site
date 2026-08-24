@@ -217,11 +217,21 @@ in the top layer, above the very content `backdrop-filter` needs to sample, so
 the glass goes flat. A plain element with the page inerted behind it gets the
 same containment without that cost.
 
-Four things make the glass read as a pane rather than a tinted box, and all
-four are load-bearing: a translucent fill, a blur, a **saturate** so colours
-coming through stay alive instead of going grey, and a hairline top edge
-brighter than the rest. There is an `@supports not (backdrop-filter)` fallback
-that takes the fill to near-opaque — a 62% wash with no blur behind it is
+The glass is **one recipe, shared with the desktop nav bar** — `--glass-*` in
+tokens.css — so the two cannot drift into looking like different materials.
+Four parts, all load-bearing: a translucent fill, a blur, a **saturate** so
+colours coming through stay alive instead of going grey, and a hairline edge.
+The saturate is the part usually left out, and its absence is why a lot of
+"glassmorphism" looks like dirty perspex.
+
+**Blur is the lever for legibility, not fill.** Raising the fill makes the pane
+less glassy; raising the blur destroys the detail behind it while keeping it
+just as translucent. That is why it is 30px — the nav bar is a thin strip with
+the 100px contact address scrolling underneath it, which is the worst case a
+translucent bar can face.
+
+There is an `@supports not (backdrop-filter)` fallback taking the fill to
+near-opaque, covering both users: a 68% wash with no blur behind it is
 unreadable text over unreadable text.
 
 Two behaviours worth knowing, both of which had a failure mode:

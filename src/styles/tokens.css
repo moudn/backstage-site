@@ -156,6 +156,31 @@
   --fade:cubic-bezier(0.37, 0, 0.63, 1);
 }
 
+/* The glass. One recipe, used by the nav bar and the mobile menu panel, so
+   the two cannot drift into looking like different materials.
+ *
+ * Four parts and every one is doing work:
+ *   fill   — translucent enough to see through, opaque enough to read on
+ *   blur   — what makes it a pane rather than a tint
+ *   sat    — colours coming through stay alive instead of going grey. This is
+ *            the part usually left out, and its absence is why a lot of
+ *            "glassmorphism" looks like dirty perspex
+ *   edge   — a hairline where the pane meets the page, catching the light
+ *
+ * Anything using --glass-blur needs the @supports fallback that goes with it:
+ * a 68% wash with no blur behind it is unreadable text over unreadable text.
+ *
+ * Blur is the lever for legibility, not fill. Raising the fill makes the pane
+ * less glassy; raising the blur destroys the detail behind it while keeping it
+ * just as translucent, which is why this is 30px for a bar that large dark
+ * type scrolls underneath. */
+:root{
+  --glass-fill:color-mix(in oklab, var(--bg) 68%, transparent);
+  --glass-fill-solid:color-mix(in oklab, var(--bg) 96%, transparent);
+  --glass-blur:blur(30px) saturate(180%);
+  --glass-edge:color-mix(in oklab, var(--text) 13%, transparent);
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
