@@ -36,7 +36,7 @@ export default function App() {
 
       {/* Drifts behind everything after the title card. */}
       <JellyfishBackdrop theme={theme} />
-      <PageBody theme={theme} />
+      <PageBody />
     </>
   );
 }

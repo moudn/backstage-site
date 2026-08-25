@@ -188,6 +188,32 @@ Three things there are load-bearing:
 `.how` is deliberately excluded — it is not a `DriftSection`, because a
 transform on it makes it the containing block for its own sticky stage.
 
+## The chrome button
+
+The primary call to action has a liquid-metal ring: a conic gradient rotating
+behind the pill on two pseudo-elements, plus a bevel on the face. It is
+entirely CSS — no canvas, no WebGL context, no per-frame JavaScript.
+
+The angle is a **registered** custom property (`@property --chrome-angle`).
+It has to be: an unregistered custom property is a string as far as
+interpolation is concerned, so `conic-gradient(from var(--x) …)` would jump
+between keyframes instead of sweeping. Where `@property` is unsupported the
+ring rests at 0deg — a still metal edge, not a broken one.
+
+This started as `metal-fx`, which does the same thing with a shader. It was
+removed, and the reason is worth keeping: the site began being flagged as
+malicious by Guardio around the deploy that introduced it, Google Safe
+Browsing had no findings against the domain, and metal-fx was both the newest
+third-party code on the page and the only thing on it reading canvas pixels.
+Canvas reads next to WebGL are the signature heuristic scanners use for
+fingerprinting. That is correlation and not proof — which is exactly why the
+replacement had to cost nothing, and it does: the main bundle got 52KB
+smaller and the page dropped a WebGL context.
+
+If a metal effect is ever wanted again, do it in CSS. Adding a library that
+touches canvas pixels to a site that already runs three WebGL scenes is a
+reputation risk out of all proportion to a ring around a button.
+
 ## Themes
 
 The toggle stamps `data-theme` on `<html>` and the stylesheet does the rest, so

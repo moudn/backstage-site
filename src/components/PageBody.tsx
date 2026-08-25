@@ -18,12 +18,10 @@
  * section the reader advances through.
  */
 
-import type { Theme } from "../lib/useTheme";
 import { DriftSection } from "./DriftSection";
 import { FooterCrowd } from "./FooterCrowd";
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
-import { MetalButton } from "./MetalButton";
 import { SectionTitle } from "./SectionTitle";
 import { StepSequence } from "./StepSequence";
 import {
@@ -37,9 +35,10 @@ import {
   PROBLEM,
 } from "../data/content";
 import "../styles/page.css";
+import "../styles/chrome.css";
 import "../styles/panels.css";
 
-export function PageBody({ theme }: { theme: Theme }) {
+export function PageBody() {
   return (
     <div className="page">
       {/* The .aurora and .aurora-veil pair that used to sit here is gone. It
@@ -57,9 +56,13 @@ export function PageBody({ theme }: { theme: Theme }) {
             </ScrollReveal>
             <Reveal delay={120}>
               <div className="intro__actions">
-                <MetalButton theme={theme} href="#contact">
-                  {INTRO.primaryCta}
-                </MetalButton>
+                {/* The chrome ring is a wrapper because it is drawn on two
+                    pseudo-elements behind the pill — see chrome.css. */}
+                <span className="btn-chrome">
+                  <a className="btn-pill" href="#contact">
+                    {INTRO.primaryCta}
+                  </a>
+                </span>
                 <a className="link-rule" href="#how">
                   {INTRO.secondaryCta}
                 </a>

@@ -1,0 +1,125 @@
+/* The chrome button.
+ *
+ * This replaced metal-fx, which did the same job with a WebGL shader. Nothing
+ * was wrong with the library — but the site began being flagged by Guardio
+ * around the deploy that introduced it, Google Safe Browsing has no findings
+ * against the domain, and metal-fx was both the newest third-party code on the
+ * page and the only thing on it reading canvas pixels. Canvas reads next to
+ * WebGL are the signature heuristic scanners use for fingerprinting, and a
+ * consultancy's own site being called malicious costs more than a shader is
+ * worth. Correlation, not proof — which is exactly why the replacement had to
+ * cost nothing to try.
+ *
+ * So: no canvas, no context, no dependency, no per-frame JavaScript. A rotating
+ * conic gradient behind the pill for the liquid-metal edge, and a sheen across
+ * the face. Everything below is compositor work on two pseudo-elements.
+ */
+
+/* The ring's angle has to be a registered property or it cannot animate —
+   an unregistered custom property is a string as far as interpolation is
+   concerned, so `from var(--x)` would jump between keyframes rather than
+   sweep. Where @property is unsupported the ring simply sits still, which is
+   a static metal edge rather than a broken one. */
+@property --chrome-angle{
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.btn-chrome{
+  position:relative;
+  isolation:isolate;
+  border-radius:999px;
+  /* Shrink to the label. .intro__actions is a flex row, and without this the
+     wrapper takes the full line and the ring is drawn around empty space. */
+  display:inline-block;
+}
+
+/* The liquid metal edge. A conic gradient turning behind the pill, showing
+   only in the 1.5px it extends past it. The gradient's centre singularity —
+   the point where every stop meets, which is what put a star in the middle of
+   the ambient field — sits underneath the button face here and is never seen. */
+.btn-chrome::before{
+  content:"";
+  position:absolute;
+  inset:-1.5px;
+  border-radius:inherit;
+  z-index:-1;
+  background:conic-gradient(
+    from var(--chrome-angle),
+    var(--chrome-shade)  0deg,
+    var(--chrome-lit)   38deg,
+    var(--chrome-mid)   76deg,
+    var(--chrome-shade)128deg,
+    var(--chrome-glint)168deg,
+    var(--chrome-lit)  206deg,
+    var(--chrome-mid)  248deg,
+    var(--chrome-shade)298deg,
+    var(--chrome-lit)  338deg,
+    var(--chrome-shade)360deg
+  );
+  animation:chrome-turn 5.5s linear infinite;
+}
+@keyframes chrome-turn{ to{ --chrome-angle:360deg } }
+
+/* A soft halo of the same metal, so the edge reads as lit rather than drawn.
+   Blurred and well under half opacity — this should be felt at the rim. */
+.btn-chrome::after{
+  content:"";
+  position:absolute;
+  inset:-5px;
+  border-radius:inherit;
+  z-index:-2;
+  background:inherit;
+  background-image:conic-gradient(
+    from var(--chrome-angle),
+    transparent 0deg,
+    var(--chrome-glint) 168deg,
+    transparent 300deg
+  );
+  filter:blur(7px);
+  opacity:0.5;
+  animation:chrome-turn 5.5s linear infinite;
+}
+
+/* The face keeps --btn-bg and --btn-fg exactly as they were: this is still the
+   primary call to action and its contrast is not up for negotiation. What it
+   gains is a bevel — a hairline of light along the top inside edge and a dark
+   one along the bottom — which is what makes a flat slug read as turned metal. */
+.btn-chrome .btn-pill{
+  position:relative;
+  z-index:1;
+  border:0;
+  background-image:linear-gradient(
+    177deg,
+    color-mix(in oklab, var(--btn-fg) 16%, transparent) 0%,
+    transparent 34%,
+    transparent 66%,
+    color-mix(in oklab, var(--chrome-shade) 26%, transparent) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--btn-fg) 30%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--chrome-shade) 40%, transparent);
+}
+
+/* Focus has to sit on the wrapper. The ring is painted at z-index -1 and the
+   face at 1, so an outline on the face alone would be crossed by neither —
+   but the wrapper is the thing whose edge a reader sees. */
+.btn-chrome:has(:focus-visible){
+  outline:2px solid var(--focus);
+  outline-offset:4px;
+}
+.btn-chrome .btn-pill:focus-visible{ outline:none }
+
+/* Hover pulls the metal round faster. Not a different effect — the same one,
+   acknowledging the pointer. */
+@media (hover: hover) and (pointer: fine){
+  .btn-chrome:hover::before,
+  .btn-chrome:hover::after{ animation-duration:2.2s }
+}
+
+/* Reduced motion stops the rotation. tokens.css already carries a global
+   `*{animation:none !important}` for that, and it is enough here: with the
+   animation off, --chrome-angle rests at its registered initial 0deg and the
+   ring is a still metal edge. Nothing further to do — noted so nobody adds a
+   redundant block. */
