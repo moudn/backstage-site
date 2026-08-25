@@ -46,6 +46,22 @@ export function useTheme() {
   }, [explicit]);
 
   const toggle = useCallback(() => {
+    /* Cross-fade the swap.
+     *
+     * Custom properties do not transition — they are not animatable unless
+     * registered with @property — so transitioning `--bg` itself does nothing.
+     * What can transition is each property that READS one, which is why this
+     * paints a class on <html> for the length of the fade and lets a single
+     * blanket rule in tokens.css cover the whole tree. It is a heavy selector,
+     * so it is only live for those 420ms and never during normal scrolling.
+     *
+     * Deliberately not the View Transitions API: that snapshots the document,
+     * and three WebGL canvases and a fixed background do not survive being
+     * photographed and cross-faded — the creatures freeze mid-swap. */
+    const root = document.documentElement;
+    root.classList.add("theme-changing");
+    window.setTimeout(() => root.classList.remove("theme-changing"), 460);
+
     setTheme((current) => {
       const next: Theme = current === "dark" ? "light" : "dark";
       try {

@@ -127,19 +127,33 @@
    sliding about — the lights move, and separately the light on them turns. */
 .ambient__sheen{
   position:absolute;
+  /* Its centre is pushed off the top-left corner, and that is the whole reason
+     for these numbers. A conic gradient has a singularity at its centre — every
+     stop meets at one point — and centred on the viewport that put a visible
+     star, a faint X, in the middle of every screen of the site. Off-canvas the
+     artefact is never rendered and what is left is the smooth part of the
+     sweep. The element is oversized enough that no corner is ever empty. */
   top:50%;
   left:50%;
-  width:180vmax;
-  height:180vmax;
-  margin:-90vmax 0 0 -90vmax;
-  background:conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    var(--amb-sheen) 70deg,
-    transparent 150deg,
-    transparent 210deg,
-    var(--amb-sheen) 290deg,
-    transparent 360deg
+  width:200vmax;
+  height:200vmax;
+  margin:-100vmax 0 0 -100vmax;
+  /* A single soft blob, parked off-centre in a big square that turns. As the
+     square rotates the blob orbits the middle of the screen, which gives the
+     same slow travelling light the conic version was for — without either of
+     the two artefacts a conic gradient has.
+   *
+   * A conic gradient has a singularity at its centre where every stop meets:
+   * centred on the viewport that drew a faint star in the middle of every
+   * screen. Moving the centre off-canvas fixed that and exposed the second
+   * problem — the boundaries between its stops are straight rays, and one of
+   * them cut a visible diagonal seam across the page. A radial blob has no
+   * centre to see and no edges to catch. */
+  background:radial-gradient(
+    circle at 32% 32%,
+    var(--amb-sheen) 0%,
+    color-mix(in oklab, var(--amb-sheen) 45%, transparent) 22%,
+    transparent 46%
   );
   animation:amb-turn 96s linear infinite;
   will-change:transform;

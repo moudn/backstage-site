@@ -28,9 +28,12 @@ export function DriftSection({
   className?: string;
   children: ReactNode;
 }) {
-  const ref = useScrollDrift<HTMLElement>(SECTION_SHIFT);
+  /* `true` turns the rotation on — see the note in useScrollDrift. Every
+     DriftSection turns; the exception is "How we work", which is not a
+     DriftSection at all, for the reason in the header comment above. */
+  const ref = useScrollDrift<HTMLElement>(SECTION_SHIFT, 0, true);
   return (
-    <section ref={ref} id={id} className={`${className ?? ""} drift`.trim()}>
+    <section ref={ref} id={id} className={`${className ?? ""} drift drift--turn`.trim()}>
       {children}
     </section>
   );

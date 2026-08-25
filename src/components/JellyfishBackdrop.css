@@ -36,12 +36,14 @@
    *  - The 0.13H bias then hung what was left off the bottom edge rather than
    *    the top, so the clipping was entirely at the feet.
    *
-   * 96svh puts the creature at ~0.85x the viewport height at its largest,
-   * leaving room for the vertical drift underneath it. Width only has to
-   * clear the creature's own 0.58H — anything wider is canvas pixels being
-   * rendered for nothing. */
-  width:min(105vh, 160vw);
-  height:96svh;
+   * The first correction for that was 96svh, which fixed the cropping and
+   * overshot: chosen against a page that was still flat, it left a creature too
+   * small to read as one once the lit field was behind it. 106svh is the most
+   * it can take before the ends of the vertical drift start clipping again.
+   * Width only has to clear the creature's own 0.58H — anything wider is canvas
+   * pixels being rendered for nothing. */
+  width:min(115vh, 165vw);
+  height:106svh;
   /* --jf-* are written by the component on scroll. The fallbacks matter: with
      no script this still renders as a static creature rather than collapsing
      to no transform at all.
@@ -73,11 +75,11 @@
    position — but at that strength it had become another soft shape in a
    background already full of soft shapes. The fix for "I can't see it" here is
    contrast against what is behind it, not presence. */
-:root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.66 }
+:root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.78 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.62 }
+  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.74 }
 }
-:root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.62 }
+:root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.74 }
 
 /* A slow independent drift on top of the scroll-driven movement, so the
    creature is alive even when the page is still. */

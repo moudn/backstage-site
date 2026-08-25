@@ -5,8 +5,15 @@
  *  1. Theme-aware. Upstream cycles random rainbow hues, which on this site
  *     would drag colours through the page that appear nowhere else in it.
  *     RAINBOW_MODE is off and the colour comes from the active theme.
- *  2. Restarts on theme change. Upstream's effect has an empty dependency
- *     array and captures its config once, so changing a prop did nothing.
+ *  2. Follows the theme WITHOUT restarting. Upstream's effect has an empty
+ *     dependency array and captures its config once, so changing a prop did
+ *     nothing. The first fix here was to put `theme` in the dependency array —
+ *     correct, and far too expensive: the cleanup calls loseContext(), so every
+ *     theme toggle tore down the whole fluid simulation, destroyed a WebGL
+ *     context and rebuilt it. With three contexts live on this page that is
+ *     what made switching theme look like the page had died until reloaded.
+ *     The theme is read through a ref instead, so a toggle changes one colour
+ *     and nothing else.
  *  3. Off under prefers-reduced-motion, and off for touch-only devices. A
  *     pointer trail with no pointer is a WebGL context and a simulation loop
  *     running every frame to draw nothing.
@@ -69,6 +76,12 @@ export function SplashCursor({
     );
   }, []);
 
+  /* The live theme, readable from inside the simulation without being one of
+     its dependencies. Kept in sync on every render rather than in an effect so
+     it is already correct by the time any handler below can fire. */
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
+
   useEffect(() => {
     if (!active) return;
     const canvas = canvasRef.current;
@@ -88,7 +101,13 @@ export function SplashCursor({
       SPLAT_RADIUS,
       SPLAT_FORCE,
       SHADING,
-      COLOR: THEME_COLOR[theme],
+      /* A getter, not a value. config.COLOR is read in two pointer handlers
+         further down; resolving it on each read means a theme change is picked
+         up by the next splat without the simulation being rebuilt to bake a
+         new constant in. */
+      get COLOR() {
+        return THEME_COLOR[themeRef.current];
+      },
     };
 
     type Pointer = {
@@ -698,8 +717,12 @@ export function SplashCursor({
       // for the jellyfish. Without this, a theme change leaks one each time.
       g.getExtension("WEBGL_lose_context")?.loseContext();
     };
+    /* `theme` is deliberately NOT in here — see the note at the top of the
+       file. It is read through themeRef, so a toggle no longer destroys and
+       rebuilds a WebGL context. Everything left in this list genuinely does
+       need a rebuilt simulation, and none of it changes at runtime. */
   }, [
-    active, theme, SIM_RESOLUTION, DYE_RESOLUTION, DENSITY_DISSIPATION, VELOCITY_DISSIPATION,
+    active, SIM_RESOLUTION, DYE_RESOLUTION, DENSITY_DISSIPATION, VELOCITY_DISSIPATION,
     PRESSURE, PRESSURE_ITERATIONS, CURL, SPLAT_RADIUS, SPLAT_FORCE, SHADING,
   ]);
 

@@ -166,6 +166,48 @@ the ambient field and the jellyfish backdrop — and `.page` paints after both,
 so an opaque colour here hides them completely. Anything that genuinely needs
 an opaque ground sets its own.
 
+### Sections turn in depth
+
+Each `DriftSection` rotates as it crosses the viewport: square on and forward
+while it owns the screen, leaning back and receding at both ends. The maths is
+in `useScrollDrift` (`--t-rot`, `--t-z`, `--t-fade`, all off one -1…1
+progress); the transform is `.drift--turn` in `panels.css`.
+
+Three things there are load-bearing:
+
+- `perspective()` is a transform **function**, not the `perspective` property
+  on `.page`. The property would make `.page` a containing block for every
+  fixed and absolutely positioned descendant it has, the footer crowd
+  included, and would put the held sequence's sticky stage out of register.
+- `transform-origin` is the **top** edge. Rotating about the centre swings the
+  bottom of a leaving section down into the one arriving beneath it and the
+  two overlap; hinged at the top they clear each other.
+- The focal length is long (2200px) on purpose. Short focal lengths keystone
+  the type on a 100svh panel; long ones let the same 9° read as depth.
+
+`.how` is deliberately excluded — it is not a `DriftSection`, because a
+transform on it makes it the containing block for its own sticky stage.
+
+## Themes
+
+The toggle stamps `data-theme` on `<html>` and the stylesheet does the rest, so
+the swap is live — but it once looked like the page had died until reloaded,
+and the cause is worth keeping written down.
+
+`SplashCursor` had `theme` in its effect's dependency array, and that effect's
+cleanup calls `loseContext()`. So every toggle tore down an entire fluid
+simulation, destroyed a WebGL context and rebuilt it — to change one colour
+constant that is read in two pointer handlers. It now reads the theme through
+a ref, and `theme` is not a dependency. **Do not put it back**: if the cursor
+needs to know the theme, read `themeRef.current`.
+
+The cross-fade is a `.theme-changing` class held on `<html>` for 420ms, with
+one blanket transition rule in `tokens.css`. Custom properties are not
+animatable, so transitioning `--bg` does nothing; what can transition is each
+property that reads one. The View Transitions API is deliberately not used —
+it snapshots the document, and three WebGL canvases do not survive being
+photographed and cross-faded.
+
 ## The background
 
 `AmbientField` is the page's ground: four large radial-gradient lights drifting

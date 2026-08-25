@@ -44,6 +44,43 @@
    fallback means a section sits exactly where it belongs with no script. */
 .drift{ transform:translate3d(0, var(--t-shift, 0px), 0) }
 
+/* The turn.
+ *
+ * Sections rotate through in depth as you scroll: the one you are reading is
+ * square on and forward, the one above has leaned back and receded, the one
+ * below is leaning up out of the same place. --t-rot, --t-z and --t-fade are
+ * written by useScrollDrift; the fallbacks are the resting, square-on values,
+ * so with no script a section is simply flat and fully opaque.
+ *
+ * perspective() as a transform FUNCTION, not the perspective property on
+ * .page. The property would make .page a containing block for every fixed and
+ * absolutely positioned descendant it has — which includes the footer crowd —
+ * and it would put the held step sequence's sticky stage out of register. As a
+ * function, each section gets its own vanishing point at its own centre, which
+ * for full-screen panels is very nearly the same picture and breaks nothing.
+ *
+ * 2200px is deliberately long. At a short focal length the top and bottom
+ * edges of a 100svh panel splay hard and the type keystones; long enough and
+ * the same 9 degrees reads as depth instead of distortion.
+ *
+ * transform-origin sits at the top edge. Rotating about the centre swings the
+ * bottom of a leaving section back DOWN into the section arriving underneath
+ * it, and the two overlap. Hinged at the top they clear each other. */
+.drift--turn{
+  transform:
+    perspective(2200px)
+    translate3d(0, var(--t-shift, 0px), var(--t-z, 0px))
+    rotateX(var(--t-rot, 0deg));
+  transform-origin:50% 0%;
+  opacity:var(--t-fade, 1);
+  will-change:transform, opacity;
+}
+
+/* The .how section is deliberately absent from all of this. It is not a
+   DriftSection — a transform on it makes it the containing block for its own
+   sticky stage, and the held sequence stops holding. It has its own motion. */
+
 @media (prefers-reduced-motion: reduce){
-  .drift{ transform:none }
+  .drift,
+  .drift--turn{ transform:none; opacity:1 }
 }

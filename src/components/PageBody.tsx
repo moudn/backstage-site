@@ -18,10 +18,12 @@
  * section the reader advances through.
  */
 
+import type { Theme } from "../lib/useTheme";
 import { DriftSection } from "./DriftSection";
 import { FooterCrowd } from "./FooterCrowd";
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
+import { MetalButton } from "./MetalButton";
 import { SectionTitle } from "./SectionTitle";
 import { StepSequence } from "./StepSequence";
 import {
@@ -37,7 +39,7 @@ import {
 import "../styles/page.css";
 import "../styles/panels.css";
 
-export function PageBody() {
+export function PageBody({ theme }: { theme: Theme }) {
   return (
     <div className="page">
       {/* The .aurora and .aurora-veil pair that used to sit here is gone. It
@@ -55,9 +57,9 @@ export function PageBody() {
             </ScrollReveal>
             <Reveal delay={120}>
               <div className="intro__actions">
-                <a className="btn-pill" href="#contact">
+                <MetalButton theme={theme} href="#contact">
                   {INTRO.primaryCta}
-                </a>
+                </MetalButton>
                 <a className="link-rule" href="#how">
                   {INTRO.secondaryCta}
                 </a>

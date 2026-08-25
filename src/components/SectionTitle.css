@@ -5,9 +5,26 @@
   letter-spacing:-0.045em;
   color:var(--text);
   text-transform:uppercase;
-  /* The scroll-linked drift. Both variables are written by the component; the
-     fallbacks mean the title sits exactly where it belongs with no script. */
-  transform:translate3d(0, var(--t-shift, 0px), 0) scale(var(--t-scale, 1));
+  /* The scroll-linked drift, now with the heading leaning back.
+   *
+   * perspective() as a transform FUNCTION rather than the perspective property
+   * on an ancestor: the property would make .panel a containing block for its
+   * fixed and absolute descendants, and the held step sequence already has a
+   * note about exactly that class of breakage. As a function the vanishing
+   * point is this element's own centre, which is what a heading leaning away
+   * from the reader wants anyway.
+   *
+   * 7 degrees is small on purpose. It is enough to make the extruded edge
+   * below read as thickness rather than as a drop shadow, and not enough to
+   * foreshorten the type into something harder to read.
+   *
+   * Both variables are written by the component; the fallbacks mean the title
+   * sits exactly where it belongs with no script. */
+  transform:
+    perspective(1200px)
+    translate3d(0, var(--t-shift, 0px), 0)
+    rotateX(var(--sec-tilt, 7deg))
+    scale(var(--t-scale, 1));
   will-change:transform;
 }
 
@@ -51,16 +68,57 @@
    * beside it. The minifier collapses such a pair and keeps only the prefixed
    * one, which is how the nav lost its blur in Chrome. */
   color:var(--text);
-  background-image:linear-gradient(
-    177deg,
-    var(--glass-lip) 0%,
-    var(--glass-body) 13%,
-    var(--glass-body) 58%,
-    var(--glass-base) 92%,
-    var(--glass-base) 100%
-  );
+  /* Two layers. The lower one is the pane; the upper one is a narrow highlight
+     that sweeps across it as the heading arrives — light travelling through
+     the glass rather than sitting on it. The sweep is 300% wide so it can
+     start and finish entirely off the glyph. */
+  background-image:
+    linear-gradient(
+      100deg,
+      transparent 41%,
+      var(--glass-spec) 50%,
+      transparent 59%
+    ),
+    linear-gradient(
+      177deg,
+      var(--glass-lip) 0%,
+      var(--glass-body) 13%,
+      var(--glass-body) 58%,
+      var(--glass-base) 92%,
+      var(--glass-base) 100%
+    );
+  background-size:300% 100%, 100% 100%;
+  background-position:165% 0, 0 0;
+  background-repeat:no-repeat;
   background-clip:text;
   -webkit-text-fill-color:transparent;
+
+  /* No text-shadow here, and that is the second attempt.
+   *
+   * The obvious way to extrude a glyph is a stack of hard text-shadows going
+   * down. It cannot work with background-clip:text: the clipped background is
+   * painted in the element's BACKGROUND layer, and text-shadow paints above
+   * backgrounds and below the text fill. With the fill transparent, the
+   * shadows land on top of the glass instead of behind it — the letters came
+   * out as flat slabs of the extrusion colour with the gradient buried.
+   *
+   * The thickness is a chain of drop-shadow() filters on .sec-title instead;
+   * see below. Those operate on the rendered element, so they composite
+   * genuinely behind it. */
+}
+
+@media (prefers-reduced-motion: no-preference){
+  .sec-title[data-shown="true"] .sec-title__ch{
+    /* Staggered off --i, the same index that drives the transition delay, so
+       the highlight travels along the word letter by letter instead of
+       flashing across all of them at once. */
+    animation:sec-spec 2200ms var(--fade) both;
+    animation-delay:calc(var(--i, 0) * 28ms + 380ms);
+  }
+}
+@keyframes sec-spec{
+  from{ background-position:165% 0, 0 0 }
+  to  { background-position:-75% 0, 0 0 }
 }
 
 /* Depth, applied once to the whole heading rather than per letter.
@@ -72,7 +130,24 @@
  * thirty separate offscreen passes that all re-run while the entrance
  * animation is changing their opacity. */
 .sec-title{
-  filter:drop-shadow(0 clamp(6px, 1.2vw, 16px) clamp(14px, 2.4vw, 34px) var(--glass-cast));
+  /* Thickness, then the cast shadow.
+   *
+   * drop-shadow traces the alpha of what was actually painted — which, with
+   * the fill clipped to text, is the glyphs — so this follows the letterforms
+   * rather than boxing them. Chained filters compound: each one shadows the
+   * result of the one before it, so three short steps read as a continuous
+   * extruded edge rather than three separate copies, and the colours can get
+   * fainter as the bevel turns away from the light.
+   *
+   * One filter on the heading, not thirty on the characters. A 132px title is
+   * around thirty inline-blocks and a per-character filter chain is thirty
+   * offscreen passes, all re-running while the entrance animation changes
+   * their opacity. */
+  filter:
+    drop-shadow(0 1px 0 var(--glass-x1))
+    drop-shadow(0 2px 0 var(--glass-x2))
+    drop-shadow(0 3px 0 var(--glass-x3))
+    drop-shadow(0 clamp(6px, 1.2vw, 16px) clamp(14px, 2.4vw, 34px) var(--glass-cast));
 }
 
 /* Forced-colours mode replaces author colours wholesale, and a gradient

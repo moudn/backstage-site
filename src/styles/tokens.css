@@ -53,6 +53,13 @@
   --glass-body:oklch(0.28 0.02 260 / 0.94);
   --glass-base:oklch(0.34 0.07 245 / 0.66);
   --glass-cast:oklch(0.45 0.08 245 / 0.20);
+  /* The extruded edge under each glyph, receding and fading — a bevel
+     catching less light the further back it goes. --glass-spec is the
+     highlight that sweeps across the letters as the heading arrives. */
+  --glass-x1:oklch(0.52 0.06 245 / 0.55);
+  --glass-x2:oklch(0.62 0.05 245 / 0.36);
+  --glass-x3:oklch(0.72 0.04 240 / 0.22);
+  --glass-spec:oklch(0.99 0.02 240 / 0.85);
   --glow-rim:oklch(0.78 0.05 215);
   --glow-rim-shadow:0px -4px 18px 0px oklch(0.60 0.06 285 / 0.45);
   --glow-1:oklch(0.62 0.07 215);
@@ -91,6 +98,10 @@
     --glass-body:oklch(0.97 0.006 285 / 0.86);
     --glass-base:oklch(0.86 0.09 295 / 0.52);
     --glass-cast:oklch(0.06 0.02 285 / 0.60);
+    --glass-x1:oklch(0.42 0.13 292 / 0.75);
+    --glass-x2:oklch(0.32 0.11 288 / 0.55);
+    --glass-x3:oklch(0.24 0.08 285 / 0.36);
+    --glass-spec:oklch(1 0 0 / 0.92);
     --glow-rim:#FFFFFF;
     --glow-rim-shadow:0px -4px 23px 0px #ffffffb5;
     --glow-1:#4922E5;
@@ -131,6 +142,10 @@
   --glass-body:oklch(0.97 0.006 285 / 0.86);
   --glass-base:oklch(0.86 0.09 295 / 0.52);
   --glass-cast:oklch(0.06 0.02 285 / 0.60);
+  --glass-x1:oklch(0.42 0.13 292 / 0.75);
+  --glass-x2:oklch(0.32 0.11 288 / 0.55);
+  --glass-x3:oklch(0.24 0.08 285 / 0.36);
+  --glass-spec:oklch(1 0 0 / 0.92);
   --glow-rim:#FFFFFF;
   --glow-rim-shadow:0px -4px 23px 0px #ffffffb5;
   --glow-1:#4922E5;
@@ -171,6 +186,13 @@
   --glass-body:oklch(0.28 0.02 260 / 0.94);
   --glass-base:oklch(0.34 0.07 245 / 0.66);
   --glass-cast:oklch(0.45 0.08 245 / 0.20);
+  /* The extruded edge under each glyph, receding and fading — a bevel
+     catching less light the further back it goes. --glass-spec is the
+     highlight that sweeps across the letters as the heading arrives. */
+  --glass-x1:oklch(0.52 0.06 245 / 0.55);
+  --glass-x2:oklch(0.62 0.05 245 / 0.36);
+  --glass-x3:oklch(0.72 0.04 240 / 0.22);
+  --glass-spec:oklch(0.99 0.02 240 / 0.85);
   --glow-rim:oklch(0.78 0.05 215);
   --glow-rim-shadow:0px -4px 18px 0px oklch(0.60 0.06 285 / 0.45);
   --glow-1:oklch(0.62 0.07 215);
@@ -284,6 +306,24 @@ body{
 /* drift1 and drift2 lived here for the old .aurora. Nothing has referenced
    them since AmbientField took over the background, and its lights carry
    their own keyframes — four of them, with durations chosen not to resync. */
+
+/* The theme cross-fade. See the note in useTheme's toggle for why this is a
+   class on <html> rather than a transition on the tokens themselves.
+   Only the colour-bearing properties, so nothing repositions: a transition on
+   `all` here would animate every layout property on the page at once. */
+.theme-changing,
+.theme-changing *,
+.theme-changing *::before,
+.theme-changing *::after{
+  transition:
+    background-color 420ms ease,
+    background-image 420ms ease,
+    color 420ms ease,
+    border-color 420ms ease,
+    fill 420ms ease,
+    stroke 420ms ease,
+    box-shadow 420ms ease !important;
+}
 
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important;transition:none !important;scroll-behavior:auto !important}

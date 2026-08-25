@@ -1,0 +1,65 @@
+/* Square, because it holds an icon now rather than a dot and a word. The old
+   pill's padding and border move here; the rest of .theme-btn is unchanged so
+   the nav's existing hover rules still apply. */
+.theme-btn{
+  display:inline-grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:transparent;
+  cursor:pointer;
+  color:var(--text-3);
+  transition:color 240ms ease, border-color 240ms ease;
+}
+.theme-btn:hover{ color:var(--text); border-color:var(--accent) }
+
+/* One cell holding both icons, so they occupy the same 16px and swap in place
+   instead of pushing each other about. */
+.theme-btn__icons{
+  display:grid;
+  width:16px;
+  height:16px;
+}
+.theme-btn__ico{
+  grid-area:1 / 1;
+  width:16px;
+  height:16px;
+  /* Stroked, not filled, for the sun; the moon overrides to a fill below.
+     currentColor throughout so the button's hover colour reaches them. */
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+}
+.theme-btn__ico--sun circle{ fill:none }
+.theme-btn__ico--moon{ fill:currentColor; stroke:none }
+
+/* The swap. Whichever icon is not wanted rotates out and shrinks away; both
+   are always present, so there is nothing to mount and nothing to reflow.
+   --enter on the movement, --fade on the opacity — the same split the rest of
+   the site uses, and for the same reason. */
+.theme-btn__ico{
+  transition:
+    opacity 320ms var(--fade),
+    transform 420ms var(--enter);
+}
+.theme-btn[data-theme-state="dark"] .theme-btn__ico--moon,
+.theme-btn[data-theme-state="light"] .theme-btn__ico--sun{
+  opacity:0;
+  transform:rotate(-70deg) scale(0.45);
+}
+.theme-btn[data-theme-state="dark"] .theme-btn__ico--sun,
+.theme-btn[data-theme-state="light"] .theme-btn__ico--moon{
+  opacity:1;
+  transform:rotate(0deg) scale(1);
+}
+
+/* A quarter turn on press, so the control acknowledges the click on its own
+   rather than relying on the whole page changing colour to confirm it. */
+@media (prefers-reduced-motion: no-preference){
+  .theme-btn:active .theme-btn__icons{ transform:rotate(38deg) }
+  .theme-btn__icons{ transition:transform 260ms var(--enter) }
+}

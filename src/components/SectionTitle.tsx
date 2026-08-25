@@ -23,7 +23,7 @@
  * is transformed — the title is simply there.
  */
 
-import { useEffect } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { useScrollDrift } from "../lib/useScrollDrift";
 import "./SectionTitle.css";
 
@@ -68,7 +68,9 @@ export function SectionTitle({ children }: { children: string }) {
             <span
               className="sec-title__ch"
               key={`${ch}-${c}`}
-              style={{ transitionDelay: `${index++ * 28}ms` }}
+              /* --i drives the specular sweep's stagger in CSS; the delay is
+                 the same number, kept here so the two never drift apart. */
+              style={{ "--i": index, transitionDelay: `${index++ * 28}ms` } as CSSProperties}
             >
               {ch}
             </span>

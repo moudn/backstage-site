@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type Lenis from "lenis";
 import { NAV_LINKS } from "../data/content";
 import type { Theme } from "../lib/useTheme";
+import { ThemeToggle } from "./ThemeToggle";
 
 /** Below this the links do not fit on one row, so they move behind a button.
  *  Kept in sync with the media queries in page.css by hand — matchMedia cannot
@@ -148,16 +149,7 @@ export function SiteNav({
               </span>
             </a>
           ))}
-          <button
-            type="button"
-            className="theme-btn"
-            onClick={onToggleTheme}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            <span aria-hidden="true" className="nav__dot" style={{ width: 8, height: 8 }} />
-            {theme === "dark" ? "Dark" : "Light"}
-          </button>
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </nav>
 
         {/* Three bars that become a cross. aria-hidden because the button's
@@ -226,15 +218,7 @@ export function SiteNav({
             className="nav__panel-foot"
             style={{ transitionDelay: `${open ? 90 + NAV_LINKS.length * 55 : 0}ms` }}
           >
-            <button
-              type="button"
-              className="theme-btn"
-              onClick={onToggleTheme}
-              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              <span aria-hidden="true" className="nav__dot" style={{ width: 8, height: 8 }} />
-              {theme === "dark" ? "Dark" : "Light"}
-            </button>
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
             <span className="nav__panel-meta">AI consultancy · UK</span>
           </div>
         </div>

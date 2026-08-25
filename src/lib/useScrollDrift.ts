@@ -1,9 +1,15 @@
 /* Scroll-linked drift, shared.
  *
- * Writes two custom properties on the element as it crosses the viewport:
+ * Writes custom properties on the element as it crosses the viewport:
  *
  *   --t-shift   px, positive below the fold and negative above it
  *   --t-scale   a slight shrink at either extreme, 1 at the centre
+ *
+ * and, when `rotate` is on, three more that turn the section in depth:
+ *
+ *   --t-rot     degrees, leaning one way coming in and the other going out
+ *   --t-z       px, negative at both ends — away is away in both directions
+ *   --t-fade    1 while the section owns the screen, --fade-floor when gone
  *
  * This started life inside SectionTitle, which is why only the titles moved.
  * That turned out to be the problem: a title drifting against a completely
@@ -26,7 +32,19 @@ import { useEffect, useRef } from "react";
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
-export function useScrollDrift<T extends HTMLElement>(shift: number, squeeze = 0) {
+/** How far a rotating section leans, how far back it goes, and how much of it
+ *  is left when it is fully away. Tuned together — a big angle with no depth
+ *  reads as a page that is falling over rather than one turning. */
+const TILT_DEG = 8;
+const DEPTH_PX = 160;
+const FADE_FLOOR = 0.66;
+
+export function useScrollDrift<T extends HTMLElement>(
+  shift: number,
+  squeeze = 0,
+  /** Also write --t-rot / --t-z / --t-fade, for sections that turn. */
+  rotate = false
+) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
@@ -53,6 +71,46 @@ export function useScrollDrift<T extends HTMLElement>(shift: number, squeeze = 0
       if (squeeze) {
         el!.style.setProperty("--t-scale", (1 - Math.abs(progress) * squeeze).toFixed(4));
       }
+
+      /* The turn.
+       *
+       * progress is -1 below the fold, 0 centred, +1 above — so a section
+       * leans one way coming in and the other way going out, and is square on
+       * only while it owns the screen. Depth and fade key off the ABSOLUTE
+       * value, because both ends are "away": the section you have finished
+       * with recedes, and the next one comes forward out of the same place.
+       *
+       * The rotation is negated so a section arriving from below is tipped
+       * away at its top edge — it swings up to meet you rather than falling
+       * towards you, which is the direction that reads as the page turning
+       * rather than collapsing. */
+      if (rotate) {
+        /* Its OWN progress, normalised over the section's height plus the
+           viewport rather than over half a viewport.
+         *
+         * `progress` above saturates as soon as the section's centre is half a
+         * screen from the screen's centre. That is fine for a 14px nudge and
+         * wrong for this: a .panel is 100svh PLUS up to 368px of padding, so a
+         * section can still be filling the screen while its centre is a long
+         * way from the middle of it. Measured with the old normalisation there
+         * were scroll positions where the section nearest the centre was 832px
+         * out, fully tilted and at 0.42 opacity — stretches of the page where
+         * everything visible was dim and leaning.
+         *
+         * Over (height + viewport)/2, ±1 lands exactly when the section is
+         * about to touch an edge of the screen and 0 when it is centred,
+         * whatever its height. */
+        const span = (rect.height + window.innerHeight) / 2;
+        const turn = clamp(
+          (window.innerHeight / 2 - (rect.top + rect.height / 2)) / (span || 1),
+          -1,
+          1
+        );
+        const away = Math.abs(turn);
+        el!.style.setProperty("--t-rot", `${(turn * -TILT_DEG).toFixed(2)}deg`);
+        el!.style.setProperty("--t-z", `${(-away * DEPTH_PX).toFixed(1)}px`);
+        el!.style.setProperty("--t-fade", (1 - away * (1 - FADE_FLOOR)).toFixed(3));
+      }
     }
     function onScroll() {
       if (!frame) frame = requestAnimationFrame(apply);
@@ -66,7 +124,7 @@ export function useScrollDrift<T extends HTMLElement>(shift: number, squeeze = 0
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [shift, squeeze]);
+  }, [shift, squeeze, rotate]);
 
   return ref;
 }

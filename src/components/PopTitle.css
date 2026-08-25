@@ -42,6 +42,17 @@
   );
   background-clip:text;
   -webkit-text-fill-color:transparent;
+  /* No extrusion and no specular sweep on this one, unlike .sec-title.
+   *
+   * text-shadow cannot do it — with background-clip:text the shadow paints on
+   * top of the clipped fill, not behind it — and the drop-shadow chain that
+   * replaced it there has to live on the heading, which here carries
+   * `perspective` for the stand-up animation. A filter on that ancestor
+   * flattens the 3D context and the letters stop standing up.
+   *
+   * It loses nothing: this heading already arrives with real depth, and a
+   * highlight travelling across letters that are mid-rotation is two effects
+   * competing for the same moment. */
 }
 
 /* No drop-shadow on .pop-title, deliberately — unlike .sec-title.
