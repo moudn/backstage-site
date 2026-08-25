@@ -155,6 +155,12 @@ export function SiteNav({
         {/* Three bars that become a cross. aria-hidden because the button's
             accessible name already says what it does — a screen reader
             announcing "menu, menu" is the usual result of labelling both. */}
+        {/* In the bar, not only in the menu.
+            The toggle used to live solely in the panel behind the burger, so on
+            a phone the single most visible control on the site was two taps
+            away and changing theme looked like it had not been implemented.
+            The panel keeps its copy for when the menu is open. */}
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} className="theme-btn--bar" />
         <button
           ref={burgerRef}
           type="button"

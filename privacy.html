@@ -20,15 +20,14 @@
     <meta name="theme-color" content="#F8FAFD" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#08080D" media="(prefers-color-scheme: dark)" />
     <style>
-      :root{
-        --bg:#F8FAFD; --bg-2:#F0F4F8; --text:#232933; --text-2:#4C535E;
-        --text-3:#706D8E; --line:#DBE0E6; --accent:#5B45B8;
-      }
+      /* Derived from src/styles/tokens.css at build time — see the note in
+         src/lib/oklch.ts. Do NOT paste hex in here by hand: the last set was
+         copied once and then drifted, and this page spent several changes
+         painting a purple accent on a site whose light accent had become
+         blue. */
+      :root{ {{VARS_LIGHT}} }
       @media (prefers-color-scheme: dark){
-        :root{
-          --bg:#08080D; --bg-2:#100F18; --text:#F4F5F9; --text-2:#B9BAC2;
-          --text-3:#9C8DCA; --line:#2C2C3A; --accent:#A558FB;
-        }
+        :root{ {{VARS_DARK}} }
       }
       *{box-sizing:border-box}
       body{

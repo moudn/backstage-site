@@ -101,11 +101,31 @@ export function useScrollDrift<T extends HTMLElement>(
          * about to touch an edge of the screen and 0 when it is centred,
          * whatever its height. */
         const span = (rect.height + window.innerHeight) / 2;
-        const turn = clamp(
+        let turn = clamp(
           (window.innerHeight / 2 - (rect.top + rect.height / 2)) / (span || 1),
           -1,
           1
         );
+
+        /* Flatten out at both ends of the document.
+         *
+         * The first and last sections can never reach the centre of the screen
+         * — there is no more page to scroll — so they were stuck part-turned at
+         * the two positions a reader is most likely to sit still and look. At
+         * the bottom that showed as a divide above the footer: the contact
+         * section was leaning 3.8deg and sitting at 0.84 opacity while the
+         * footer beneath it was square on and solid, and the perspective
+         * foreshortening pulled its painted bottom edge 60px clear of its
+         * layout box, leaving a strip of bare background between the two.
+         *
+         * Damping the turn to nothing within three quarters of a screen of
+         * either end means you land on a flat page and finish on one, and the
+         * effect only exists in the middle where there is something to turn
+         * between. */
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const fromEnd = Math.min(window.scrollY, maxScroll - window.scrollY);
+        turn *= clamp(fromEnd / (window.innerHeight * 0.75), 0, 1);
+
         const away = Math.abs(turn);
         el!.style.setProperty("--t-rot", `${(turn * -TILT_DEG).toFixed(2)}deg`);
         el!.style.setProperty("--t-z", `${(-away * DEPTH_PX).toFixed(1)}px`);

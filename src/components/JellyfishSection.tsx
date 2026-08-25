@@ -230,10 +230,11 @@ const RING_CSS = `
   width:min(420px, 82vw);
   text-align:center;
   padding:clamp(10px,1.4vh,16px) clamp(14px,2.4vw,24px);
-  /* Translucent, not solid --bg. This is a readability pad under the slogan;
-     at full page colour it read as a pale disc floating on the field once the
-     panel stopped painting its own background. */
-  background:radial-gradient(120% 140% at 50% 60%, color-mix(in oklab, var(--bg) 74%, transparent) 38%, transparent 78%);
+  /* No pad at all. This was a radial wash of page colour to keep the line
+     legible over the creature; dropping it to 74% opacity only made it a
+     fainter disc, and a disc is still a shape. The legibility comes from a
+     halo on the glyphs instead — see .jf-slogan__line. A shadow follows the
+     letterforms, so there is nothing with an edge to notice. */
   pointer-events:none;
 }
 /* Deliberately small. BACKSTAGE is the title on this screen; at anything
@@ -244,6 +245,13 @@ const RING_CSS = `
   letter-spacing:0.04em;
   color:var(--text-2);
   text-wrap:balance;
+  /* The halo that replaced the pad. Three shadows in the page colour, tight
+     and stacked: they only reach a few pixels, so they read as the type
+     sitting slightly proud of what is behind it rather than as a box. */
+  text-shadow:
+    0 0 4px var(--bg),
+    0 0 9px var(--bg),
+    0 0 18px var(--bg);
 }
 
 .jf-bubble{

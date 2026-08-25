@@ -1,6 +1,9 @@
+import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
+
+import { readOklchTokens } from './src/lib/oklch.ts'
 
 import {
   CONTACT,
@@ -111,6 +114,39 @@ ${PROBLEM.body.map((p) => `<p>${esc(p)}</p>`).join('')}
 </div></noscript>`
 }
 
+
+/* The privacy notice's palette, derived from the real tokens.
+ *
+ * It cannot import tokens.css — it is a standalone page with no bundle — so it
+ * carries its palette inline. Reading the tokens here and converting them
+ * means the two cannot disagree. They did: the notice shipped a purple accent
+ * for several changes after the site's light accent became blue, and a
+ * --text-3 from before that token was re-cut for contrast against the ambient
+ * field. See src/lib/oklch.ts. */
+const PRIVACY_TOKENS = ['bg', 'bg-2', 'text', 'text-2', 'text-3', 'line', 'accent'] as const
+
+function privacyPalette() {
+  const css = readFileSync(resolve(__dirname, 'src/styles/tokens.css'), 'utf8')
+
+  /* Sliced by block rather than searched across the whole file: every token
+     appears four times over (light, dark, and both explicit [data-theme]
+     blocks) and a bare search would find whichever came first. */
+  const cut = (start: string) => {
+    const i = css.indexOf(start)
+    if (i < 0) throw new Error(`tokens.css: block ${start} not found`)
+    const end = css.indexOf('}', i)
+    return css.slice(i, end)
+  }
+
+  const decl = (vars: Record<string, string>) =>
+    Object.entries(vars).map(([k, v]) => `--${k}:${v};`).join(' ')
+
+  return {
+    light: decl(readOklchTokens(cut(':root{'), PRIVACY_TOKENS)),
+    dark: decl(readOklchTokens(cut(':root[data-theme="dark"]{'), PRIVACY_TOKENS)),
+  }
+}
+
 /* Fills the {{TOKENS}} in privacy.html from src/data/legal.ts.
  *
  * The notice is hand-written HTML rather than generated prose — it is a legal
@@ -143,7 +179,11 @@ function fillPrivacy(html: string) {
       `<td>${esc(p.role)}</td><td>${esc(p.data)}</td></tr>`
   ).join('')
 
+  const palette = privacyPalette()
+
   return html
+    .replaceAll('{{VARS_LIGHT}}', palette.light)
+    .replaceAll('{{VARS_DARK}}', palette.dark)
     .replaceAll('{{LEGAL_NAME}}', esc(LEGAL_NAME))
     .replaceAll('{{LEGAL_FORM_SENTENCE}}', form)
     .replaceAll('{{POSTAL_ADDRESS_HTML}}', POSTAL_ADDRESS.split('\n').map(esc).join('<br />'))

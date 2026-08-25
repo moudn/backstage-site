@@ -16,6 +16,15 @@
 }
 .theme-btn:hover{ color:var(--text); border-color:var(--accent) }
 
+/* The copy that sits in the collapsed bar next to the burger. It is the same
+   control; it only needs to be hidden on desktop, where the one inside
+   .nav__links is already showing, and shown on mobile, where that row is
+   replaced by the panel. The breakpoint matches .nav__burger's. */
+.theme-btn--bar{ display:none; margin-right:4px }
+@media (max-width: 760px){
+  .theme-btn--bar{ display:inline-grid }
+}
+
 /* One cell holding both icons, so they occupy the same 16px and swap in place
    instead of pushing each other about. */
 .theme-btn__icons{

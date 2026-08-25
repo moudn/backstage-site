@@ -113,15 +113,17 @@
        the overlap the path rewrite was for. */
     --jf-bias:0%;
   }
-  /* Raised with the desktop numbers above, and for the same reason. A phone is
-     the worst case for this: the creature was already the dimmest here — 0.30
-     against a page that was flat — and it is now competing with the lit field
-     across almost the whole screen rather than behind a fraction of it. */
-  :root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.48 }
-  :root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.44 }
+  /* A phone is the worst case for this and has needed raising twice.
+     0.30 was tuned against a flat page. 0.44 was the desktop correction
+     applied here at a discount — but the desktop then went to 0.74/0.78 and
+     this was left behind, so the creature stayed hard to make out on exactly
+     the screens where the lit field covers the most of it. These are the
+     desktop numbers less a small margin, not a fraction of them. */
+  :root:not([data-theme="dark"]) .jf-backdrop__inner{ opacity:0.68 }
+  :root[data-theme="dark"] .jf-backdrop__inner{ opacity:0.64 }
 }
 @media (max-width: 900px) and (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.44 }
+  :root:not([data-theme="light"]) .jf-backdrop__inner{ opacity:0.64 }
 }
 
 @media (prefers-reduced-motion: reduce){
