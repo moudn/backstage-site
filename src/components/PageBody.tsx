@@ -19,6 +19,7 @@
  */
 
 import { DriftSection } from "./DriftSection";
+import { Evidence } from "./Evidence";
 import { FooterCrowd } from "./FooterCrowd";
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
@@ -26,6 +27,7 @@ import { SectionTitle } from "./SectionTitle";
 import { StepSequence } from "./StepSequence";
 import {
   CONTACT,
+  EVIDENCE,
   CONTACT_EMAIL,
   FOOTER,
   INTRO,
@@ -95,6 +97,24 @@ export function PageBody() {
                 </Reveal>
               </div>
             </div>
+          </DriftSection>
+
+          {/* Evidence sits between the claim and the product on purpose:
+              "being handed a tool is being handed more work" is an assertion
+              until something backs it, and Julian is easier to believe after
+              the numbers than before them. */}
+          <DriftSection id="evidence" className="panel panel--tall section">
+            <SectionTitle>{EVIDENCE.title}</SectionTitle>
+            <Reveal>
+              <p className="eyebrow">{EVIDENCE.eyebrow}</p>
+            </Reveal>
+            <ScrollReveal mode="scrub" as="h3" className="h2" baseRotation={2}>
+              {EVIDENCE.heading}
+            </ScrollReveal>
+            <ScrollReveal mode="scrub" className="body-copy">
+              {EVIDENCE.lede}
+            </ScrollReveal>
+            <Evidence />
           </DriftSection>
 
           <DriftSection id="julian" className="panel panel--tall section">

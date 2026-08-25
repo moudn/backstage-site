@@ -1,9 +1,19 @@
 /* Page copy, verbatim from Backstage.dc.html.
  *
  * The handoff's hard rules apply to anything edited here: invent nothing (no
- * clients, testimonials, logos or statistics), never call the offering a
+ * clients, testimonials or logos), never call the offering a
  * tool/platform/software, plain English, British spelling, and never the
  * words "free trial".
+ *
+ * On statistics, the rule changed and the new one is stricter, not looser.
+ * It used to be "no statistics" full stop. EVIDENCE below now carries some,
+ * so the rule is: every figure must come from a named primary source, with
+ * the population and the fieldwork dates stated, and the source must be
+ * visible to the reader on the page. No vendor marketing surveys — the
+ * "office workers waste N hours a week" genre is all published by companies
+ * selling automation, self-reported, with undisclosed method, and a prospect
+ * who checks will find that out. If a figure cannot be sourced to that
+ * standard it does not go on the site.
  *
  * Everything the page says lives in this file, including the hero lines and
  * the slogan. That is not tidiness for its own sake: `vite.config.ts` imports
@@ -51,6 +61,101 @@ export const PROBLEM = {
     { label: "What you don't", value: "The machinery." },
   ],
 };
+
+/* The evidence section.
+ *
+ * Every figure here is UK official statistics, from two Office for National
+ * Statistics surveys. That choice is deliberate and worth defending, because
+ * the obvious alternative is much easier to find: the "employees waste four
+ * and a half hours a week on automatable tasks" genre of statistic. Every one
+ * of those traces back to a company selling automation software — UiPath,
+ * Automation Anywhere, Smartsheet, ProcessMaker — is self-reported, and
+ * publishes no method. A consultancy quoting a vendor's marketing survey as
+ * evidence is one search away from looking either careless or dishonest, and
+ * this page has to survive being read by a sceptic.
+ *
+ * The two sources:
+ *
+ *   MES  — Management and Expectations Survey. About 55,000 UK businesses,
+ *          fieldwork November 2023 to March 2024. Published by the ONS in
+ *          March 2025 as "Management practices and the adoption of technology
+ *          and artificial intelligence in UK firms, 2023".
+ *   BICS — Business Insights and Conditions Survey. The AI questions ran
+ *          15 to 28 June 2026, published July 2026 as "Artificial
+ *          intelligence in UK businesses: 2023 to 2026".
+ *
+ * Two things to hold on to if these are ever edited:
+ *
+ *  - The 19% is an ASSOCIATION, not a cause. The ONS controlled for
+ *    management practice scores and firm characteristics; it did not show
+ *    that adopting technology raises turnover. The copy says "associated
+ *    with" and it has to keep saying that.
+ *  - The denominators differ between the two surveys and between questions.
+ *    35% is businesses with ten or more employees; the all-business figure
+ *    for the same question is 29%. Quoting one number with the other's
+ *    population is the easiest mistake to make here.
+ */
+export const EVIDENCE = {
+  title: "The numbers",
+  eyebrow: "UK businesses · Office for National Statistics",
+  heading: "The hard part was never the technology.",
+  lede:
+    "Adoption across UK business has roughly tripled in under three years. What has barely moved is how far anyone gets with it — and the thing firms say stops them is not the price or the skills.",
+  /* Each stat carries its own source line. They are rendered on the page, not
+     kept here for reference: a figure without a visible source is a claim. */
+  stats: [
+    {
+      id: "barrier",
+      value: 39,
+      unit: "%",
+      claim:
+        "of UK firms named working out where it would actually help as their biggest barrier to adopting AI.",
+      detail:
+        "Ahead of cost, at 21%, and the level of AI expertise and skills, at 16%. The most common answer of any given.",
+      source: "ONS, Management and Expectations Survey",
+      population: "~55,000 UK businesses · fieldwork Nov 2023 – Mar 2024",
+      chart: "bars",
+    },
+    {
+      id: "adoption",
+      value: 35,
+      unit: "%",
+      claim:
+        "of UK businesses with ten or more employees now use at least one AI technology.",
+      detail:
+        "Up from around 12% in late 2023. Across businesses of every size the figure is 29%; among those with 250 or more employees it is 49%.",
+      source: "ONS, Business Insights and Conditions Survey",
+      population: "Fieldwork 15 – 28 June 2026",
+      chart: "rise",
+    },
+    {
+      id: "depth",
+      value: 10,
+      unit: "%",
+      claim:
+        "of the businesses that have adopted AI describe their own use of it as extensive.",
+      detail:
+        "The average adopter uses about 1.6 of the technologies surveyed, up from about 1.4 in late 2023. Adoption has widened much faster than it has deepened.",
+      source: "ONS, Business Insights and Conditions Survey",
+      population: "Fieldwork 15 – 28 June 2026",
+      chart: "waffle",
+    },
+    {
+      id: "return",
+      value: 19,
+      unit: "%",
+      claim:
+        "higher turnover per worker is associated with firms that had adopted new technology.",
+      detail:
+        "After controlling for management practice scores and firm characteristics. An association measured across firms, not proof that adopting technology causes the difference.",
+      source: "ONS, Management and Expectations Survey",
+      population: "~55,000 UK businesses · fieldwork Nov 2023 – Mar 2024",
+      chart: "compare",
+    },
+  ],
+  foot:
+    "Nobody is short of things to automate. What they are short of is the time to work out which one is worth it, and someone to keep it running afterwards. That is the job we do.",
+} as const;
 
 export const JULIAN = {
   title: "Our products",
@@ -141,6 +246,7 @@ export const FOOTER = {
 
 export const NAV_LINKS: { href: string; label: string; strong?: boolean }[] = [
   { href: "#problem", label: "What we do" },
+  { href: "#evidence", label: "The numbers" },
   { href: "#julian", label: "Our products" },
   { href: "#how", label: "How we work" },
   { href: "#contact", label: "Get in touch", strong: true },

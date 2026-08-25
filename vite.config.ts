@@ -8,6 +8,7 @@ import { readOklchTokens } from './src/lib/oklch.ts'
 import {
   CONTACT,
   CONTACT_EMAIL,
+  EVIDENCE,
   FOOTER,
   HERO,
   HOW_TITLE,
@@ -84,6 +85,17 @@ function crawlableBody() {
     .map((c) => `<li><strong>${esc(c.label)}:</strong> ${esc(c.value)}</li>`)
     .join('')
 
+  /* Each figure with its source, because the crawlable copy is also what a
+     reader with no JavaScript gets, and a statistic without its source is a
+     claim. */
+  const evidence = EVIDENCE.stats
+    .map(
+      (st) =>
+        `<li><strong>${esc(String(st.value))}${esc(st.unit)}</strong> ${esc(st.claim)} ` +
+        `${esc(st.detail)} <em>${esc(st.source)} — ${esc(st.population)}</em></li>`
+    )
+    .join('')
+
   return `<noscript><div class="nojs">
 <h1>${esc(HERO.lines.join(' '))}</h1>
 <p>${esc(HERO.eyebrow)}</p>
@@ -94,6 +106,12 @@ function crawlableBody() {
 <h3>${esc(PROBLEM.heading)}</h3>
 ${PROBLEM.body.map((p) => `<p>${esc(p)}</p>`).join('')}
 <ul>${pair}</ul>
+
+<h2>${esc(EVIDENCE.title)}</h2>
+<h3>${esc(EVIDENCE.heading)}</h3>
+<p>${esc(EVIDENCE.lede)}</p>
+<ul>${evidence}</ul>
+<p>${esc(EVIDENCE.foot)}</p>
 
 <h2>${esc(JULIAN.title)}</h2>
 <h3>${esc(JULIAN.heading)}</h3>
