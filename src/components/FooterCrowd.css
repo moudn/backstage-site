@@ -22,6 +22,31 @@
   position:absolute;
   inset:0;
   overflow:hidden;
+
+  /* The back row dissolves in rather than starting on a line.
+   *
+   * This is the other half of the preserveAspectRatio fix. Pinning the viewBox
+   * to the ink stopped the heads being sliced off — and put the back row hard
+   * against the top edge of the band, where forty blurred heads at an even
+   * height across 1440px stop reading as people and start reading as a rule
+   * ruled across the page. Nothing measured it: there is no step in luminance
+   * or in chroma at that edge, because each figure is faint on its own. What
+   * the eye picks up is that they all begin at the same y.
+   *
+   * The mask is also the right thing physically. The far row is the one
+   * furthest into the room; losing it into the haze is what distance does, and
+   * it is the same reasoning as the blur and the 0.09 opacity it already
+   * carries.
+   *
+   * Standard `mask-image` only — do NOT write the -webkit- prefix beside it.
+   * The minifier collapses such a pair and keeps only one, which is how the
+   * nav lost its backdrop blur. The build adds what its targets need. */
+  mask-image:linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, #000 45%, transparent) 9%,
+    #000 32%
+  );
 }
 
 .crowd__svg{
