@@ -348,17 +348,43 @@
      measured at 0px between them — and the audience read as crowding the type
      rather than sitting behind it. */
   padding:clamp(22px,3vh,32px) 0 calc(var(--crowd-h) + clamp(30px,6vh,72px));
-  /* The stage edge. A plain rule reads as a divider; the gradient makes it a
-     lip with light on it, which is the join between stage and house. */
-  border-top:1px solid transparent;
-  border-image:linear-gradient(90deg,
+  font:400 13px/1.5 var(--font-text);
+  color:var(--text-3);
+}
+
+/* The stage edge, softened.
+ *
+ * This used to be `border-top:1px solid transparent` with a gradient
+ * border-image — a crisp, ruler-straight, full-width line, deliberately
+ * gradient-coloured so it would read as "a lip with light on it" rather than
+ * a plain divider. That reasoning held when it sat on a flat page colour.
+ * It stopped holding the moment AmbientField went in behind it: laid over a
+ * soft, blurred, constantly-drifting field, ANY hard-edged geometric line —
+ * however nicely coloured — is the one crisp thing in an otherwise organic
+ * picture, and that contrast is what reads as a seam. Measured across a
+ * crop of the join: it was the single largest row-to-row discontinuity on
+ * the whole page, by a wide margin over the next competitor.
+ *
+ * A blurred glow band replaces it — the same trick `.crowd__spill` already
+ * uses two elements below. Same "light at the join" idea, executed the way
+ * everything else on this page is: as a soft gradient with no measurable
+ * edge, rather than a rule with one. */
+.footer::before{
+  content:"";
+  position:absolute;
+  top:0; left:8%; right:8%;
+  height:64px;
+  transform:translateY(-50%);
+  background:linear-gradient(90deg,
       transparent,
       color-mix(in oklab, var(--accent) 45%, var(--line)) 22%,
       color-mix(in oklab, var(--accent) 65%, var(--line)) 50%,
       color-mix(in oklab, var(--accent) 45%, var(--line)) 78%,
-      transparent) 1;
-  font:400 13px/1.5 var(--font-text);
-  color:var(--text-3);
+      transparent);
+  filter:blur(22px);
+  opacity:0.55;
+  pointer-events:none;
+  z-index:0;
 }
 /* Text has to clear the crowd, which is painted at z-index 0 behind it. */
 .footer__brand,
