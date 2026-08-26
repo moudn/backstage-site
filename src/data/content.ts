@@ -121,9 +121,9 @@ export const EVIDENCE = {
       value: 39,
       unit: "%",
       claim:
-        "of UK firms named working out where it would actually help as their biggest barrier to adopting AI.",
+        "of UK firms said their biggest barrier to adopting AI was working out where it would actually help.",
       detail:
-        "Ahead of cost at 21% and the level of AI expertise and skills at 16%. More firms named it than named anything else.",
+        "Ahead of cost at 21% and AI skills and expertise at 16%. More firms picked it than picked anything else.",
       source: "ONS, Management and Expectations Survey",
       population: "~55,000 UK businesses · fieldwork Nov 2023 to Mar 2024",
       chart: "bars",
@@ -157,9 +157,9 @@ export const EVIDENCE = {
       value: 75,
       unit: "%",
       claim:
-        "of the UK businesses that have adopted AI say it improved their productivity.",
+        "of UK businesses that have adopted AI say it improved their productivity.",
       detail:
-        "That figure is the businesses' own account of it, not a measurement. Where the effect has actually been measured, it holds up: a staggered rollout across 5,179 customer support agents raised issues resolved per hour by 14%, rising to 34% for the least experienced staff.",
+        "That figure is the businesses' own account of it, not a measurement. Where the effect has actually been measured, it holds up: a staggered rollout across 5,179 customer support agents lifted the number of issues resolved per hour by 14%, rising to 34% for the least experienced staff.",
       source: "DSIT AI Adoption Research · Brynjolfsson, Li & Raymond, QJE 2025",
       population: "3,500 UK businesses · fieldwork 12 Feb to 2 May 2025",
       chart: "share",
@@ -192,7 +192,7 @@ export const EVIDENCE = {
  */
 export const CALCULATOR = {
   /* The question the section has been building to. */
-  lead: "So what is not automating it actually costing you?",
+  lead: "So what does not automating it actually cost you?",
   intro:
     "Most businesses have never added this up. Move the sliders to the shape of your own team and see what a year of it comes to.",
   inputs: [
@@ -208,7 +208,7 @@ export const CALCULATOR = {
     },
     {
       id: "hours",
-      label: "Hours each, per week",
+      label: "Hours each per week",
       min: 1,
       max: 30,
       step: 1,
@@ -385,11 +385,11 @@ export const FAQ = {
     },
     {
       q: "What is the difference between an AI consultancy and an AI agency?",
-      a: "In practice the two labels are used interchangeably and neither tells you much. The question worth asking instead is what you are left holding at the end. An engagement that finishes with a handover leaves you owning a system, its upkeep and whoever internally now understands it. An engagement that finishes with the work still being done for you leaves you owning the output and nothing else. We are the second kind. Ask any firm you are considering which of those two they are, and what happens in month seven. The answer separates them far faster than the word on the door does.",
+      a: "In practice the two labels are used interchangeably and neither tells you much. The question worth asking instead is what you are left holding at the end. An engagement that finishes with a handover leaves you owning a system, its upkeep and whoever inside your business now understands it. An engagement that finishes with the work still being done for you leaves you owning the output and nothing else. We are the second kind. Ask any firm you are considering which of those two they are, and what happens in month seven. The answer separates them far faster than the word on the door does.",
     },
     {
       q: "Do we need anyone technical on our side?",
-      a: "No. Nobody at your end logs into anything. That is not a convenience feature, it is the whole arrangement. The most common way an automation project quietly dies is being handed to somebody who already had a full-time job. We build it, we host it, we watch it and we fix it when it breaks. What we do need from you is somebody who understands the process well enough to describe how it really works, including the exceptions nobody has written down. We also need somebody with the authority to approve the decisions where a person ought to be approving decisions.",
+      a: "No. Nobody at your end logs into anything. That is not a convenience feature, it is the whole arrangement. The most common way an automation project quietly dies is being handed to somebody who already had a full-time job. We build it, we host it, we watch it and we fix it when it breaks. What we do need from you is somebody who understands the process well enough to describe how it really works, including the exceptions nobody has written down. We also need somebody with the authority to sign off the decisions that should have a person behind them.",
     },
     {
       q: "How is this different from buying an AI platform?",
@@ -397,7 +397,7 @@ export const FAQ = {
     },
     {
       q: "What kinds of process are worth automating first?",
-      a: "The ones that are dull, frequent and follow rules somebody could write down if they sat and thought about it. Volume matters more than complexity: a fiddly thing done twice a year is rarely worth it, a dull thing done forty times a week usually is. The strongest candidates tend to involve moving information between systems that do not talk to each other, chasing people for things or producing the same document from the same inputs. The weak ones are where the judgement is the job. If you are not sure which yours is, that is exactly the conversation to have. Working it out is the part most businesses never find time for.",
+      a: "The dull, frequent ones that follow rules somebody could write down if they sat and thought about it. Volume matters more than complexity: a fiddly thing done twice a year is rarely worth it, a dull thing done forty times a week usually is. The strongest candidates tend to involve moving information between systems that do not talk to each other, chasing people for things or producing the same document from the same inputs. The weak ones are where the judgement is the job. If you are not sure which yours is, that is exactly the conversation to have. Working it out is the part most businesses never find time for.",
     },
     {
       q: "What does it cost?",
@@ -405,7 +405,7 @@ export const FAQ = {
     },
     {
       q: "Do you work with businesses outside the UK?",
-      a: "We are UK-based, and this site is written for UK businesses because that is where we are and whose rules we know best: UK GDPR, how payroll and invoicing actually run here, the same working day. None of that prevents us working elsewhere, and North America overlaps enough on language and afternoon hours to be straightforward. What we will not do is take on a process governed by rules we do not know well and learn them at your expense. If that is the situation, we will say so before you have spent anything.",
+      a: "We are UK-based, and this site is written for UK businesses because that is where we are and whose rules we know best: UK GDPR, how payroll and invoicing actually run here, the same working day. None of that prevents us working elsewhere, and North America overlaps enough on language and working hours to make that straightforward. What we will not do is take on a process governed by rules we do not know well and learn them at your expense. If that is the situation, we will say so before you have spent anything.",
     },
   ],
 } as const;
