@@ -90,13 +90,13 @@ export const PROCESSORS = [
   {
     name: "Cloudflare, Inc.",
     role: "Hosting, CDN and network security for this website.",
-    data: "IP address, browser user-agent, requested URL, timestamp — in server logs.",
+    data: "IP address, browser user-agent, requested URL and timestamp, in server logs.",
     where: "Served from the nearest edge location worldwide; company based in the USA.",
   },
   {
     name: "Namecheap, Inc. (Private Email)",
     role: "Our email. Anything you send to us is stored on their servers.",
-    data: "Your name, email address, and whatever the message contains.",
+    data: "Your name, email address and whatever the message contains.",
     where: "USA.",
   },
 ];

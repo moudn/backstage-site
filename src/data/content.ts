@@ -44,7 +44,7 @@ export const SLOGAN = "We work backstage, so you can take centre stage.";
 export const INTRO = {
   eyebrow: "AI consultancy · UK",
   opening:
-    "Tell us which process is eating your week. We build whatever fixes it, we run it, and we hand back the finished work. Nobody at your end logs into anything.",
+    "Tell us which process is eating your week. We build whatever fixes it, we run it and we hand back the finished work. Nobody at your end logs into anything.",
   primaryCta: "Tell us what's eating your week",
   secondaryCta: "See how we work",
 };
@@ -53,8 +53,8 @@ export const PROBLEM = {
   title: "What we do",
   heading: "Being handed a tool is being handed more work.",
   body: [
-    "Buy an AI platform and you have bought a rollout, a training plan, a licence renewal, and somebody internal who now owns all three. Six months later the problem you started with is still yours. You just own some software as well.",
-    "We do the opposite. You name the process. We build whatever fixes it, we keep it running, and what comes back to you is the finished work.",
+    "Buy an AI platform and you have bought a rollout, a training plan, a licence renewal and somebody internal who now owns all three. Six months later the problem you started with is still yours. You just own some software as well.",
+    "We do the opposite. You name the process. We build whatever fixes it, we keep it running and what comes back to you is the finished work.",
   ],
   pair: [
     { label: "What you get", value: "The output." },
@@ -112,7 +112,7 @@ export const EVIDENCE = {
   eyebrow: "UK government statistics · peer-reviewed research",
   heading: "The hard part was never the technology.",
   lede:
-    "Adoption across UK business has roughly tripled in under three years. What has barely moved is how far anyone gets with it — and the thing firms say stops them is not the price or the skills.",
+    "Adoption across UK business has roughly tripled in under three years. What has barely moved is how far anyone gets with it, and the thing firms say stops them is not the price or the skills.",
   /* Each stat carries its own source line. They are rendered on the page, not
      kept here for reference: a figure without a visible source is a claim. */
   stats: [
@@ -123,9 +123,9 @@ export const EVIDENCE = {
       claim:
         "of UK firms named working out where it would actually help as their biggest barrier to adopting AI.",
       detail:
-        "Ahead of cost, at 21%, and the level of AI expertise and skills, at 16%. The most common answer of any given.",
+        "Ahead of cost at 21% and the level of AI expertise and skills at 16%. The most common answer of any given.",
       source: "ONS, Management and Expectations Survey",
-      population: "~55,000 UK businesses · fieldwork Nov 2023 – Mar 2024",
+      population: "~55,000 UK businesses · fieldwork Nov 2023 to Mar 2024",
       chart: "bars",
     },
     {
@@ -137,7 +137,7 @@ export const EVIDENCE = {
       detail:
         "Up from around 12% in late 2023. Across businesses of every size the figure is 29%; among those with 250 or more employees it is 49%.",
       source: "ONS, Business Insights and Conditions Survey",
-      population: "Fieldwork 15 – 28 June 2026",
+      population: "Fieldwork 15 to 28 June 2026",
       chart: "rise",
     },
     {
@@ -149,7 +149,7 @@ export const EVIDENCE = {
       detail:
         "The average adopter uses about 1.6 of the technologies surveyed, up from about 1.4 in late 2023. Adoption has widened much faster than it has deepened.",
       source: "ONS, Business Insights and Conditions Survey",
-      population: "Fieldwork 15 – 28 June 2026",
+      population: "Fieldwork 15 to 28 June 2026",
       chart: "waffle",
     },
     {
@@ -159,14 +159,14 @@ export const EVIDENCE = {
       claim:
         "of the UK businesses that have adopted AI say it improved their productivity.",
       detail:
-        "That figure is the businesses' own account of it, not a measurement. Where the effect has actually been measured, it holds up: a staggered rollout across 5,179 customer support agents raised issues resolved per hour by 14%, and by 34% for the least experienced staff.",
+        "That figure is the businesses' own account of it, not a measurement. Where the effect has actually been measured, it holds up: a staggered rollout across 5,179 customer support agents raised issues resolved per hour by 14%, rising to 34% for the least experienced staff.",
       source: "DSIT AI Adoption Research · Brynjolfsson, Li & Raymond, QJE 2025",
-      population: "3,500 UK businesses · fieldwork 12 Feb – 2 May 2025",
+      population: "3,500 UK businesses · fieldwork 12 Feb to 2 May 2025",
       chart: "share",
     },
   ],
   foot:
-    "Nobody is short of things to automate. What they are short of is the time to work out which one is worth it, and someone to keep it running afterwards. That is the job we do.",
+    "Nobody is short of things to automate. What they are short of is the time to work out which one is worth it and someone to keep it running afterwards. That is the job we do.",
 } as const;
 
 /* The calculator.
@@ -262,7 +262,7 @@ export const JULIAN = {
   title: "Our products",
   eyebrow: "Our first product",
   heading: "You don't run Julian. Julian runs your outbound.",
-  lede: "Julian is an AI sales agent that works your outbound the way a diligent junior would — one company at a time, in your name, from your own inbox. Priced by how many leads it works each month, with thirty days before anything is charged.",
+  lede: "Julian is an AI sales agent that works your outbound the way a diligent junior would: one company at a time, in your name, from your own inbox. Priced by how many leads it works each month, with thirty days before anything is charged.",
   /* Moved here from step 04 of "How we work", which used to be "Use it
      first". It was the only step in that sequence naming a product, and the
      sequence is about method — but the claim itself is worth keeping and this
@@ -283,7 +283,7 @@ export const JULIAN_ROWS: { k: string; v: string }[] = [
   { k: "Research", v: "Reads each company before writing a word to it." },
   {
     k: "Writes individually",
-    v: "One letter at a time, not a mail merge — sent from your own Gmail, in your name.",
+    v: "One letter at a time, not a mail merge. Sent from your own Gmail, in your name.",
   },
   { k: "Follows up", v: "A fixed cadence: day 0, day 3, day 7, day 12. Then it stops." },
   { k: "Triages replies", v: "Sorts the interested from the polite no from the out-of-office." },
@@ -296,7 +296,7 @@ export const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
     title: "Find the real bottleneck",
-    body: 'Not "where could AI help" — where time and money are actually leaking this week. Usually it is something nobody has bothered to say out loud.',
+    body: 'Not "where could AI help" but where time and money are actually leaking this week. Usually it is something nobody has bothered to say out loud.',
   },
   {
     n: "02",
@@ -306,7 +306,7 @@ export const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "03",
     title: "Keep a human at every decision that matters",
-    body: "Automation takes the repetitive middle. A person still makes the calls that carry consequences — and that person can be one of ours or one of yours.",
+    body: "Automation takes the repetitive middle. A person still makes the calls that carry consequences, and that person can be one of ours or one of yours.",
   },
   /* Was "Use it first" — Julian runs our own outreach, we don't sell what we
      haven't lived with. Replaced for two reasons: it was the only step that
@@ -322,7 +322,7 @@ export const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "04",
     title: "Keep it earning its place",
-    body: "Going live is the middle, not the end. The process shifts, and something built once quietly stops fitting it. We keep adjusting what we run for you — and because what comes back is finished work rather than a dashboard, you can judge it yourself.",
+    body: "Going live is the middle, not the end. The process shifts, and something built once quietly stops fitting it. We keep adjusting what we run for you. Because what comes back is finished work rather than a dashboard, you can judge it yourself.",
   },
 ];
 
@@ -333,7 +333,7 @@ export const CONTACT = {
 };
 
 export const FOOTER = {
-  line: "Backstage — AI consultancy · UK",
+  line: "Backstage · AI consultancy · UK",
   est: "Est. 2026",
   /* Deliberately in the footer and nowhere else. A privacy notice has to be
      easy to find, which the footer satisfies — it is the first place anybody
@@ -376,36 +376,36 @@ export const FOOTER = {
  * rather than who we have worked for.
  */
 export const FAQ = {
-  title: "Questions",
+  title: "FAQ",
   heading: "The things people ask before the first call.",
   items: [
     {
       q: "What does an AI consultancy actually do?",
-      a: "It depends entirely on which one you ask, and that is part of the problem. Some sell you a licence and a training plan. Some write a strategy document and leave. What we do is narrower and easier to check: you name a process that is eating your week, we work out whether automating it is worth doing at all, we build whatever fixes it, and then we run it. What comes back to you is the finished work rather than something new to learn. If the honest answer is that a process is not worth automating yet, that is the answer you get, and it costs you nothing to have asked.",
+      a: "It depends entirely on which one you ask, and that is part of the problem. Some sell you a licence and a training plan. Some write a strategy document and leave. What we do is narrower and easier to check: you name a process that is eating your week, we work out whether automating it is worth doing at all, we build whatever fixes it and then we run it. What comes back to you is the finished work rather than something new to learn. If the honest answer is that a process is not worth automating yet, that is the answer you get, and it costs you nothing to have asked.",
     },
     {
       q: "What is the difference between an AI consultancy and an AI agency?",
-      a: "In practice the two labels are used interchangeably and neither tells you much. The question worth asking instead is what you are left holding at the end. An engagement that finishes with a handover leaves you owning a system, its upkeep, and whoever internally now understands it. An engagement that finishes with the work still being done for you leaves you owning the output and nothing else. We are the second kind. Ask any firm you are considering which of those two they are, and what happens in month seven — the answer separates them far faster than the word on the door does.",
+      a: "In practice the two labels are used interchangeably and neither tells you much. The question worth asking instead is what you are left holding at the end. An engagement that finishes with a handover leaves you owning a system, its upkeep and whoever internally now understands it. An engagement that finishes with the work still being done for you leaves you owning the output and nothing else. We are the second kind. Ask any firm you are considering which of those two they are, and what happens in month seven. The answer separates them far faster than the word on the door does.",
     },
     {
       q: "Do we need anyone technical on our side?",
-      a: "No. Nobody at your end logs into anything. That is not a convenience feature, it is the whole arrangement — the most common way an automation project quietly dies is being handed to somebody who already had a full-time job. We build it, we host it, we watch it, and we fix it when it breaks. What we do need from you is somebody who understands the process well enough to describe how it really works, including the exceptions nobody has written down, and somebody with the authority to approve the decisions where a person ought to be approving decisions.",
+      a: "No. Nobody at your end logs into anything. That is not a convenience feature, it is the whole arrangement. The most common way an automation project quietly dies is being handed to somebody who already had a full-time job. We build it, we host it, we watch it and we fix it when it breaks. What we do need from you is somebody who understands the process well enough to describe how it really works, including the exceptions nobody has written down. We also need somebody with the authority to approve the decisions where a person ought to be approving decisions.",
     },
     {
       q: "How is this different from buying an AI platform?",
-      a: "Buying one gets you a licence, a rollout, a training plan, a renewal date, and an internal owner for all four. Six months later the problem you started with is still yours, and now you have a subscription as well. The difference is where the work sits. We do not hand you the machinery and wish you luck with it; we keep the machinery and hand you what comes out of it. If we stop being worth what we cost, you stop paying us — and you have not built a department around something you would then have to unwind.",
+      a: "Buying one gets you a licence, a rollout, a training plan, a renewal date and an internal owner for all four. Six months later the problem you started with is still yours, and now you have a subscription as well. The difference is where the work sits. We do not hand you the machinery and wish you luck with it; we keep the machinery and hand you what comes out of it. If we stop being worth what we cost, you stop paying us, and you have not built a department around something you would then have to unwind.",
     },
     {
       q: "What kinds of process are worth automating first?",
-      a: "The ones that are dull, frequent, and follow rules somebody could write down if they sat and thought about it. Volume matters more than complexity: a fiddly thing done twice a year is rarely worth it, a dull thing done forty times a week usually is. The strongest candidates tend to involve moving information between systems that do not talk to each other, chasing people for things, or producing the same document from the same inputs. The weak ones are where the judgement is the job. If you are not sure which yours is, that is exactly the conversation to have — working it out is the part most businesses never find time for.",
+      a: "The ones that are dull, frequent and follow rules somebody could write down if they sat and thought about it. Volume matters more than complexity: a fiddly thing done twice a year is rarely worth it, a dull thing done forty times a week usually is. The strongest candidates tend to involve moving information between systems that do not talk to each other, chasing people for things or producing the same document from the same inputs. The weak ones are where the judgement is the job. If you are not sure which yours is, that is exactly the conversation to have. Working it out is the part most businesses never find time for.",
     },
     {
       q: "What does it cost?",
-      a: "It depends on the process, and we would rather say so than publish a number that turns out not to apply to you. What we can tell you is how it gets decided. We look at the actual process first, work out what a year of doing it by hand costs you, and only then talk about price — because if the second number is not comfortably smaller than the first, there is no good reason to do any of it. Julian, our AI sales agent, is the one thing with a fixed shape: it is priced by how many leads it works each month, with thirty days before anything is charged.",
+      a: "It depends on the process, and we would rather say so than publish a number that turns out not to apply to you. What we can tell you is how it gets decided. We look at the actual process first, work out what a year of doing it by hand costs you and only then talk about price. If the second number is not comfortably smaller than the first, there is no good reason to do any of it. Julian, our AI sales agent, is the one thing with a fixed shape: it is priced by how many leads it works each month, with thirty days before anything is charged.",
     },
     {
       q: "Do you work with businesses outside the UK?",
-      a: "We are UK-based, and this site is written for UK businesses because that is where we are and whose rules we know best — UK GDPR, how payroll and invoicing actually run here, the same working day. None of that prevents us working elsewhere, and North America overlaps enough on language and afternoon hours to be straightforward. What we will not do is take on a process governed by rules we do not know well and learn them at your expense. If that is the situation, we will say so before you have spent anything.",
+      a: "We are UK-based, and this site is written for UK businesses because that is where we are and whose rules we know best: UK GDPR, how payroll and invoicing actually run here, the same working day. None of that prevents us working elsewhere, and North America overlaps enough on language and afternoon hours to be straightforward. What we will not do is take on a process governed by rules we do not know well and learn them at your expense. If that is the situation, we will say so before you have spent anything.",
     },
   ],
 } as const;
@@ -418,6 +418,6 @@ export const NAV_LINKS: { href: string; label: string; strong?: boolean }[] = [
   { href: "#evidence", label: "Why us" },
   { href: "#julian", label: "Our products" },
   { href: "#how", label: "How we work" },
-  { href: "#faq", label: "Questions" },
+  { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Get in touch", strong: true },
 ];

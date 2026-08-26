@@ -182,9 +182,18 @@ export function PageBody() {
             </div>
           </DriftSection>
 
-          {/* Questions sit after the method and before the address: by this
-              point a reader either has an objection or is ready to write, and
-              this is where the objections get answered. */}
+          {/* No .panel / .section here: the sequence is a tall scroll region
+              that manages its own height, and a section's vertical padding
+              would put the sticky stage out of register with it. */}
+          <section id="how" className="how">
+            <StepSequence />
+          </section>
+
+          {/* The FAQ sits between the method and the address on purpose. By
+              this point the reader has seen what we do, the evidence, the
+              product and the way we work, so anything still stopping them is
+              an objection rather than a gap. This is where the objections get
+              answered, and the next thing they see is where to write. */}
           <DriftSection id="faq" className="panel section">
             <SectionTitle>{FAQ.title}</SectionTitle>
             <ScrollReveal mode="scrub" as="h3" className="h2" baseRotation={2}>
@@ -192,13 +201,6 @@ export function PageBody() {
             </ScrollReveal>
             <Faq />
           </DriftSection>
-
-          {/* No .panel / .section here: the sequence is a tall scroll region
-              that manages its own height, and a section's vertical padding
-              would put the sticky stage out of register with it. */}
-          <section id="how" className="how">
-            <StepSequence />
-          </section>
 
           {/* One address, set large, and nothing to fill in. A form asks
               somebody to compose their problem in a textarea on a stranger's

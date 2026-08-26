@@ -42,19 +42,19 @@ export const SAME_AS = ["https://www.linkedin.com/company/backstage-consultancy/
 
 /* ~55 characters. The service term leads because nobody is searching the
    brand yet, and the brand is ambiguous besides. */
-export const TITLE = "Backstage — AI consultancy, UK. We build it, we run it.";
+export const TITLE = "Backstage · AI consultancy, UK. We build it, we run it.";
 
 /* ~150 characters, which is about where Google truncates. Drawn from the
    page's own opening rather than written fresh, so the snippet matches what
    somebody sees when they arrive. */
 export const DESCRIPTION =
-  "Backstage is a UK AI consultancy. Tell us which process is eating your week — we build whatever fixes it, we run it, and we hand back the finished work.";
+  "Backstage is a UK AI consultancy. Tell us which process is eating your week. We build whatever fixes it, we run it and we hand back the finished work.";
 
 export const LOCALE = "en_GB";
 export const LANG = "en-GB";
 
 export const OG_IMAGE = `${SITE_URL}/og.png`;
-export const OG_IMAGE_ALT = "Backstage — AI consultancy, UK";
+export const OG_IMAGE_ALT = "Backstage · AI consultancy, UK";
 
 /** Light and dark, so the browser chrome on mobile is the page colour rather
  *  than white. These are `--bg` from tokens.css converted out of oklch:
@@ -103,7 +103,7 @@ export function structuredData(
       "@type": "Offer",
       itemOffered: {
         "@type": "Service",
-        name: "Julian — AI sales agent",
+        name: "Julian, an AI sales agent",
         description:
           "An AI sales agent that works outbound one company at a time, from your own inbox and in your name, with a person approving every meeting.",
         provider: { "@id": `${SITE_URL}/#organization` },
@@ -148,7 +148,7 @@ export function structuredData(
     areaServed: { "@type": "Country", name: "United Kingdom" },
     audience: { "@type": "BusinessAudience", audienceType: "Small and medium-sized businesses" },
     description:
-      "You name a process. We work out whether automating it is worth doing, build whatever fixes it, run it, and hand back the finished work. Nobody at your end logs into anything.",
+      "You name a process. We work out whether automating it is worth doing, build whatever fixes it, run it and hand back the finished work. Nobody at your end logs into anything.",
     /* No `offers` block. There is no published price, and inventing a range
        to fill the field is exactly the kind of claim that earns a manual
        action rather than a ranking. */

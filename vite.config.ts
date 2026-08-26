@@ -76,11 +76,11 @@ const esc = (s: string) =>
  */
 function crawlableBody() {
   const rows = JULIAN_ROWS.map(
-    (r) => `<li><strong>${esc(r.k)}</strong> — ${esc(r.v)}</li>`
+    (r) => `<li><strong>${esc(r.k)}:</strong> ${esc(r.v)}</li>`
   ).join('')
 
   const steps = STEPS.map(
-    (s) => `<li><h3>${esc(s.n)} — ${esc(s.title)}</h3><p>${esc(s.body)}</p></li>`
+    (s) => `<li><h3>${esc(s.n)}. ${esc(s.title)}</h3><p>${esc(s.body)}</p></li>`
   ).join('')
 
   const pair = PROBLEM.pair
@@ -94,7 +94,7 @@ function crawlableBody() {
     .map(
       (st) =>
         `<li><strong>${esc(String(st.value))}${esc(st.unit)}</strong> ${esc(st.claim)} ` +
-        `${esc(st.detail)} <em>${esc(st.source)} — ${esc(st.population)}</em></li>`
+        `${esc(st.detail)} <em>${esc(st.source)}. ${esc(st.population)}</em></li>`
     )
     .join('')
 
@@ -133,7 +133,7 @@ ${PROBLEM.body.map((p) => `<p>${esc(p)}</p>`).join('')}
 <p>${esc(JULIAN.lede)}</p>
 <p>${esc(JULIAN.ourOwn)}</p>
 <ul>${rows}</ul>
-<p><a href="${esc(JULIAN_URL)}">${esc(JULIAN.linkLabel)}</a> — ${esc(JULIAN.note)}</p>
+<p><a href="${esc(JULIAN_URL)}">${esc(JULIAN.linkLabel)}</a>. ${esc(JULIAN.note)}</p>
 
 <h2>${esc(HOW_TITLE)}</h2>
 <ol>${steps}</ol>
