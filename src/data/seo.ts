@@ -64,8 +64,15 @@ export const OG_IMAGE_ALT = "Backstage — AI consultancy, UK";
  *  If --bg changes, recompute these. */
 export const THEME_COLOR = { light: "#F8FAFD", dark: "#08080D" };
 
-/** Written into <html data-…> nothing; used only to build the JSON-LD. */
-export function structuredData(contactEmail: string) {
+/** Written into <html data-…> nothing; used only to build the JSON-LD.
+ *
+ *  `faq` is the FAQ items from content.ts, passed in rather than imported so
+ *  this module stays a description of the site to machines and content.ts
+ *  stays the single source of the words. */
+export function structuredData(
+  contactEmail: string,
+  faq: readonly { q: string; a: string }[]
+) {
   const org = {
     "@type": ["Organization", "ProfessionalService"],
     "@id": `${SITE_URL}/#organization`,
@@ -114,5 +121,62 @@ export function structuredData(contactEmail: string) {
     publisher: { "@id": `${SITE_URL}/#organization` },
   };
 
-  return { "@context": "https://schema.org", "@graph": [org, website] };
+  /* The consultancy itself, as a service.
+   *
+   * makesOffer on the organisation above describes Julian, which is one
+   * product. The thing most of the page is actually about — naming a process,
+   * having it built, and having it run for you — had no entity of its own, so
+   * the only service Google could see here was the sales agent.
+   *
+   * serviceType uses the words people search rather than the words we would
+   * choose for ourselves. That is the one place on this site where matching
+   * somebody else's vocabulary beats using our own: nobody types "we keep the
+   * machinery". */
+  const service = {
+    "@type": "Service",
+    "@id": `${SITE_URL}/#service`,
+    name: "Managed AI automation and consultancy",
+    serviceType: [
+      "AI consultancy",
+      "AI consultancy services",
+      "AI agency",
+      "Automation agency",
+      "Business process automation",
+      "Managed AI services",
+    ],
+    provider: { "@id": `${SITE_URL}/#organization` },
+    areaServed: { "@type": "Country", name: "United Kingdom" },
+    audience: { "@type": "BusinessAudience", audienceType: "Small and medium-sized businesses" },
+    description:
+      "You name a process. We work out whether automating it is worth doing, build whatever fixes it, run it, and hand back the finished work. Nobody at your end logs into anything.",
+    /* No `offers` block. There is no published price, and inventing a range
+       to fill the field is exactly the kind of claim that earns a manual
+       action rather than a ranking. */
+  };
+
+  /* FAQPage.
+   *
+   * Worth being clear about what this does and does not buy, because it is
+   * easy to add for the wrong reason. It buys NO rich result: Google narrowed
+   * FAQ rich results to government and health sites in 2023 and retired them
+   * entirely on 7 May 2026. Search Console dropped the report that same
+   * summer. Nothing here will ever draw an expandable list under a listing
+   * again.
+   *
+   * It stays because the markup is still parsed for page understanding, and
+   * because the answer engines this site's robots.txt deliberately admits
+   * consume question-and-answer pairs directly. That is the audience. */
+  const faqPage = {
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/#faq`,
+    inLanguage: LANG,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+
+  return { "@context": "https://schema.org", "@graph": [org, website, service, faqPage] };
 }

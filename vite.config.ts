@@ -10,6 +10,7 @@ import {
   CONTACT_EMAIL,
   CALCULATOR,
   EVIDENCE,
+  FAQ,
   FOOTER,
   HERO,
   HOW_TITLE,
@@ -97,6 +98,14 @@ function crawlableBody() {
     )
     .join('')
 
+  /* Questions as real headings and paragraphs rather than a list, because
+     that is the shape a question-and-answer pair wants: the h4 is the
+     question, the paragraph under it is the answer, and anything walking the
+     document gets the pairing for free from the structure. */
+  const faq = FAQ.items
+    .map((item) => `<h4>${esc(item.q)}</h4><p>${esc(item.a)}</p>`)
+    .join('')
+
   return `<noscript><div class="nojs">
 <h1>${esc(HERO.lines.join(' '))}</h1>
 <p>${esc(HERO.eyebrow)}</p>
@@ -128,6 +137,10 @@ ${PROBLEM.body.map((p) => `<p>${esc(p)}</p>`).join('')}
 
 <h2>${esc(HOW_TITLE)}</h2>
 <ol>${steps}</ol>
+
+<h2>${esc(FAQ.title)}</h2>
+<h3>${esc(FAQ.heading)}</h3>
+${faq}
 
 <h2>${esc(CONTACT.title)}</h2>
 <h3>${esc(CONTACT.heading)}</h3>
@@ -263,7 +276,7 @@ function seo(): Plugin {
     <meta name="theme-color" content="${THEME_COLOR.light}" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="${THEME_COLOR.dark}" media="(prefers-color-scheme: dark)" />
 
-    <script type="application/ld+json">${JSON.stringify(structuredData(CONTACT_EMAIL))}</script>`
+    <script type="application/ld+json">${JSON.stringify(structuredData(CONTACT_EMAIL, FAQ.items))}</script>`
 
       return html
         .replace('<title>Backstage</title>', `<title>${esc(TITLE)}</title>${head}`)

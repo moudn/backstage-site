@@ -15,6 +15,7 @@
  * floods, washing out the headline sitting in it.
  */
 
+import { Fragment } from "react";
 import "./GlowHorizon.css";
 
 export function GlowHorizon({
@@ -40,9 +41,18 @@ export function GlowHorizon({
 
       <div className="glow-horizon__content">
         <p className="glow-horizon__eyebrow">{eyebrow}</p>
+        {/* The spaces between the lines are real text nodes. Each line is its
+            own block-level span, so whitespace between them collapses away
+            and changes nothing about the look — but without it the page's h1,
+            the single strongest heading on the site, reads as
+            "Welcome to your newAI-poweredworld" to anything walking the
+            document text. */}
         <h1 className="glow-horizon__title">
           {lines.map((line, i) => (
-            <span key={i}>{line}</span>
+            <Fragment key={i}>
+              {i > 0 ? " " : null}
+              <span>{line}</span>
+            </Fragment>
           ))}
         </h1>
       </div>

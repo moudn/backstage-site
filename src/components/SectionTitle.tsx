@@ -23,7 +23,7 @@
  * is transformed — the title is simply there.
  */
 
-import { useEffect, type CSSProperties } from "react";
+import { Fragment, useEffect, type CSSProperties } from "react";
 import { useScrollDrift } from "../lib/useScrollDrift";
 import "./SectionTitle.css";
 
@@ -62,20 +62,37 @@ export function SectionTitle({ children }: { children: string }) {
 
   return (
     <h2 ref={ref} className="sec-title" aria-label={children}>
+      {/* The space between words is a real text node BETWEEN the word spans,
+          not the ::after pseudo-element it used to be, and not inside them.
+
+          Why it matters: a pseudo-element's `content` is not part of the
+          document text. It is not in textContent, it is not selectable, and a
+          crawler reading this heading saw "Whyshouldyouimplementourservices?"
+          as a single unreadable token. Headings are among the strongest
+          on-page signals there are, and every section title on this site was
+          arriving as a run of letters with no words in it.
+
+          It has to be a sibling, not the first child of the word span: that
+          span is an inline-block, and leading whitespace inside an
+          inline-block is trimmed, so a space put in there would vanish and
+          the bug would look fixed in the DOM while still rendering wrong. */}
       {words.map((word, w) => (
-        <span className="sec-title__word" key={`${word}-${w}`} aria-hidden="true">
-          {[...word].map((ch, c) => (
-            <span
-              className="sec-title__ch"
-              key={`${ch}-${c}`}
-              /* --i drives the specular sweep's stagger in CSS; the delay is
-                 the same number, kept here so the two never drift apart. */
-              style={{ "--i": index, transitionDelay: `${index++ * 28}ms` } as CSSProperties}
-            >
-              {ch}
-            </span>
-          ))}
-        </span>
+        <Fragment key={`${word}-${w}`}>
+          {w > 0 ? " " : null}
+          <span className="sec-title__word" aria-hidden="true">
+            {[...word].map((ch, c) => (
+              <span
+                className="sec-title__ch"
+                key={`${ch}-${c}`}
+                /* --i drives the specular sweep's stagger in CSS; the delay is
+                   the same number, kept here so the two never drift apart. */
+                style={{ "--i": index, transitionDelay: `${index++ * 28}ms` } as CSSProperties}
+              >
+                {ch}
+              </span>
+            ))}
+          </span>
+        </Fragment>
       ))}
     </h2>
   );

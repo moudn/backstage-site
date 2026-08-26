@@ -29,7 +29,7 @@
  * and not nine separate characters.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import "./PopTitle.css";
 
 export function PopTitle({ children, className = "" }: { children: string; className?: string }) {
@@ -64,8 +64,16 @@ export function PopTitle({ children, className = "" }: { children: string; class
       data-shown={shown}
       aria-label={children}
     >
+      {/* A real space between the word spans. It used to be a ::after
+          pseudo-element, whose `content` is not part of the document text —
+          so this heading reached a crawler as "Howwework". Same fix and same
+          reasoning as SectionTitle; see the longer note there. It has to sit
+          between the spans rather than inside one, because leading whitespace
+          inside an inline-block is trimmed. */}
       {words.map((word, w) => (
-        <span className="pop-title__word" key={`${word}-${w}`} aria-hidden="true">
+        <Fragment key={`${word}-${w}`}>
+          {w > 0 ? " " : null}
+          <span className="pop-title__word" aria-hidden="true">
           {[...word].map((ch, c) => (
             <span
               className="pop-title__ch"
@@ -78,7 +86,8 @@ export function PopTitle({ children, className = "" }: { children: string; class
               {ch}
             </span>
           ))}
-        </span>
+          </span>
+        </Fragment>
       ))}
     </h2>
   );

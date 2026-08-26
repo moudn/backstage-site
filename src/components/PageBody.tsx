@@ -21,6 +21,7 @@
 import { Calculator } from "./Calculator";
 import { DriftSection } from "./DriftSection";
 import { Evidence } from "./Evidence";
+import { Faq } from "./Faq";
 import { FooterCrowd } from "./FooterCrowd";
 import { Reveal } from "./Reveal";
 import { ScrollReveal } from "./ScrollReveal";
@@ -30,6 +31,7 @@ import {
   CALCULATOR,
   CONTACT,
   EVIDENCE,
+  FAQ,
   CONTACT_EMAIL,
   FOOTER,
   INTRO,
@@ -178,6 +180,17 @@ export function PageBody() {
                 ))}
               </ul>
             </div>
+          </DriftSection>
+
+          {/* Questions sit after the method and before the address: by this
+              point a reader either has an objection or is ready to write, and
+              this is where the objections get answered. */}
+          <DriftSection id="faq" className="panel section">
+            <SectionTitle>{FAQ.title}</SectionTitle>
+            <ScrollReveal mode="scrub" as="h3" className="h2" baseRotation={2}>
+              {FAQ.heading}
+            </ScrollReveal>
+            <Faq />
           </DriftSection>
 
           {/* No .panel / .section here: the sequence is a tall scroll region

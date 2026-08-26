@@ -1,0 +1,112 @@
+/* The questions.
+ *
+ * Same rule as everything else laid out on this page: NO OPAQUE FILLS. The
+ * jellyfish drifts behind the body and the ambient field is behind that, and
+ * a list of solid rows would put a stack of rectangles on top of the creature.
+ * These are rules and a fill that is mostly transparent.
+ */
+
+.faq__list{
+  list-style:none;
+  margin:clamp(28px,4vw,44px) 0 0;
+  padding:0;
+  /* Capped. An answer is a paragraph of prose, and prose set across 1180px is
+     tiring to read however nice the page looks — the line length is the
+     point, not the width of the shell. */
+  max-width:780px;
+  border-top:1px solid var(--line-soft);
+}
+
+.faq__item{
+  border-bottom:1px solid var(--line-soft);
+}
+
+.faq__d{
+  /* A tint that only appears once the question is open, so an open row reads
+     as a place you are rather than another row in the list. */
+  transition:background-color 420ms var(--fade);
+}
+.faq__d[open]{
+  background:color-mix(in oklab, var(--bg) 22%, transparent);
+}
+
+/* ── the question ─────────────────────────────────────────────────────── */
+
+.faq__q{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:clamp(14px,2.4vw,28px);
+  padding:clamp(16px,2.2vw,22px) clamp(4px,1.4vw,16px);
+  cursor:pointer;
+  /* Removes the disclosure triangle. Both are needed: Safari and older
+     WebKit use the -webkit- pseudo-element, everything current honours
+     list-style on the summary itself. */
+  list-style:none;
+  font:500 clamp(16px,1.9vw,19px)/1.45 var(--font-text);
+  color:var(--text);
+  text-wrap:pretty;
+  transition:color 240ms var(--fade);
+}
+.faq__q::-webkit-details-marker{ display:none }
+.faq__q:hover{ color:var(--accent) }
+.faq__q:focus-visible{
+  outline:2px solid var(--focus);
+  outline-offset:-2px;
+  border-radius:8px;
+}
+
+.faq__q-text{ flex:1 }
+
+/* The plus. Sized in ch-independent units and nudged down by a fraction of a
+   line so it centres on the question's first line rather than on the whole
+   block, which for a two-line question is a long way off. */
+.faq__mark{
+  position:relative;
+  flex:none;
+  width:13px; height:13px;
+  margin-top:0.32em;
+  color:var(--text-3);
+}
+.faq__mark::before,
+.faq__mark::after{
+  content:"";
+  position:absolute;
+  inset:50% 0 auto 0;
+  height:1.6px;
+  background:currentColor;
+  border-radius:2px;
+  transform:translateY(-50%);
+  transition:transform 380ms var(--enter), background-color 240ms var(--fade);
+}
+.faq__mark::after{ transform:translateY(-50%) rotate(90deg) }
+.faq__d[open] .faq__mark::after{ transform:translateY(-50%) rotate(0deg) }
+.faq__d[open] .faq__mark{ color:var(--accent) }
+
+/* ── the answer ───────────────────────────────────────────────────────── */
+
+.faq__a{
+  padding:0 clamp(4px,1.4vw,16px) clamp(20px,2.6vw,26px);
+  /* Stops short of the plus, so the answer's ragged right edge does not run
+     under the mark and look like it collided with it. */
+  padding-right:clamp(30px,4vw,52px);
+}
+.faq__a p{
+  margin:0;
+  font:400 clamp(15px,1.6vw,16.5px)/1.68 var(--font-text);
+  color:var(--text-2);
+  text-wrap:pretty;
+}
+
+/* The rise. Only under no-preference — an answer that animates in every time
+   somebody opens a row is the kind of motion that stops being charming on the
+   third use, so it is small and quick. */
+@media (prefers-reduced-motion: no-preference){
+  .faq__d[open] .faq__a{
+    animation:faq-in 420ms var(--enter) both;
+  }
+  @keyframes faq-in{
+    from{ opacity:0; transform:translateY(-6px) }
+    to{ opacity:1; transform:translateY(0) }
+  }
+}
