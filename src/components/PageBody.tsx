@@ -18,6 +18,7 @@
  * section the reader advances through.
  */
 
+import { Calculator } from "./Calculator";
 import { DriftSection } from "./DriftSection";
 import { Evidence } from "./Evidence";
 import { FooterCrowd } from "./FooterCrowd";
@@ -26,6 +27,7 @@ import { ScrollReveal } from "./ScrollReveal";
 import { SectionTitle } from "./SectionTitle";
 import { StepSequence } from "./StepSequence";
 import {
+  CALCULATOR,
   CONTACT,
   EVIDENCE,
   CONTACT_EMAIL,
@@ -115,6 +117,19 @@ export function PageBody() {
               {EVIDENCE.lede}
             </ScrollReveal>
             <Evidence />
+
+            {/* The calculator closes the section. The four figures establish
+                that the problem is real and general; this is where it stops
+                being general — the reader puts their own team into it and gets
+                their own number back. An h3, like the section's other heading,
+                so the outline still matches what the page looks like. */}
+            <ScrollReveal mode="scrub" as="h3" className="h2 calc__lead" baseRotation={2}>
+              {CALCULATOR.lead}
+            </ScrollReveal>
+            <ScrollReveal mode="scrub" className="body-copy">
+              {CALCULATOR.intro}
+            </ScrollReveal>
+            <Calculator />
           </DriftSection>
 
           <DriftSection id="julian" className="panel panel--tall section">

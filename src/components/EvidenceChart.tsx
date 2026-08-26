@@ -188,13 +188,34 @@ function Waffle({ on }: On) {
   );
 }
 
-/** The association: turnover per worker, indexed, one bar 19% above the other. */
-function Compare({ on }: On) {
-  const max = 128;
+/** Three in four: the share of adopters reporting a productivity gain.
+ *
+ * Four blocks rather than the hundred the waffle uses. 75% is a proportion the
+ * eye can check at a glance if the denominator is small enough to count, and
+ * drawing it as 75 lit cells out of 100 would put two near-identical grids on
+ * one screen — this card sits diagonally opposite the waffle. */
+function Share({ on }: On) {
+  const CELLS = 4;
+  const LIT = 3;
   return (
-    <div className="evc evc--cols evc--pair" aria-hidden="true">
-      <Column grow={100 / max} value="100" name="Others" lit={false} delay={0} on={on} />
-      <Column grow={119 / max} value="119" name="Adopted new tech" lit delay={150} on={on} />
+    <div className="evc evc--share" aria-hidden="true">
+      <div className="evc__blocks">
+        {Array.from({ length: CELLS }, (_, i) => (
+          <span
+            key={i}
+            className={`evc__block${i < LIT ? " is-lit" : ""}`}
+            style={{
+              opacity: on ? (i < LIT ? 1 : 0.18) : 0,
+              transform: on ? "translateY(0)" : "translateY(10px)",
+              transitionDelay: `${i * 130}ms`,
+            }}
+          />
+        ))}
+      </div>
+      <div className="evc__ends">
+        <span className="evc__name">3 said yes</span>
+        <span className="evc__name">1 did not</span>
+      </div>
     </div>
   );
 }
@@ -203,7 +224,7 @@ export function EvidenceChart({ kind, on }: { kind: string; on: boolean }) {
   if (kind === "bars") return <Bars on={on} />;
   if (kind === "rise") return <Rise on={on} />;
   if (kind === "waffle") return <Waffle on={on} />;
-  return <Compare on={on} />;
+  return <Share on={on} />;
 }
 
 export default EvidenceChart;

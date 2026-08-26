@@ -8,6 +8,7 @@ import { readOklchTokens } from './src/lib/oklch.ts'
 import {
   CONTACT,
   CONTACT_EMAIL,
+  CALCULATOR,
   EVIDENCE,
   FOOTER,
   HERO,
@@ -112,6 +113,11 @@ ${PROBLEM.body.map((p) => `<p>${esc(p)}</p>`).join('')}
 <p>${esc(EVIDENCE.lede)}</p>
 <ul>${evidence}</ul>
 <p>${esc(EVIDENCE.foot)}</p>
+
+<h3>${esc(CALCULATOR.lead)}</h3>
+<p>${esc(CALCULATOR.intro)}</p>
+<p>${esc(CALCULATOR.closing)}</p>
+<p>${esc(CALCULATOR.basis)}</p>
 
 <h2>${esc(JULIAN.title)}</h2>
 <h3>${esc(JULIAN.heading)}</h3>

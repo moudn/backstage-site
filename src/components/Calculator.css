@@ -1,0 +1,243 @@
+/* The calculator.
+ *
+ * Same rule as the evidence grid, and for the same reason: NO OPAQUE FILLS.
+ * The jellyfish drifts behind the whole body and the ambient field is behind
+ * that, and any panel painted in a solid page colour puts a rectangle on top
+ * of the creature and makes it look broken. Everything here is a border and a
+ * fill that is mostly transparent.
+ */
+
+/* The question that introduces the calculator. It follows .ev__foot, which
+   closes the four stat cards, so it needs a gap big enough to read as a new
+   beat in the section rather than another paragraph of the last one. */
+.calc__lead{
+  margin-top:clamp(48px,7vw,88px) !important;
+}
+
+.calc{
+  margin:clamp(24px,3.4vw,38px) 0 0;
+  padding:clamp(20px,3vw,34px);
+  /* A shade more present than the stat cards' 26%. Those are small and there
+     are four of them, so their edges do the work of saying "card"; this is one
+     panel most of a screen wide, and at 30% its boundary washed out entirely
+     against the light field. Still nowhere near opaque. */
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:color-mix(in oklab, var(--bg) 46%, transparent);
+  transition:border-color 420ms var(--fade), background-color 420ms var(--fade);
+}
+
+.calc__inputs{
+  display:grid;
+  gap:clamp(18px,2.6vw,26px);
+}
+
+/* Label and value on one line, slider spanning both beneath. A grid rather
+   than a flex column so the value can sit hard against the right edge without
+   a spacer element between them. */
+.calc__row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:baseline;
+  gap:6px 12px;
+}
+
+.calc__label{
+  margin:0;
+  font:400 clamp(14.5px,1.5vw,16px)/1.4 var(--font-text);
+  color:var(--text-2);
+  cursor:pointer;
+}
+
+.calc__out{
+  font:700 clamp(20px,2.6vw,26px)/1 var(--font-display);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-0.02em;
+  color:var(--accent);
+  justify-self:end;
+}
+
+.calc__note,
+.calc__basis{
+  grid-column:1 / -1;
+  margin:0;
+  font:400 11.5px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:0.04em;
+  color:var(--text-3);
+  opacity:0.85;
+}
+
+/* ── the slider ───────────────────────────────────────────────────────── */
+
+.calc__range{
+  grid-column:1 / -1;
+  width:100%;
+  /* 28px of hit area around a 6px track. The painted control is thin, but the
+     box that receives a touch is not: below about 24px a fingertip keeps
+     landing beside the thumb instead of on it. */
+  height:28px;
+  margin:0;
+  /* Strips the platform control so the track and thumb below are what shows.
+     Everything the input DOES — arrow keys, Home/End, touch dragging, the
+     value announced to a screen reader — survives this; only the paint goes. */
+  appearance:none;
+  background:transparent;
+  cursor:pointer;
+}
+.calc__range:focus{ outline:none }
+
+/* Track. The filled portion is a hard-stop gradient at --pct, which the
+   component sets from the current value. */
+.calc__range::-webkit-slider-runnable-track{
+  height:6px;
+  border-radius:99px;
+  background:linear-gradient(
+    to right,
+    var(--accent) 0 var(--pct),
+    color-mix(in oklab, var(--text-3) 26%, transparent) var(--pct) 100%
+  );
+}
+.calc__range::-moz-range-track{
+  height:6px;
+  border-radius:99px;
+  background:color-mix(in oklab, var(--text-3) 26%, transparent);
+}
+.calc__range::-moz-range-progress{
+  height:6px;
+  border-radius:99px;
+  background:var(--accent);
+}
+
+/* Thumb. 26px of touch target around an 18px painted circle — under the 24px
+   minimum a finger keeps missing it on a phone. */
+.calc__range::-webkit-slider-thumb{
+  appearance:none;
+  width:18px; height:18px;
+  margin-top:-6px;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 4px color-mix(in oklab, var(--accent) 22%, transparent);
+  transition:box-shadow 220ms var(--fade), transform 220ms var(--enter);
+}
+.calc__range::-moz-range-thumb{
+  width:18px; height:18px;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 4px color-mix(in oklab, var(--accent) 22%, transparent);
+  transition:box-shadow 220ms var(--fade), transform 220ms var(--enter);
+}
+
+.calc__range:hover::-webkit-slider-thumb{ transform:scale(1.12) }
+.calc__range:hover::-moz-range-thumb{ transform:scale(1.12) }
+
+/* The focus ring has to be drawn on the thumb, not the input: the input's own
+   box is 26px tall and full width, so an outline on it draws a rectangle
+   across the whole row instead of around the control the user is moving. */
+.calc__range:focus-visible::-webkit-slider-thumb{
+  box-shadow:0 0 0 4px color-mix(in oklab, var(--accent) 30%, transparent),
+             0 0 0 7px var(--focus);
+}
+.calc__range:focus-visible::-moz-range-thumb{
+  box-shadow:0 0 0 4px color-mix(in oklab, var(--accent) 30%, transparent),
+             0 0 0 7px var(--focus);
+}
+
+/* ── the results ──────────────────────────────────────────────────────── */
+
+/* Capped rather than full-bleed. The sliders above run in two columns across
+   the whole panel, but a result is a label and a figure that belong to each
+   other — stretched over 900px the eye has to travel the width of the screen
+   to pair them up, and they stop reading as one line. */
+.calc__results{
+  margin:clamp(22px,3vw,32px) 0 0;
+  padding:clamp(18px,2.4vw,24px) 0 0;
+  border-top:1px solid var(--line-soft);
+  display:grid;
+  gap:clamp(10px,1.4vw,14px);
+  max-width:620px;
+}
+
+.calc__line{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:baseline;
+  gap:12px;
+}
+.calc__line dt{
+  margin:0;
+  font:400 clamp(14px,1.5vw,15.5px)/1.45 var(--font-text);
+  color:var(--text-2);
+}
+.calc__line dd{
+  margin:0;
+  font:600 clamp(16px,1.9vw,19px)/1.2 var(--font-display);
+  font-variant-numeric:tabular-nums;
+  color:var(--text);
+  justify-self:end;
+  text-align:right;
+}
+
+/* The last line is the one the section is for, so it gets the space and the
+   size. Its own rule above it separates the reader's inputs from the answer.
+   It also stacks rather than sitting label-left / figure-right like the two
+   above it: at this size the figure is four times the height of its label, so
+   a shared baseline leaves the label stranded, and on a phone the label wraps
+   to two lines and collides with the number. */
+.calc__line--lead{
+  margin-top:clamp(6px,1vw,10px);
+  padding-top:clamp(14px,1.8vw,18px);
+  border-top:1px solid var(--line-soft);
+  grid-template-columns:1fr;
+  gap:4px;
+}
+.calc__line--lead dd{ justify-self:start; text-align:left }
+.calc__big{
+  font:700 clamp(30px,5vw,46px)/1.05 var(--font-display) !important;
+  letter-spacing:-0.03em;
+  background-image:linear-gradient(
+    177deg,
+    var(--glass-lip) 0%,
+    var(--glass-body) 22%,
+    var(--glass-body) 62%,
+    var(--glass-base) 100%
+  );
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:var(--text);
+}
+
+.calc__closing{
+  margin:clamp(20px,2.6vw,28px) 0 0;
+  max-width:56ch;
+  font:400 clamp(14.5px,1.6vw,16px)/1.62 var(--font-text);
+  color:var(--text-2);
+  text-wrap:pretty;
+}
+
+/* The button itself is .btn-chrome / .btn-pill, the same pair the intro's call
+   to action uses — this is the same action, so it should not be a second
+   button design. All this rule does is place it. */
+.calc__cta{
+  display:inline-block;
+  margin:clamp(18px,2.4vw,26px) 0 clamp(16px,2vw,20px);
+}
+
+.calc__basis{ margin-top:0 }
+
+@media (min-width: 780px){
+  /* Two columns of sliders on a wide screen. Four stacked rows plus four
+     results is a very tall column on desktop, and the whole point of the
+     thing is that the inputs and the answer are visible at the same time —
+     if the reader has to scroll to see the number change, the number might
+     as well not move. */
+  .calc__inputs{ grid-template-columns:repeat(2, 1fr); column-gap:clamp(28px,4vw,48px) }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .calc__cta,
+  .calc__range::-webkit-slider-thumb,
+  .calc__range::-moz-range-thumb{ transition:none }
+  .calc__cta:hover{ transform:none }
+}

@@ -64,40 +64,52 @@ export const PROBLEM = {
 
 /* The evidence section.
  *
- * Every figure here is UK official statistics, from two Office for National
- * Statistics surveys. That choice is deliberate and worth defending, because
- * the obvious alternative is much easier to find: the "employees waste four
- * and a half hours a week on automatable tasks" genre of statistic. Every one
- * of those traces back to a company selling automation software — UiPath,
- * Automation Anywhere, Smartsheet, ProcessMaker — is self-reported, and
- * publishes no method. A consultancy quoting a vendor's marketing survey as
- * evidence is one search away from looking either careless or dishonest, and
- * this page has to survive being read by a sceptic.
+ * Every figure here is UK government statistics or peer-reviewed research.
+ * That choice is deliberate and worth defending, because the obvious
+ * alternative is much easier to find: the "employees waste four and a half
+ * hours a week on automatable tasks" genre of statistic. Every one of those
+ * traces back to a company selling automation software — UiPath, Automation
+ * Anywhere, Smartsheet, ProcessMaker — is self-reported, and publishes no
+ * method. A consultancy quoting a vendor's marketing survey as evidence is
+ * one search away from looking either careless or dishonest, and this page
+ * has to survive being read by a sceptic.
  *
- * The two sources:
+ * The sources:
  *
- *   MES  — Management and Expectations Survey. About 55,000 UK businesses,
- *          fieldwork November 2023 to March 2024. Published by the ONS in
- *          March 2025 as "Management practices and the adoption of technology
- *          and artificial intelligence in UK firms, 2023".
- *   BICS — Business Insights and Conditions Survey. The AI questions ran
+ *   MES  — ONS Management and Expectations Survey. About 55,000 UK
+ *          businesses, fieldwork November 2023 to March 2024. Published by
+ *          the ONS in March 2025 as "Management practices and the adoption of
+ *          technology and artificial intelligence in UK firms, 2023".
+ *   BICS — ONS Business Insights and Conditions Survey. The AI questions ran
  *          15 to 28 June 2026, published July 2026 as "Artificial
  *          intelligence in UK businesses: 2023 to 2026".
+ *   DSIT — AI Adoption Research, for the Department for Science, Innovation
+ *          and Technology. 3,500 UK business interviews by IFF Research and
+ *          Technopolis Group, telephone fieldwork 12 February to 2 May 2025.
+ *   QJE  — Brynjolfsson, Li and Raymond, "Generative AI at Work", Quarterly
+ *          Journal of Economics 140(2), 2025, pp. 889–942. 5,179 customer
+ *          support agents at a Fortune 500 software firm, about three million
+ *          conversations, staggered rollout across 2020–21.
  *
- * Two things to hold on to if these are ever edited:
+ * Three things to hold on to if these are ever edited:
  *
- *  - The 19% is an ASSOCIATION, not a cause. The ONS controlled for
- *    management practice scores and firm characteristics; it did not show
- *    that adopting technology raises turnover. The copy says "associated
- *    with" and it has to keep saying that.
- *  - The denominators differ between the two surveys and between questions.
- *    35% is businesses with ten or more employees; the all-business figure
- *    for the same question is 29%. Quoting one number with the other's
- *    population is the easiest mistake to make here.
+ *  - The 75% is SELF-REPORTED. Businesses were asked whether AI had improved
+ *    their productivity and three-quarters said yes; nobody measured their
+ *    output. The detail line says so, and it has to keep saying so — that
+ *    sentence is what stops a sceptic dismissing the whole card. The QJE
+ *    figure in the same detail is the answer to that objection: 14% is a
+ *    measured effect from a staggered rollout, not an opinion.
+ *  - Do not restate the QJE result as something Backstage delivers. It is
+ *    evidence that automating a real process produces a real gain, not a
+ *    promise of 14% for anyone. The site does not promise numbers.
+ *  - The denominators differ between surveys and between questions. 35% is
+ *    businesses with ten or more employees; the all-business figure for the
+ *    same question is 29%. Quoting one number with the other's population is
+ *    the easiest mistake to make here.
  */
 export const EVIDENCE = {
-  title: "The numbers",
-  eyebrow: "UK businesses · Office for National Statistics",
+  title: "Why should you implement our services?",
+  eyebrow: "UK government statistics · peer-reviewed research",
   heading: "The hard part was never the technology.",
   lede:
     "Adoption across UK business has roughly tripled in under three years. What has barely moved is how far anyone gets with it — and the thing firms say stops them is not the price or the skills.",
@@ -142,19 +154,108 @@ export const EVIDENCE = {
     },
     {
       id: "return",
-      value: 19,
+      value: 75,
       unit: "%",
       claim:
-        "higher turnover per worker is associated with firms that had adopted new technology.",
+        "of the UK businesses that have adopted AI say it improved their productivity.",
       detail:
-        "After controlling for management practice scores and firm characteristics. An association measured across firms, not proof that adopting technology causes the difference.",
-      source: "ONS, Management and Expectations Survey",
-      population: "~55,000 UK businesses · fieldwork Nov 2023 – Mar 2024",
-      chart: "compare",
+        "That figure is the businesses' own account of it, not a measurement. Where the effect has actually been measured, it holds up: a staggered rollout across 5,179 customer support agents raised issues resolved per hour by 14%, and by 34% for the least experienced staff.",
+      source: "DSIT AI Adoption Research · Brynjolfsson, Li & Raymond, QJE 2025",
+      population: "3,500 UK businesses · fieldwork 12 Feb – 2 May 2025",
+      chart: "share",
     },
   ],
   foot:
     "Nobody is short of things to automate. What they are short of is the time to work out which one is worth it, and someone to keep it running afterwards. That is the job we do.",
+} as const;
+
+/* The calculator.
+ *
+ * A deliberate decision about the last slider, because it is the one that
+ * makes this either honest or not. The obvious way to build this is to assert
+ * a recovery rate — "60-70% recoverable with AI" — and multiply by it. Every
+ * calculator of this kind on the internet does exactly that, and not one of
+ * them can tell you where the number came from. Under the rule at the top of
+ * this file it would be the worst kind of figure: unsourced, flattering, and
+ * ours.
+ *
+ * So the share is a slider the reader sets, the label says it is their
+ * estimate, and the result line says we would rather work the real number out
+ * with them. That is more honest, and it is also better sales: a number
+ * somebody chose themselves is a number they believe.
+ *
+ * On the 46 weeks. Multiplying by 52 assumes nobody takes a day off all year,
+ * which overstates every result by about 12%. UK statutory minimum leave is
+ * 5.6 weeks including bank holidays, so 46 working weeks is the conservative
+ * figure, and the page says so rather than hiding it. Better to be the
+ * calculator that under-claims.
+ */
+export const CALCULATOR = {
+  /* The question the section has been building to. */
+  lead: "So what is not automating it actually costing you?",
+  intro:
+    "Most businesses have never added this up. Move the sliders to the shape of your own team and see what a year of it comes to.",
+  inputs: [
+    {
+      id: "people",
+      label: "People doing the work",
+      min: 1,
+      max: 40,
+      step: 1,
+      initial: 4,
+      prefix: "",
+      suffix: "",
+    },
+    {
+      id: "hours",
+      label: "Hours each, per week",
+      min: 1,
+      max: 30,
+      step: 1,
+      initial: 6,
+      prefix: "",
+      suffix: "h",
+    },
+    {
+      id: "rate",
+      label: "Average cost per hour",
+      min: 12,
+      max: 120,
+      step: 1,
+      initial: 32,
+      prefix: "£",
+      suffix: "",
+    },
+    {
+      id: "share",
+      label: "How much of it could run without a person",
+      min: 0,
+      max: 90,
+      step: 5,
+      initial: 55,
+      prefix: "",
+      suffix: "%",
+      /* Rendered under the slider, so nobody can read the result as a promise. */
+      note: "Your estimate, not our promise.",
+    },
+  ],
+  /* Working weeks, not calendar weeks. See the note above. */
+  weeksPerYear: 46,
+  results: {
+    hours: "Hours that go into it each week",
+    year: "What that costs you a year",
+    recover: "The part that need not be a person's job",
+  },
+  /* No price appears here on purpose. A calculator that ends in "and our
+     package costs X, so you break even in month Y" is doing arithmetic on a
+     number the reader never agreed to. This ends where the reader's own
+     numbers end. */
+  closing:
+    "That is an estimate built from your figures, not a quote. The useful version of this conversation is the one where we look at the actual process and work out which part of it is worth handing over first.",
+  cta: "Tell us what's eating your week",
+  /* Shown small, beneath everything. The rigour is the point. */
+  basis:
+    "Calculated over 46 working weeks a year rather than 52, to allow for statutory leave and bank holidays.",
 } as const;
 
 export const JULIAN = {
@@ -246,7 +347,10 @@ export const FOOTER = {
 
 export const NAV_LINKS: { href: string; label: string; strong?: boolean }[] = [
   { href: "#problem", label: "What we do" },
-  { href: "#evidence", label: "The numbers" },
+  /* The section's own title is the full question, "Why should you implement
+     our services?". The nav gets the short form — the bar is horizontal and
+     five items wide, and a nine-word link would push the row into wrapping. */
+  { href: "#evidence", label: "Why us" },
   { href: "#julian", label: "Our products" },
   { href: "#how", label: "How we work" },
   { href: "#contact", label: "Get in touch", strong: true },

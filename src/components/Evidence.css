@@ -156,7 +156,6 @@
   align-items:start;
   gap:clamp(10px,2vw,20px);
 }
-.evc--pair{ grid-template-columns:repeat(2, 1fr) }
 
 .evc__col{
   display:grid;
@@ -215,6 +214,20 @@
   border-radius:1.5px;
   background:var(--accent);
   transition:opacity 520ms var(--fade);
+}
+
+/* ── three in four ────────────────────────────────────────────────────── */
+
+.evc--share .evc__blocks{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:clamp(8px,1.6vw,14px);
+  height:var(--evc-plot);
+}
+.evc__block{
+  border-radius:6px;
+  background:var(--accent);
+  transition:opacity 620ms var(--fade), transform 620ms var(--enter);
 }
 
 /* ── the source, behind a real button ─────────────────────────────────── */
