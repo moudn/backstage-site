@@ -123,7 +123,7 @@ export const EVIDENCE = {
       claim:
         "of UK firms named working out where it would actually help as their biggest barrier to adopting AI.",
       detail:
-        "Ahead of cost at 21% and the level of AI expertise and skills at 16%. The most common answer of any given.",
+        "Ahead of cost at 21% and the level of AI expertise and skills at 16%. More firms named it than named anything else.",
       source: "ONS, Management and Expectations Survey",
       population: "~55,000 UK businesses · fieldwork Nov 2023 to Mar 2024",
       chart: "bars",
