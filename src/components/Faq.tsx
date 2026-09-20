@@ -29,7 +29,19 @@ export function Faq() {
         <li className="faq__item" key={item.q}>
           <details className="faq__d">
             <summary className="faq__q">
-              <span className="faq__q-text">{item.q}</span>
+              {/* A real heading, not a span.
+                  These questions are the most keyword-dense text on the site
+                  — "What does an AI consultancy actually do?", "the difference
+                  between an AI consultancy and an AI agency" — and as a span
+                  they carried no heading weight at all. The prerendered copy
+                  in vite.config.ts already emits them as <h4>, so the rendered
+                  page was the odd one out. h4 keeps the hierarchy honest:
+                  h2 section title, h3 section lead, h4 per question.
+
+                  <summary> explicitly permits heading content, so this is
+                  valid. All of the h4's default styling is reset in the CSS —
+                  the look still comes from .faq__q on the summary. */}
+              <h4 className="faq__q-text">{item.q}</h4>
               {/* A plus that becomes a minus: two bars, one of which turns.
                   aria-hidden because <summary> already announces its own
                   expanded state — the mark is a picture of that, not a

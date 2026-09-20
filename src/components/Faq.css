@@ -56,7 +56,16 @@
   border-radius:8px;
 }
 
-.faq__q-text{ flex:1 }
+/* The question is an <h4>. Everything a browser does to a heading by default
+   is undone here: the size, weight and colour all come from .faq__q on the
+   summary above, so making it a heading changed nothing visually. */
+.faq__q-text{
+  flex:1;
+  margin:0;
+  font:inherit;
+  color:inherit;
+  letter-spacing:inherit;
+}
 
 /* The plus. Sized in ch-independent units and nudged down by a fraction of a
    line so it centres on the question's first line rather than on the whole
