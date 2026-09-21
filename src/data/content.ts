@@ -256,6 +256,62 @@ export const CALCULATOR = {
   /* Shown small, beneath everything. The rigour is the point. */
   basis:
     "Calculated over 46 working weeks a year rather than 52, to allow for statutory leave and bank holidays.",
+  /* Rendered on the homepage only, under the calculator. The dedicated page
+     carries the reasoning this section has no room for, and an internal link
+     is how a crawler finds it and how a reader gets the long answer. */
+  pageLink: "How this is worked out, and why there is no recovery percentage",
+} as const;
+
+/* The calculator's own page, at /cost-calculator.
+ *
+ * It exists for a reason that is not "more pages". A calculator is the one
+ * thing on this site somebody might link to without being asked, and buried
+ * two thirds of the way down the homepage it has no address of its own to
+ * link to. On its own URL it can be shared, cited and sent to a colleague.
+ *
+ * Everything here is prose the homepage does not carry, so the two pages are
+ * not competing for the same query with the same words. The homepage has the
+ * calculator; this page has the calculator AND the reasoning behind it. If
+ * these ever start to say the same things, delete one of them.
+ */
+export const CALC_PAGE = {
+  eyebrow: "Free · Nothing to fill in · Nothing stored",
+  h1: "What is manual admin costing you?",
+  lede:
+    "A rough answer in about thirty seconds, built from your own figures rather than somebody's industry average. It runs entirely in your browser: nothing is sent to us and nothing is saved.",
+  sections: [
+    {
+      title: "How the figure is worked out",
+      body: [
+        "People multiplied by hours gives the hours a week. That multiplied by 46 working weeks and by the hourly cost gives the year. The last slider takes a share of it.",
+        "One thing worth getting right: the hourly cost wants the blended cost of employing somebody for an hour, not a salary divided by hours worked. Once employer National Insurance, pension, holiday, equipment and the space they sit in are counted, the true figure is usually higher than people expect, and the result here moves with it.",
+      ],
+    },
+    {
+      title: "Why 46 weeks and not 52",
+      body: [
+        "Multiplying by 52 assumes nobody takes a day off all year, which overstates every answer by roughly a tenth. UK statutory minimum leave is 5.6 weeks including bank holidays, so 46 working weeks is the conservative reading.",
+        "We would rather the number came out low and survived being checked than came out impressive and did not.",
+      ],
+    },
+    {
+      title: "Why there is no recovery percentage",
+      body: [
+        "Almost every calculator of this kind asserts one. It multiplies your total by some share, calls the result your saving, and cannot tell you where that share came from.",
+        "We have no idea what proportion of your process could run without a person, because we have not seen your process. So the last slider is yours to set and the label under it says exactly that. A number you chose is worth more than one we invented, and it is the only version of this that holds up when you check it.",
+      ],
+    },
+    {
+      title: "What to do with the answer",
+      body: [
+        "It is an estimate, not a quote. If the yearly figure is big enough to be worth a conversation, the useful next step is looking at the actual process and working out which part of it is worth handing over first.",
+        "That part is free and it does not commit you to anything. If the honest answer is that your process is not worth automating yet, that is the answer you get.",
+      ],
+    },
+  ],
+  cta: "Tell us what's eating your week",
+  homeLabel: "Backstage",
+  homeHint: "UK AI consultancy",
 } as const;
 
 export const JULIAN = {

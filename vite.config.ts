@@ -9,6 +9,7 @@ import {
   CONTACT,
   CONTACT_EMAIL,
   CALCULATOR,
+  CALC_PAGE,
   EVIDENCE,
   FAQ,
   FOOTER,
@@ -33,6 +34,9 @@ import {
   assertLegalIdentityComplete,
 } from './src/data/legal.ts'
 import {
+  CALC_DESCRIPTION,
+  CALC_PATH,
+  CALC_TITLE,
   DESCRIPTION,
   LOCALE,
   OG_IMAGE,
@@ -41,6 +45,7 @@ import {
   SITE_URL,
   THEME_COLOR,
   TITLE,
+  calculatorPageData,
   structuredData,
 } from './src/data/seo.ts'
 
@@ -251,6 +256,55 @@ function seo(): Plugin {
          its Open Graph tags and a second copy of the whole site's copy. */
       if (ctx.path.includes('privacy')) return fillPrivacy(html)
 
+      /* The calculator page gets its own head. Sharing the homepage's title
+         and description is what Bing's scan flags as duplicates, and a result
+         for this page should describe this page. Its crawlable copy is its own
+         prose, not the whole site's. */
+      if (ctx.path.includes('cost-calculator')) {
+        const calcHead = `
+    <meta name="description" content="${esc(CALC_DESCRIPTION)}" />
+    <link rel="canonical" href="${SITE_URL}${CALC_PATH}" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="author" content="${esc(ORG_NAME)}" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="${esc(ORG_NAME)}" />
+    <meta property="og:title" content="${esc(CALC_TITLE)}" />
+    <meta property="og:description" content="${esc(CALC_DESCRIPTION)}" />
+    <meta property="og:url" content="${SITE_URL}${CALC_PATH}" />
+    <meta property="og:locale" content="${LOCALE}" />
+    <meta property="og:image" content="${OG_IMAGE}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="${esc(OG_IMAGE_ALT)}" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${esc(CALC_TITLE)}" />
+    <meta name="twitter:description" content="${esc(CALC_DESCRIPTION)}" />
+    <meta name="twitter:image" content="${OG_IMAGE}" />
+
+    <meta name="theme-color" content="${THEME_COLOR.light}" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="${THEME_COLOR.dark}" media="(prefers-color-scheme: dark)" />
+
+    <script type="application/ld+json">${JSON.stringify(calculatorPageData())}</script>`
+
+        const calcBody = `<noscript><div class="nojs">
+<h1>${esc(CALC_PAGE.h1)}</h1>
+<p>${esc(CALC_PAGE.lede)}</p>
+${CALC_PAGE.sections
+  .map(
+    (sec) =>
+      `<h2>${esc(sec.title)}</h2>` + sec.body.map((b) => `<p>${esc(b)}</p>`).join('')
+  )
+  .join('')}
+<p><a href="mailto:${esc(CONTACT_EMAIL)}">${esc(CONTACT_EMAIL)}</a></p>
+</div></noscript>`
+
+        return html
+          .replace('<title>Backstage</title>', `<title>${esc(CALC_TITLE)}</title>${calcHead}`)
+          .replace('</body>', `  ${calcBody}\n  </body>`)
+      }
+
       const head = `
     <meta name="description" content="${esc(DESCRIPTION)}" />
     <link rel="canonical" href="${SITE_URL}/" />
@@ -301,6 +355,12 @@ function seo(): Plugin {
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>${SITE_URL}${CALC_PATH}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${SITE_URL}/privacy</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>yearly</changefreq>
@@ -336,6 +396,7 @@ export default defineConfig({
        * rather than adding to it. */
       input: {
         index: resolve(__dirname, 'index.html'),
+        calculator: resolve(__dirname, 'cost-calculator.html'),
         privacy: resolve(__dirname, 'privacy.html'),
       },
     },

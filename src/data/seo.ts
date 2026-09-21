@@ -50,6 +50,19 @@ export const TITLE = "Backstage · AI consultancy, UK. We build it, we run it.";
 export const DESCRIPTION =
   "Backstage is a UK AI consultancy. Tell us which process is eating your week. We build whatever fixes it, we run it and we hand back the finished work.";
 
+/* The calculator page.
+ *
+ * Its own title and description, not the homepage's. Two pages sharing a
+ * title is the exact thing Bing's site scan flags, and more importantly a
+ * search result for this page should describe this page. The title leads on
+ * what somebody would actually type, which is a question about cost rather
+ * than the word "calculator". */
+export const CALC_PATH = "/cost-calculator";
+export const CALC_TITLE =
+  "What is manual admin costing you? Free calculator | Backstage";
+export const CALC_DESCRIPTION =
+  "Work out what manual admin costs your business in a year. Set your own figures, see the annual cost, and decide what is worth automating. Runs in your browser, nothing stored.";
+
 export const LOCALE = "en_GB";
 export const LANG = "en-GB";
 
@@ -179,4 +192,40 @@ export function structuredData(
   };
 
   return { "@context": "https://schema.org", "@graph": [org, website, service, faqPage] };
+}
+
+/** The calculator page's own graph.
+ *
+ *  WebApplication rather than WebPage, because that is what it is: something
+ *  you operate, free, in a browser. `offers` at price 0 is the honest way to
+ *  say free, and it is one of the few places a price belongs on this site.
+ *  It points back at the same organisation node so the two pages resolve to
+ *  one entity rather than two. */
+export function calculatorPageData() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": `${SITE_URL}${CALC_PATH}#app`,
+        name: "Cost of manual admin calculator",
+        url: `${SITE_URL}${CALC_PATH}`,
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Any browser",
+        description: CALC_DESCRIPTION,
+        inLanguage: LANG,
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        publisher: { "@id": `${SITE_URL}/#organization` },
+        offers: { "@type": "Offer", price: "0", priceCurrency: "GBP" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${SITE_URL}${CALC_PATH}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: ORG_NAME, item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: "Cost calculator" },
+        ],
+      },
+    ],
+  };
 }

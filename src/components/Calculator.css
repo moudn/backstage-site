@@ -226,6 +226,20 @@
 
 .calc__basis{ margin-top:0 }
 
+/* The link out to /cost-calculator. Homepage only — see PageBody. */
+.calc__more{
+  margin:clamp(16px,2.2vw,22px) 0 0;
+  font:400 clamp(14px,1.5vw,15.5px)/1.5 var(--font-text);
+}
+.calc__more a{
+  color:var(--text-2);
+  text-decoration:none;
+  border-bottom:1px solid var(--line);
+  padding-bottom:2px;
+  transition:color 240ms var(--fade), border-color 240ms var(--fade);
+}
+.calc__more a:hover{ color:var(--text); border-color:var(--accent) }
+
 @media (min-width: 780px){
   /* Two columns of sliders on a wide screen. Four stacked rows plus four
      results is a very tall column on desktop, and the whole point of the

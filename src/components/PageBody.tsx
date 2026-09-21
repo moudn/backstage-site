@@ -132,6 +132,14 @@ export function PageBody() {
               {CALCULATOR.intro}
             </ScrollReveal>
             <Calculator />
+            {/* Homepage only. The link lives here rather than inside
+                <Calculator> because that component is also the whole of
+                /cost-calculator, where this would be a link to itself. */}
+            <Reveal delay={80}>
+              <p className="calc__more">
+                <a href="/cost-calculator">{CALCULATOR.pageLink}</a>
+              </p>
+            </Reveal>
           </DriftSection>
 
           <DriftSection id="julian" className="panel panel--tall section">
