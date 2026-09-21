@@ -39,6 +39,53 @@ const TILT_DEG = 8;
 const DEPTH_PX = 160;
 const FADE_FLOOR = 0.66;
 
+/* Must match perspective() in .drift--turn (panels.css). If that changes, this
+   changes with it, or the damping below is computed against the wrong optics. */
+const PERSPECTIVE = 2200;
+
+/* How far a section's painted edge may pull clear of its layout box.
+ *
+ * The turn is applied with transform-origin at the top, so everything happens
+ * to the BOTTOM edge. Two things push it away from the camera:
+ *
+ *   - the translate, worth DEPTH_PX
+ *   - rotating about the top edge, worth height * sin(angle)
+ *
+ * The second dominates on anything tall — at 8deg a 2900px section sends its
+ * own bottom edge 400px back, against the translate's 160 — and perspective
+ * then foreshortens the lot by P/(P+z). The lift is therefore a function of
+ * the section's HEIGHT, not a constant: about 100px on a 900px panel, which
+ * nobody notices, and 500px on a 2900px one, which is a hole in the page.
+ *
+ * The evidence section became 2931px tall when the calculator moved into it,
+ * and opened a ~500px gap above "Our products".
+ *
+ * 140px is not an arbitrary budget: it is roughly what this page's ordinary
+ * joins already produce, so capping there leaves every existing section
+ * untouched and pulls only the outlier back into the same rhythm. */
+const EDGE_BUDGET = 140;
+
+/** The largest fraction of the full turn a section of this height can take
+ *  before its painted bottom edge pulls further than EDGE_BUDGET clear.
+ *
+ *  Monotonic in `u`, so a short bisection is exact enough, and it runs only
+ *  when a section's height changes rather than every frame. */
+function turnDamping(height: number): number {
+  const lift = (u: number) => {
+    const z = DEPTH_PX * u + height * Math.sin((TILT_DEG * u * Math.PI) / 180);
+    return (height * z) / (PERSPECTIVE + z);
+  };
+  if (lift(1) <= EDGE_BUDGET) return 1;
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2;
+    if (lift(mid) > EDGE_BUDGET) hi = mid;
+    else lo = mid;
+  }
+  return lo;
+}
+
 export function useScrollDrift<T extends HTMLElement>(
   shift: number,
   squeeze = 0,
@@ -58,6 +105,9 @@ export function useScrollDrift<T extends HTMLElement>(
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let frame = 0;
+    /* Recomputed only when the section's height changes. */
+    let dampedFor = -1;
+    let damp = 1;
     function apply() {
       frame = 0;
       const rect = el!.getBoundingClientRect();
@@ -127,8 +177,24 @@ export function useScrollDrift<T extends HTMLElement>(
         turn *= clamp(fromEnd / (window.innerHeight * 0.75), 0, 1);
 
         const away = Math.abs(turn);
-        el!.style.setProperty("--t-rot", `${(turn * -TILT_DEG).toFixed(2)}deg`);
-        el!.style.setProperty("--t-z", `${(-away * DEPTH_PX).toFixed(1)}px`);
+
+        /* Damp the whole turn on tall sections. Solving
+         *   height * z / (PERSPECTIVE + z) = EDGE_BUDGET
+         * for z gives the deepest this section may go before its bottom edge
+         * pulls further than the budget allows. A short section's limit lands
+         * above DEPTH_PX, so damp is 1 and nothing about it changes; only
+         * genuinely tall sections are pulled back.
+         *
+         * The same factor scales the tilt, because rotateX about the top edge
+         * lifts the bottom by height * (1 - cos) and that grows with height
+         * too — less sharply than the depth, but in the same direction. */
+        if (rect.height !== dampedFor) {
+          dampedFor = rect.height;
+          damp = turnDamping(rect.height);
+        }
+
+        el!.style.setProperty("--t-rot", `${(turn * -TILT_DEG * damp).toFixed(2)}deg`);
+        el!.style.setProperty("--t-z", `${(-away * DEPTH_PX * damp).toFixed(1)}px`);
         el!.style.setProperty("--t-fade", (1 - away * (1 - FADE_FLOOR)).toFixed(3));
       }
     }
